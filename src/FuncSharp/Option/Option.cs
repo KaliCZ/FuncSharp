@@ -234,6 +234,182 @@ public struct Option<A> : IEquatable<Option<A>>
     }
 
     /// <summary>
+    /// Returns value of the option if it has value. If not, returns null.
+    /// </summary>
+    [Pure]
+    public static T? GetOrNull<T>(this Option<T> option)
+        where T : notnull
+    {
+        return Value;
+    }
+
+    /// <summary>
+    /// Returns value of the option if it has value. If not, returns null.
+    /// </summary>
+    [Pure]
+    public static R? GetOrNull<T, R>(this Option<T> option, Func<T, R> func)
+        where T : notnull
+    {
+        if (NonEmpty)
+            return func(Value!);
+        return default;
+    }
+
+    /// <summary>
+    /// Returns value of the option if it has value. If not, returns the <paramref name="otherwise"/>.
+    /// </summary>
+    [Pure]
+    public static B GetOrElse<A, B>(B otherwise)
+        where A : notnull, B
+    {
+        if (NonEmpty)
+        {
+            return Value!;
+        }
+        return otherwise;
+    }
+
+    /// <summary>
+    /// Returns value of the option if it has value. If not, returns value created by the otherwise function.
+    /// </summary>
+    [Pure]
+    public static B GetOrElse<A, B>(Func<Unit, B> otherwise)
+        where A : notnull, B
+    {
+        if (NonEmpty)
+        {
+            return Value!;
+        }
+        return otherwise(Unit.Value);
+    }
+
+    /// <summary>
+    /// Returns the option if it has value. Otherwise returns the alternative option.
+    /// </summary>
+    [Pure]
+    public static Option<B> OrElse<A, B>(Option<B> alternative)
+        where A : B where B : notnull
+    {
+        if (NonEmpty)
+        {
+            return Map(value => (B)value);
+        }
+        return alternative;
+    }
+
+
+
+    /// <summary>
+    /// Maps value of the current option (if present) into a new value using the specified function and
+    /// returns a new option with that new value.
+    /// </summary>
+    [Pure]
+    public Option<B> Select<B>(Func<A, B> f)
+        where B : notnull
+    {
+        return Map<B>(f);
+    }
+
+    /// <summary>
+    /// Maps value of the current option (if present) into a new option using the specified function and
+    /// returns that new option.
+    /// </summary>
+    [Pure]
+    public Option<B> SelectMany<B>(Func<A, Option<B>> f)
+        where B : notnull
+    {
+        return FlatMap(f);
+    }
+
+    /// <summary>
+    /// Maps the current value to a new option using the specified function and combines values of both of the options.
+    /// </summary>
+    [Pure]
+    public Option<B> SelectMany<X, B>(Func<A, Option<X>> f, Func<A, X, B> compose)
+        where B : notnull where X : notnull
+    {
+        return FlatMap(a => f(a).Map(x => compose(a, x)));
+    }
+
+    /// <summary>
+    /// Retuns the current option only if its value matches the specified predicate. Otherwise returns an empty option.
+    /// </summary>
+    [Pure]
+    public Option<A> Where(Func<A, bool> predicate)
+    {
+        if (IsEmpty || !predicate(Value!))
+        {
+            return Option.Empty<A>();
+        }
+        return this;
+    }
+
+    /// <summary>
+    /// Retuns true if value of the option matches the specified predicate. Otherwise returns false.
+    /// </summary>
+    [Pure]
+    public bool Is(Func<A, bool> predicate)
+    {
+        if (NonEmpty)
+            return predicate(Value!);
+        return false;
+    }
+
+    /// <summary>
+    /// Turns the option into a try using the exception in case of empty option.
+    /// </summary>
+    [Pure]
+    public Try<A, E> ToTry<E>(Func<Unit, E> e)
+    {
+        if (NonEmpty)
+            return Try.Success<A, E>(Value!);
+
+        return Try.Error<A, E>(e(Unit.Value));
+    }
+
+    /// <summary>
+    /// Maps value of the current <see cref="Option{A}"/> (if present) into a new value using the specified function and
+    /// returns a new <see cref="Option{A}"/> (with that new value) wrapped in a <see cref="System.Threading.Tasks.Task"/>.
+    /// </summary>
+    [Pure]
+    public async Task<Option<B>> MapAsync<B>(Func<A, Task<B>> f)
+        where B : notnull
+    {
+        if (NonEmpty)
+        {
+            return Option.Valued(await f(Value!));
+        }
+        else
+        {
+            return Option.Empty<B>();
+        }
+    }
+
+    [Pure]
+    public async Task MatchAsync(Func<A, Task> ifFirst, Func<Unit, Task>? ifSecond = null)
+    {
+        if (NonEmpty)
+        {
+            await ifFirst(Value!);
+        }
+        else if (ifSecond != null)
+        {
+            await ifSecond(Unit.Value);
+        }
+    }
+
+    [Pure]
+    public async Task<TResult> MatchAsync<TResult>(Func<A, Task<TResult>> ifFirst, Func<Unit, Task<TResult>> ifSecond)
+    {
+        if (NonEmpty)
+        {
+            return await ifFirst(Value!);
+        }
+
+        return await ifSecond(Unit.Value);
+    }
+
+    /// <summary>
     /// For empty option, returns an empty list.<br/>
     /// For non-empty option, returns a single-item list with the option value.
     /// </summary>
