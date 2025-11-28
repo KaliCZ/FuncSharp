@@ -237,8 +237,7 @@ public struct Option<A> : IEquatable<Option<A>>
     /// Returns value of the option if it has value. If not, returns null.
     /// </summary>
     [Pure]
-    public static T? GetOrNull<T>(this Option<T> option)
-        where T : notnull
+    public A? GetOrNull()
     {
         return Value;
     }
@@ -247,57 +246,12 @@ public struct Option<A> : IEquatable<Option<A>>
     /// Returns value of the option if it has value. If not, returns null.
     /// </summary>
     [Pure]
-    public static R? GetOrNull<T, R>(this Option<T> option, Func<T, R> func)
-        where T : notnull
+    public R? GetOrNull<R>(Func<A, R> func)
     {
         if (NonEmpty)
             return func(Value!);
         return default;
     }
-
-    /// <summary>
-    /// Returns value of the option if it has value. If not, returns the <paramref name="otherwise"/>.
-    /// </summary>
-    [Pure]
-    public static B GetOrElse<A, B>(B otherwise)
-        where A : notnull, B
-    {
-        if (NonEmpty)
-        {
-            return Value!;
-        }
-        return otherwise;
-    }
-
-    /// <summary>
-    /// Returns value of the option if it has value. If not, returns value created by the otherwise function.
-    /// </summary>
-    [Pure]
-    public static B GetOrElse<A, B>(Func<Unit, B> otherwise)
-        where A : notnull, B
-    {
-        if (NonEmpty)
-        {
-            return Value!;
-        }
-        return otherwise(Unit.Value);
-    }
-
-    /// <summary>
-    /// Returns the option if it has value. Otherwise returns the alternative option.
-    /// </summary>
-    [Pure]
-    public static Option<B> OrElse<A, B>(Option<B> alternative)
-        where A : B where B : notnull
-    {
-        if (NonEmpty)
-        {
-            return Map(value => (B)value);
-        }
-        return alternative;
-    }
-
-
 
     /// <summary>
     /// Maps value of the current option (if present) into a new value using the specified function and
