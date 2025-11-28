@@ -6,12 +6,12 @@ namespace FuncSharp;
 
 public class NonEmptyStringJsonConverter : JsonConverter<NonEmptyString>
 {
-    public override NonEmptyString Read(
+    public override NonEmptyString? Read(
         ref Utf8JsonReader reader,
         Type typeToConvert,
         JsonSerializerOptions options)
     {
-        return reader.GetString().AsNonEmpty().GetOrNull();
+        return reader.GetString()?.AsNonEmpty();
     }
 
     public override void Write(
@@ -19,6 +19,6 @@ public class NonEmptyStringJsonConverter : JsonConverter<NonEmptyString>
         NonEmptyString value,
         JsonSerializerOptions options)
     {
-        writer.WriteStringValue(value?.Value);
+        writer.WriteStringValue(value.Value);
     }
 }

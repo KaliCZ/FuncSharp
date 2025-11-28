@@ -17,44 +17,37 @@ public sealed class NonEmptyString : IEquatable<string>, IEquatable<NonEmptyStri
 
     public static implicit operator string(NonEmptyString s)
     {
-        return s.MapRef(v => v.Value);
+        return s.Value;
     }
 
     public static explicit operator NonEmptyString(string s)
     {
-        return CreateUnsafe(s);
+        return Create(s);
     }
 
-    [return: NotNull]
-    public static NonEmptyString CreateUnsafe(string value)
+    /// <summary>
+    /// Creates a new instance of NonEmptyString or throws an exception if the specified value is null, empty or whitespace.
+    /// </summary>
+    /// <exception cref="ArgumentException">Exception thrown in case the value is null, empty or whitespace</exception>
+    public static NonEmptyString Create(string value)
     {
-        if (string.IsNullOrWhiteSpace(value))
-        {
-            throw new ArgumentException("You cannot create NonEmptyString from whitespace, empty string or null.");
-        }
-
-        return new NonEmptyString(value);
+        return TryCreate(value) ?? throw new ArgumentException("You cannot create NonEmptyString from whitespace, empty string or null.");
     }
 
-    public static Option<NonEmptyString> Create(string value)
+    public static NonEmptyString? TryCreate(string value)
     {
-        if (string.IsNullOrWhiteSpace(value))
-        {
-            return Option.Empty<NonEmptyString>();
-        }
-
-        return Option.Valued(new NonEmptyString(value));
+        return string.IsNullOrWhiteSpace(value) ? null : new NonEmptyString(value);
     }
 
     #region Proxy methods to string
 
-    public NonEmptyString ToLower() => CreateUnsafe(Value.ToLower());
-    public NonEmptyString ToLower(CultureInfo culture) => CreateUnsafe(Value.ToLower(culture));
-    public NonEmptyString ToLowerInvariant() => CreateUnsafe(Value.ToLowerInvariant());
+    public NonEmptyString ToLower() => Create(Value.ToLower());
+    public NonEmptyString ToLower(CultureInfo culture) => Create(Value.ToLower(culture));
+    public NonEmptyString ToLowerInvariant() => Create(Value.ToLowerInvariant());
 
-    public NonEmptyString ToUpper() => CreateUnsafe(Value.ToUpper());
-    public NonEmptyString ToUpper(CultureInfo culture) => CreateUnsafe(Value.ToUpper(culture));
-    public NonEmptyString ToUpperInvariant() => CreateUnsafe(Value.ToUpperInvariant());
+    public NonEmptyString ToUpper() => Create(Value.ToUpper());
+    public NonEmptyString ToUpper(CultureInfo culture) => Create(Value.ToUpper(culture));
+    public NonEmptyString ToUpperInvariant() => Create(Value.ToUpperInvariant());
 
     public bool Contains(string s) => Value.Contains(s);
     public bool Contains(string s, StringComparison comparisonType) => Value.Contains(s, comparisonType);

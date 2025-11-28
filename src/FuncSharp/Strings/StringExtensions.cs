@@ -10,127 +10,115 @@ public static class StringExtensions
     /// Returns a type-safe option of NonEmptyString in case the string is not empty nor whitespace.
     /// </summary>
     [Pure]
-    public static Option<NonEmptyString> AsNonEmpty(this string s)
+    public static NonEmptyString? AsNonEmpty(this string s)
     {
-        return NonEmptyString.Create(s);
+        return NonEmptyString.TryCreate(s);
     }
 
     [Obsolete("This is already a nonempty string", error: true)]
-    public static Option<NonEmptyString> AsNonEmpty(this NonEmptyString s)
+    public static NonEmptyString? AsNonEmpty(this NonEmptyString s)
     {
-        return Option.Valued(s);
+        return s;
     }
 
     [Pure]
-    public static Option<byte> ToByte(this string s, IFormatProvider format = null, NumberStyles style = NumberStyles.Integer)
+    public static byte? ToByte(this NonEmptyString s, IFormatProvider? format = null, NumberStyles style = NumberStyles.Integer)
     {
-        return byte.TryParse(s, style, format, out var value)
-            ? Option.Valued(value)
-            : Option.Empty<byte>();
+        byte.TryParse(s.Value, style, format, out var value);
+        return value;
     }
 
     [Pure]
-    public static Option<short> ToShort(this string s, IFormatProvider format = null, NumberStyles style = NumberStyles.Integer)
+    public static short? ToShort(this NonEmptyString s, IFormatProvider? format = null, NumberStyles style = NumberStyles.Integer)
     {
-        return short.TryParse(s, style, format, out var value)
-            ? Option.Valued(value)
-            : Option.Empty<short>();
+        short.TryParse(s.Value, style, format, out var value);
+        return value;
     }
 
     [Pure]
-    public static Option<int> ToInt(this string s, IFormatProvider format = null, NumberStyles style = NumberStyles.Integer)
+    public static int? ToInt(this NonEmptyString s, IFormatProvider? format = null, NumberStyles style = NumberStyles.Integer)
     {
-        return int.TryParse(s, style, format, out var value)
-            ? Option.Valued(value)
-            : Option.Empty<int>();
+        int.TryParse(s.Value, style, format, out var value);
+        return value;
     }
 
     [Pure]
-    public static Option<long> ToLong(this string s, IFormatProvider format = null, NumberStyles style = NumberStyles.Integer)
+    public static long? ToLong(this NonEmptyString s, IFormatProvider? format = null, NumberStyles style = NumberStyles.Integer)
     {
-        return long.TryParse(s, style, format, out var value)
-            ? Option.Valued(value)
-            : Option.Empty<long>();
+        long.TryParse(s.Value, style, format, out var value);
+        return value;
     }
 
     [Pure]
-    public static Option<float> ToFloat(this string s, IFormatProvider format = null, NumberStyles style = NumberStyles.Float | NumberStyles.AllowThousands)
+    public static float? ToFloat(this NonEmptyString s, IFormatProvider? format = null, NumberStyles style = NumberStyles.Float | NumberStyles.AllowThousands)
     {
-        return float.TryParse(s, style, format, out var value)
-            ? Option.Valued(value)
-            : Option.Empty<float>();
+        float.TryParse(s.Value, style, format, out var value);
+        return value;
     }
 
     [Pure]
-    public static Option<double> ToDouble(this string s, IFormatProvider format = null, NumberStyles style = NumberStyles.Float | NumberStyles.AllowThousands)
+    public static double ToDouble(this NonEmptyString s, IFormatProvider? format = null, NumberStyles style = NumberStyles.Float | NumberStyles.AllowThousands)
     {
-        return double.TryParse(s, style, format, out var value)
-            ? Option.Valued(value)
-            : Option.Empty<double>();
+        double.TryParse(s.Value, style, format, out var value);
+        return value;
     }
 
     [Pure]
-    public static Option<decimal> ToDecimal(this string s, IFormatProvider format = null, NumberStyles style = NumberStyles.Number)
+    public static decimal? ToDecimal(this NonEmptyString s, IFormatProvider? format = null, NumberStyles style = NumberStyles.Number)
     {
-        return decimal.TryParse(s, style, format, out var value)
-            ? Option.Valued(value)
-            : Option.Empty<decimal>();
+        decimal.TryParse(s.Value, style, format, out var value);
+        return value;
     }
 
     [Pure]
-    public static Option<bool> ToBool(this string s, IFormatProvider format = null, NumberStyles style = NumberStyles.Number)
+    public static bool? ToBool(this NonEmptyString s)
     {
-        return bool.TryParse(s, out var value)
-            ? Option.Valued(value)
-            : Option.Empty<bool>();
+        bool.TryParse(s.Value, out var value);
+        return value;
     }
 
     [Pure]
-    public static Option<DateTime> ToDateTime(this string s, IFormatProvider format = null, DateTimeStyles style = DateTimeStyles.None)
+    public static DateTime? ToDateTime(this NonEmptyString s, IFormatProvider? format = null, DateTimeStyles style = DateTimeStyles.None)
     {
-        return DateTime.TryParse(s, format, style, out var value)
-            ? Option.Valued(value)
-            : Option.Empty<DateTime>();
+        DateTime.TryParse(s.Value, format, style, out var value);
+        return value;
     }
 
     [Pure]
-    public static Option<TimeSpan> ToTimeSpan(this string s, IFormatProvider format = null)
+    public static TimeSpan? ToTimeSpan(this NonEmptyString s, IFormatProvider? format = null)
     {
-        return TimeSpan.TryParse(s, format, out var value)
-            ? Option.Valued(value)
-            : Option.Empty<TimeSpan>();
+        TimeSpan.TryParse(s.Value, format, out var value);
+        return value;
     }
 
     [Pure]
-    public static Option<TEnum> ToEnum<TEnum>(this string s, bool ignoreCase = false)
+    public static TEnum? ToEnum<TEnum>(this NonEmptyString s, bool ignoreCase = false)
         where TEnum : struct
     {
-        if (s is null || s.Contains(",") || !Enum.TryParse<TEnum>(s, ignoreCase, out var value))
+        if (s.Contains(",") || !Enum.TryParse(s, ignoreCase, out TEnum value))
         {
-            return Option.Empty<TEnum>();
+            return null;
         }
 
-        if (!Enum.IsDefined(typeof(TEnum), value) || !value.ToString().Equals(s, StringComparison.InvariantCultureIgnoreCase))
+        if (!Enum.IsDefined(typeof(TEnum), value) || !s.Equals(value.ToString(), StringComparison.InvariantCultureIgnoreCase))
         {
-            return Option.Empty<TEnum>();
+            return null;
         }
 
-        return Option.Valued(value);
+        return value;
     }
 
     [Pure]
-    public static Option<Guid> ToGuid(this string s)
+    public static Guid? ToGuid(this NonEmptyString s)
     {
-        return Guid.TryParse(s, out var value)
-            ? Option.Valued(value)
-            : Option.Empty<Guid>();
+        Guid.TryParse(s.Value, out var value);
+        return value;
     }
 
     [Pure]
-    public static Option<Guid> ToGuidExact(this string s, string format = "D")
+    public static Guid? ToGuidExact(this NonEmptyString s, string format = "D")
     {
-        return Guid.TryParseExact(s, format, out var value)
-            ? Option.Valued(value)
-            : Option.Empty<Guid>();
+        Guid.TryParseExact(s, format, out var value);
+        return value;
     }
 }
