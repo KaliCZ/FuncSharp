@@ -85,7 +85,7 @@ public struct NonNegativeDecimal : IEquatable<NonNegativeDecimal>
         return Value == other.Value;
     }
 
-    public override bool Equals(object obj)
+    public override bool Equals(object? obj)
     {
         return obj is NonNegativeDecimal other && Equals(other);
     }

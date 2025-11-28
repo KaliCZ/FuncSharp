@@ -1,28 +1,26 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <NoWarn>CS1591</NoWarn>
-    <Version>10.0.5</Version>
-    <AssemblyVersion>10.0.5</AssemblyVersion>
-    <FileVersion>10.0.5</FileVersion>
-    <PackageId>FuncSharp</PackageId>
+    <Version>1.0.0</Version>
+    <AssemblyVersion>1.0.0</AssemblyVersion>
+    <FileVersion>1.0.0</FileVersion>
+    <PackageId>FuncSharp.Lite</PackageId>
     <Description>A C# library with main purpose to reduce boilerplate code and avoid bugs thanks to stronger typing. Utilizes many concepts from functional programming languages that are also applicable in C#. Originally written by Honza Široký.</Description>
-    <Authors>Mews, Honza Široký</Authors>
-    <PackageTags>FuncSharp, Functional C#, Product, Coproduct, ADT, Algebraic, Types</PackageTags>
-    <Copyright>Copyright © 2022</Copyright>
-    <PackageProjectUrl>https://github.com/MewsSystems/FuncSharp</PackageProjectUrl>
+    <Authors>Pavel Kalandra, Honza Široký</Authors>
+    <PackageTags>FuncSharp, FuncSharp.Lite, Functional C#</PackageTags>
+    <Copyright>Copyright © 2025</Copyright>
+    <PackageProjectUrl>https://github.com/KaliCZ/FuncSharp.Lite</PackageProjectUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-    <PackageReleaseNotes>Added NET10.0 compatability</PackageReleaseNotes>
+    <PackageReleaseNotes>Seeded a new future-proof package</PackageReleaseNotes>
     <RepositoryType>git</RepositoryType>
-    <RepositoryUrl>https://github.com/MewsSystems/FuncSharp</RepositoryUrl>
+    <RepositoryUrl>https://github.com/KaliCZ/FuncSharp.Lite</RepositoryUrl>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <DebugType>pdbonly</DebugType>
     <DebugSymbols>true</DebugSymbols>
-    <TargetFrameworks>net10.0;net8.0</TargetFrameworks>
-    <Product>FuncSharp</Product>
+    <Product>FuncSharp.Lite</Product>
     <PackageReadmeFile>readme.md</PackageReadmeFile>
   </PropertyGroup>
   <ItemGroup>

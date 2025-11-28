@@ -9,7 +9,7 @@ public class CustomException : Exception
 {
     public CustomException(string message) : base(message) { }
     public bool Equals(CustomException other) => Message.Equals(other?.Message);
-    public override bool Equals(object obj) => Equals(obj as CustomException);
+    public override bool Equals(object? obj) => Equals(obj as CustomException);
     public override int GetHashCode() => Message.GetHashCode();
 }
 

@@ -118,7 +118,7 @@ public sealed class NonEmptyString : IEquatable<string>, IEquatable<NonEmptyStri
         return !left.Equals(right);
     }
 
-    public override bool Equals(object obj)
+    public override bool Equals(object? obj)
     {
         return obj is NonEmptyString otherNonEmpty && Equals(otherNonEmpty) ||
                obj is string otherString && Equals(otherString);

@@ -1,3 +1,4 @@
+﻿
 using System;
 using System.Threading.Tasks;
 
@@ -65,7 +66,7 @@ public interface ICoproduct1<T1> : ICoproduct
     /// the <paramref name="ifFirst" /> function. If the function that should be executed is null, does nothing.
     /// </summary>
     void Match(
-        Action<T1> ifFirst = null);
+        Action<T1>? ifFirst = null);
 
     /// <summary>
     /// Executes the async function that matches the coproduct value. E.g. if the coproduct is the first value, executes
@@ -122,8 +123,8 @@ public interface ICoproduct2<T1, T2> : ICoproduct
     /// the <paramref name="ifFirst" /> function. If the function that should be executed is null, does nothing.
     /// </summary>
     void Match(
-        Action<T1> ifFirst = null,
-        Action<T2> ifSecond = null);
+        Action<T1>? ifFirst = null,
+        Action<T2>? ifSecond = null);
 
     /// <summary>
     /// Executes the async function that matches the coproduct value. E.g. if the coproduct is the first value, executes
@@ -194,9 +195,9 @@ public interface ICoproduct3<T1, T2, T3> : ICoproduct
     /// the <paramref name="ifFirst" /> function. If the function that should be executed is null, does nothing.
     /// </summary>
     void Match(
-        Action<T1> ifFirst = null,
-        Action<T2> ifSecond = null,
-        Action<T3> ifThird = null);
+        Action<T1>? ifFirst = null,
+        Action<T2>? ifSecond = null,
+        Action<T3>? ifThird = null);
 
     /// <summary>
     /// Executes the async function that matches the coproduct value. E.g. if the coproduct is the first value, executes
@@ -281,10 +282,10 @@ public interface ICoproduct4<T1, T2, T3, T4> : ICoproduct
     /// the <paramref name="ifFirst" /> function. If the function that should be executed is null, does nothing.
     /// </summary>
     void Match(
-        Action<T1> ifFirst = null,
-        Action<T2> ifSecond = null,
-        Action<T3> ifThird = null,
-        Action<T4> ifFourth = null);
+        Action<T1>? ifFirst = null,
+        Action<T2>? ifSecond = null,
+        Action<T3>? ifThird = null,
+        Action<T4>? ifFourth = null);
 
     /// <summary>
     /// Executes the async function that matches the coproduct value. E.g. if the coproduct is the first value, executes
@@ -383,11 +384,11 @@ public interface ICoproduct5<T1, T2, T3, T4, T5> : ICoproduct
     /// the <paramref name="ifFirst" /> function. If the function that should be executed is null, does nothing.
     /// </summary>
     void Match(
-        Action<T1> ifFirst = null,
-        Action<T2> ifSecond = null,
-        Action<T3> ifThird = null,
-        Action<T4> ifFourth = null,
-        Action<T5> ifFifth = null);
+        Action<T1>? ifFirst = null,
+        Action<T2>? ifSecond = null,
+        Action<T3>? ifThird = null,
+        Action<T4>? ifFourth = null,
+        Action<T5>? ifFifth = null);
 
     /// <summary>
     /// Executes the async function that matches the coproduct value. E.g. if the coproduct is the first value, executes
@@ -500,12 +501,12 @@ public interface ICoproduct6<T1, T2, T3, T4, T5, T6> : ICoproduct
     /// the <paramref name="ifFirst" /> function. If the function that should be executed is null, does nothing.
     /// </summary>
     void Match(
-        Action<T1> ifFirst = null,
-        Action<T2> ifSecond = null,
-        Action<T3> ifThird = null,
-        Action<T4> ifFourth = null,
-        Action<T5> ifFifth = null,
-        Action<T6> ifSixth = null);
+        Action<T1>? ifFirst = null,
+        Action<T2>? ifSecond = null,
+        Action<T3>? ifThird = null,
+        Action<T4>? ifFourth = null,
+        Action<T5>? ifFifth = null,
+        Action<T6>? ifSixth = null);
 
     /// <summary>
     /// Executes the async function that matches the coproduct value. E.g. if the coproduct is the first value, executes
@@ -632,13 +633,13 @@ public interface ICoproduct7<T1, T2, T3, T4, T5, T6, T7> : ICoproduct
     /// the <paramref name="ifFirst" /> function. If the function that should be executed is null, does nothing.
     /// </summary>
     void Match(
-        Action<T1> ifFirst = null,
-        Action<T2> ifSecond = null,
-        Action<T3> ifThird = null,
-        Action<T4> ifFourth = null,
-        Action<T5> ifFifth = null,
-        Action<T6> ifSixth = null,
-        Action<T7> ifSeventh = null);
+        Action<T1>? ifFirst = null,
+        Action<T2>? ifSecond = null,
+        Action<T3>? ifThird = null,
+        Action<T4>? ifFourth = null,
+        Action<T5>? ifFifth = null,
+        Action<T6>? ifSixth = null,
+        Action<T7>? ifSeventh = null);
 
     /// <summary>
     /// Executes the async function that matches the coproduct value. E.g. if the coproduct is the first value, executes
@@ -779,14 +780,14 @@ public interface ICoproduct8<T1, T2, T3, T4, T5, T6, T7, T8> : ICoproduct
     /// the <paramref name="ifFirst" /> function. If the function that should be executed is null, does nothing.
     /// </summary>
     void Match(
-        Action<T1> ifFirst = null,
-        Action<T2> ifSecond = null,
-        Action<T3> ifThird = null,
-        Action<T4> ifFourth = null,
-        Action<T5> ifFifth = null,
-        Action<T6> ifSixth = null,
-        Action<T7> ifSeventh = null,
-        Action<T8> ifEighth = null);
+        Action<T1>? ifFirst = null,
+        Action<T2>? ifSecond = null,
+        Action<T3>? ifThird = null,
+        Action<T4>? ifFourth = null,
+        Action<T5>? ifFifth = null,
+        Action<T6>? ifSixth = null,
+        Action<T7>? ifSeventh = null,
+        Action<T8>? ifEighth = null);
 
     /// <summary>
     /// Executes the async function that matches the coproduct value. E.g. if the coproduct is the first value, executes
@@ -941,15 +942,15 @@ public interface ICoproduct9<T1, T2, T3, T4, T5, T6, T7, T8, T9> : ICoproduct
     /// the <paramref name="ifFirst" /> function. If the function that should be executed is null, does nothing.
     /// </summary>
     void Match(
-        Action<T1> ifFirst = null,
-        Action<T2> ifSecond = null,
-        Action<T3> ifThird = null,
-        Action<T4> ifFourth = null,
-        Action<T5> ifFifth = null,
-        Action<T6> ifSixth = null,
-        Action<T7> ifSeventh = null,
-        Action<T8> ifEighth = null,
-        Action<T9> ifNinth = null);
+        Action<T1>? ifFirst = null,
+        Action<T2>? ifSecond = null,
+        Action<T3>? ifThird = null,
+        Action<T4>? ifFourth = null,
+        Action<T5>? ifFifth = null,
+        Action<T6>? ifSixth = null,
+        Action<T7>? ifSeventh = null,
+        Action<T8>? ifEighth = null,
+        Action<T9>? ifNinth = null);
 
     /// <summary>
     /// Executes the async function that matches the coproduct value. E.g. if the coproduct is the first value, executes
@@ -1118,16 +1119,16 @@ public interface ICoproduct10<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10> : ICoprod
     /// the <paramref name="ifFirst" /> function. If the function that should be executed is null, does nothing.
     /// </summary>
     void Match(
-        Action<T1> ifFirst = null,
-        Action<T2> ifSecond = null,
-        Action<T3> ifThird = null,
-        Action<T4> ifFourth = null,
-        Action<T5> ifFifth = null,
-        Action<T6> ifSixth = null,
-        Action<T7> ifSeventh = null,
-        Action<T8> ifEighth = null,
-        Action<T9> ifNinth = null,
-        Action<T10> ifTenth = null);
+        Action<T1>? ifFirst = null,
+        Action<T2>? ifSecond = null,
+        Action<T3>? ifThird = null,
+        Action<T4>? ifFourth = null,
+        Action<T5>? ifFifth = null,
+        Action<T6>? ifSixth = null,
+        Action<T7>? ifSeventh = null,
+        Action<T8>? ifEighth = null,
+        Action<T9>? ifNinth = null,
+        Action<T10>? ifTenth = null);
 
     /// <summary>
     /// Executes the async function that matches the coproduct value. E.g. if the coproduct is the first value, executes
@@ -1310,17 +1311,17 @@ public interface ICoproduct11<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11> : IC
     /// the <paramref name="ifFirst" /> function. If the function that should be executed is null, does nothing.
     /// </summary>
     void Match(
-        Action<T1> ifFirst = null,
-        Action<T2> ifSecond = null,
-        Action<T3> ifThird = null,
-        Action<T4> ifFourth = null,
-        Action<T5> ifFifth = null,
-        Action<T6> ifSixth = null,
-        Action<T7> ifSeventh = null,
-        Action<T8> ifEighth = null,
-        Action<T9> ifNinth = null,
-        Action<T10> ifTenth = null,
-        Action<T11> ifEleventh = null);
+        Action<T1>? ifFirst = null,
+        Action<T2>? ifSecond = null,
+        Action<T3>? ifThird = null,
+        Action<T4>? ifFourth = null,
+        Action<T5>? ifFifth = null,
+        Action<T6>? ifSixth = null,
+        Action<T7>? ifSeventh = null,
+        Action<T8>? ifEighth = null,
+        Action<T9>? ifNinth = null,
+        Action<T10>? ifTenth = null,
+        Action<T11>? ifEleventh = null);
 
     /// <summary>
     /// Executes the async function that matches the coproduct value. E.g. if the coproduct is the first value, executes
@@ -1517,18 +1518,18 @@ public interface ICoproduct12<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12>
     /// the <paramref name="ifFirst" /> function. If the function that should be executed is null, does nothing.
     /// </summary>
     void Match(
-        Action<T1> ifFirst = null,
-        Action<T2> ifSecond = null,
-        Action<T3> ifThird = null,
-        Action<T4> ifFourth = null,
-        Action<T5> ifFifth = null,
-        Action<T6> ifSixth = null,
-        Action<T7> ifSeventh = null,
-        Action<T8> ifEighth = null,
-        Action<T9> ifNinth = null,
-        Action<T10> ifTenth = null,
-        Action<T11> ifEleventh = null,
-        Action<T12> ifTwelfth = null);
+        Action<T1>? ifFirst = null,
+        Action<T2>? ifSecond = null,
+        Action<T3>? ifThird = null,
+        Action<T4>? ifFourth = null,
+        Action<T5>? ifFifth = null,
+        Action<T6>? ifSixth = null,
+        Action<T7>? ifSeventh = null,
+        Action<T8>? ifEighth = null,
+        Action<T9>? ifNinth = null,
+        Action<T10>? ifTenth = null,
+        Action<T11>? ifEleventh = null,
+        Action<T12>? ifTwelfth = null);
 
     /// <summary>
     /// Executes the async function that matches the coproduct value. E.g. if the coproduct is the first value, executes
@@ -1739,19 +1740,19 @@ public interface ICoproduct13<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12,
     /// the <paramref name="ifFirst" /> function. If the function that should be executed is null, does nothing.
     /// </summary>
     void Match(
-        Action<T1> ifFirst = null,
-        Action<T2> ifSecond = null,
-        Action<T3> ifThird = null,
-        Action<T4> ifFourth = null,
-        Action<T5> ifFifth = null,
-        Action<T6> ifSixth = null,
-        Action<T7> ifSeventh = null,
-        Action<T8> ifEighth = null,
-        Action<T9> ifNinth = null,
-        Action<T10> ifTenth = null,
-        Action<T11> ifEleventh = null,
-        Action<T12> ifTwelfth = null,
-        Action<T13> ifThirteenth = null);
+        Action<T1>? ifFirst = null,
+        Action<T2>? ifSecond = null,
+        Action<T3>? ifThird = null,
+        Action<T4>? ifFourth = null,
+        Action<T5>? ifFifth = null,
+        Action<T6>? ifSixth = null,
+        Action<T7>? ifSeventh = null,
+        Action<T8>? ifEighth = null,
+        Action<T9>? ifNinth = null,
+        Action<T10>? ifTenth = null,
+        Action<T11>? ifEleventh = null,
+        Action<T12>? ifTwelfth = null,
+        Action<T13>? ifThirteenth = null);
 
     /// <summary>
     /// Executes the async function that matches the coproduct value. E.g. if the coproduct is the first value, executes
@@ -1976,20 +1977,20 @@ public interface ICoproduct14<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12,
     /// the <paramref name="ifFirst" /> function. If the function that should be executed is null, does nothing.
     /// </summary>
     void Match(
-        Action<T1> ifFirst = null,
-        Action<T2> ifSecond = null,
-        Action<T3> ifThird = null,
-        Action<T4> ifFourth = null,
-        Action<T5> ifFifth = null,
-        Action<T6> ifSixth = null,
-        Action<T7> ifSeventh = null,
-        Action<T8> ifEighth = null,
-        Action<T9> ifNinth = null,
-        Action<T10> ifTenth = null,
-        Action<T11> ifEleventh = null,
-        Action<T12> ifTwelfth = null,
-        Action<T13> ifThirteenth = null,
-        Action<T14> ifFourteenth = null);
+        Action<T1>? ifFirst = null,
+        Action<T2>? ifSecond = null,
+        Action<T3>? ifThird = null,
+        Action<T4>? ifFourth = null,
+        Action<T5>? ifFifth = null,
+        Action<T6>? ifSixth = null,
+        Action<T7>? ifSeventh = null,
+        Action<T8>? ifEighth = null,
+        Action<T9>? ifNinth = null,
+        Action<T10>? ifTenth = null,
+        Action<T11>? ifEleventh = null,
+        Action<T12>? ifTwelfth = null,
+        Action<T13>? ifThirteenth = null,
+        Action<T14>? ifFourteenth = null);
 
     /// <summary>
     /// Executes the async function that matches the coproduct value. E.g. if the coproduct is the first value, executes
@@ -2228,21 +2229,21 @@ public interface ICoproduct15<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12,
     /// the <paramref name="ifFirst" /> function. If the function that should be executed is null, does nothing.
     /// </summary>
     void Match(
-        Action<T1> ifFirst = null,
-        Action<T2> ifSecond = null,
-        Action<T3> ifThird = null,
-        Action<T4> ifFourth = null,
-        Action<T5> ifFifth = null,
-        Action<T6> ifSixth = null,
-        Action<T7> ifSeventh = null,
-        Action<T8> ifEighth = null,
-        Action<T9> ifNinth = null,
-        Action<T10> ifTenth = null,
-        Action<T11> ifEleventh = null,
-        Action<T12> ifTwelfth = null,
-        Action<T13> ifThirteenth = null,
-        Action<T14> ifFourteenth = null,
-        Action<T15> ifFifteenth = null);
+        Action<T1>? ifFirst = null,
+        Action<T2>? ifSecond = null,
+        Action<T3>? ifThird = null,
+        Action<T4>? ifFourth = null,
+        Action<T5>? ifFifth = null,
+        Action<T6>? ifSixth = null,
+        Action<T7>? ifSeventh = null,
+        Action<T8>? ifEighth = null,
+        Action<T9>? ifNinth = null,
+        Action<T10>? ifTenth = null,
+        Action<T11>? ifEleventh = null,
+        Action<T12>? ifTwelfth = null,
+        Action<T13>? ifThirteenth = null,
+        Action<T14>? ifFourteenth = null,
+        Action<T15>? ifFifteenth = null);
 
     /// <summary>
     /// Executes the async function that matches the coproduct value. E.g. if the coproduct is the first value, executes
@@ -2495,22 +2496,22 @@ public interface ICoproduct16<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12,
     /// the <paramref name="ifFirst" /> function. If the function that should be executed is null, does nothing.
     /// </summary>
     void Match(
-        Action<T1> ifFirst = null,
-        Action<T2> ifSecond = null,
-        Action<T3> ifThird = null,
-        Action<T4> ifFourth = null,
-        Action<T5> ifFifth = null,
-        Action<T6> ifSixth = null,
-        Action<T7> ifSeventh = null,
-        Action<T8> ifEighth = null,
-        Action<T9> ifNinth = null,
-        Action<T10> ifTenth = null,
-        Action<T11> ifEleventh = null,
-        Action<T12> ifTwelfth = null,
-        Action<T13> ifThirteenth = null,
-        Action<T14> ifFourteenth = null,
-        Action<T15> ifFifteenth = null,
-        Action<T16> ifSixteenth = null);
+        Action<T1>? ifFirst = null,
+        Action<T2>? ifSecond = null,
+        Action<T3>? ifThird = null,
+        Action<T4>? ifFourth = null,
+        Action<T5>? ifFifth = null,
+        Action<T6>? ifSixth = null,
+        Action<T7>? ifSeventh = null,
+        Action<T8>? ifEighth = null,
+        Action<T9>? ifNinth = null,
+        Action<T10>? ifTenth = null,
+        Action<T11>? ifEleventh = null,
+        Action<T12>? ifTwelfth = null,
+        Action<T13>? ifThirteenth = null,
+        Action<T14>? ifFourteenth = null,
+        Action<T15>? ifFifteenth = null,
+        Action<T16>? ifSixteenth = null);
 
     /// <summary>
     /// Executes the async function that matches the coproduct value. E.g. if the coproduct is the first value, executes
@@ -2777,23 +2778,23 @@ public interface ICoproduct17<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12,
     /// the <paramref name="ifFirst" /> function. If the function that should be executed is null, does nothing.
     /// </summary>
     void Match(
-        Action<T1> ifFirst = null,
-        Action<T2> ifSecond = null,
-        Action<T3> ifThird = null,
-        Action<T4> ifFourth = null,
-        Action<T5> ifFifth = null,
-        Action<T6> ifSixth = null,
-        Action<T7> ifSeventh = null,
-        Action<T8> ifEighth = null,
-        Action<T9> ifNinth = null,
-        Action<T10> ifTenth = null,
-        Action<T11> ifEleventh = null,
-        Action<T12> ifTwelfth = null,
-        Action<T13> ifThirteenth = null,
-        Action<T14> ifFourteenth = null,
-        Action<T15> ifFifteenth = null,
-        Action<T16> ifSixteenth = null,
-        Action<T17> ifSeventeenth = null);
+        Action<T1>? ifFirst = null,
+        Action<T2>? ifSecond = null,
+        Action<T3>? ifThird = null,
+        Action<T4>? ifFourth = null,
+        Action<T5>? ifFifth = null,
+        Action<T6>? ifSixth = null,
+        Action<T7>? ifSeventh = null,
+        Action<T8>? ifEighth = null,
+        Action<T9>? ifNinth = null,
+        Action<T10>? ifTenth = null,
+        Action<T11>? ifEleventh = null,
+        Action<T12>? ifTwelfth = null,
+        Action<T13>? ifThirteenth = null,
+        Action<T14>? ifFourteenth = null,
+        Action<T15>? ifFifteenth = null,
+        Action<T16>? ifSixteenth = null,
+        Action<T17>? ifSeventeenth = null);
 
     /// <summary>
     /// Executes the async function that matches the coproduct value. E.g. if the coproduct is the first value, executes
@@ -3074,24 +3075,24 @@ public interface ICoproduct18<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12,
     /// the <paramref name="ifFirst" /> function. If the function that should be executed is null, does nothing.
     /// </summary>
     void Match(
-        Action<T1> ifFirst = null,
-        Action<T2> ifSecond = null,
-        Action<T3> ifThird = null,
-        Action<T4> ifFourth = null,
-        Action<T5> ifFifth = null,
-        Action<T6> ifSixth = null,
-        Action<T7> ifSeventh = null,
-        Action<T8> ifEighth = null,
-        Action<T9> ifNinth = null,
-        Action<T10> ifTenth = null,
-        Action<T11> ifEleventh = null,
-        Action<T12> ifTwelfth = null,
-        Action<T13> ifThirteenth = null,
-        Action<T14> ifFourteenth = null,
-        Action<T15> ifFifteenth = null,
-        Action<T16> ifSixteenth = null,
-        Action<T17> ifSeventeenth = null,
-        Action<T18> ifEighteenth = null);
+        Action<T1>? ifFirst = null,
+        Action<T2>? ifSecond = null,
+        Action<T3>? ifThird = null,
+        Action<T4>? ifFourth = null,
+        Action<T5>? ifFifth = null,
+        Action<T6>? ifSixth = null,
+        Action<T7>? ifSeventh = null,
+        Action<T8>? ifEighth = null,
+        Action<T9>? ifNinth = null,
+        Action<T10>? ifTenth = null,
+        Action<T11>? ifEleventh = null,
+        Action<T12>? ifTwelfth = null,
+        Action<T13>? ifThirteenth = null,
+        Action<T14>? ifFourteenth = null,
+        Action<T15>? ifFifteenth = null,
+        Action<T16>? ifSixteenth = null,
+        Action<T17>? ifSeventeenth = null,
+        Action<T18>? ifEighteenth = null);
 
     /// <summary>
     /// Executes the async function that matches the coproduct value. E.g. if the coproduct is the first value, executes
@@ -3386,25 +3387,25 @@ public interface ICoproduct19<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12,
     /// the <paramref name="ifFirst" /> function. If the function that should be executed is null, does nothing.
     /// </summary>
     void Match(
-        Action<T1> ifFirst = null,
-        Action<T2> ifSecond = null,
-        Action<T3> ifThird = null,
-        Action<T4> ifFourth = null,
-        Action<T5> ifFifth = null,
-        Action<T6> ifSixth = null,
-        Action<T7> ifSeventh = null,
-        Action<T8> ifEighth = null,
-        Action<T9> ifNinth = null,
-        Action<T10> ifTenth = null,
-        Action<T11> ifEleventh = null,
-        Action<T12> ifTwelfth = null,
-        Action<T13> ifThirteenth = null,
-        Action<T14> ifFourteenth = null,
-        Action<T15> ifFifteenth = null,
-        Action<T16> ifSixteenth = null,
-        Action<T17> ifSeventeenth = null,
-        Action<T18> ifEighteenth = null,
-        Action<T19> ifNineteenth = null);
+        Action<T1>? ifFirst = null,
+        Action<T2>? ifSecond = null,
+        Action<T3>? ifThird = null,
+        Action<T4>? ifFourth = null,
+        Action<T5>? ifFifth = null,
+        Action<T6>? ifSixth = null,
+        Action<T7>? ifSeventh = null,
+        Action<T8>? ifEighth = null,
+        Action<T9>? ifNinth = null,
+        Action<T10>? ifTenth = null,
+        Action<T11>? ifEleventh = null,
+        Action<T12>? ifTwelfth = null,
+        Action<T13>? ifThirteenth = null,
+        Action<T14>? ifFourteenth = null,
+        Action<T15>? ifFifteenth = null,
+        Action<T16>? ifSixteenth = null,
+        Action<T17>? ifSeventeenth = null,
+        Action<T18>? ifEighteenth = null,
+        Action<T19>? ifNineteenth = null);
 
     /// <summary>
     /// Executes the async function that matches the coproduct value. E.g. if the coproduct is the first value, executes
@@ -3713,26 +3714,26 @@ public interface ICoproduct20<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12,
     /// the <paramref name="ifFirst" /> function. If the function that should be executed is null, does nothing.
     /// </summary>
     void Match(
-        Action<T1> ifFirst = null,
-        Action<T2> ifSecond = null,
-        Action<T3> ifThird = null,
-        Action<T4> ifFourth = null,
-        Action<T5> ifFifth = null,
-        Action<T6> ifSixth = null,
-        Action<T7> ifSeventh = null,
-        Action<T8> ifEighth = null,
-        Action<T9> ifNinth = null,
-        Action<T10> ifTenth = null,
-        Action<T11> ifEleventh = null,
-        Action<T12> ifTwelfth = null,
-        Action<T13> ifThirteenth = null,
-        Action<T14> ifFourteenth = null,
-        Action<T15> ifFifteenth = null,
-        Action<T16> ifSixteenth = null,
-        Action<T17> ifSeventeenth = null,
-        Action<T18> ifEighteenth = null,
-        Action<T19> ifNineteenth = null,
-        Action<T20> ifTwentieth = null);
+        Action<T1>? ifFirst = null,
+        Action<T2>? ifSecond = null,
+        Action<T3>? ifThird = null,
+        Action<T4>? ifFourth = null,
+        Action<T5>? ifFifth = null,
+        Action<T6>? ifSixth = null,
+        Action<T7>? ifSeventh = null,
+        Action<T8>? ifEighth = null,
+        Action<T9>? ifNinth = null,
+        Action<T10>? ifTenth = null,
+        Action<T11>? ifEleventh = null,
+        Action<T12>? ifTwelfth = null,
+        Action<T13>? ifThirteenth = null,
+        Action<T14>? ifFourteenth = null,
+        Action<T15>? ifFifteenth = null,
+        Action<T16>? ifSixteenth = null,
+        Action<T17>? ifSeventeenth = null,
+        Action<T18>? ifEighteenth = null,
+        Action<T19>? ifNineteenth = null,
+        Action<T20>? ifTwentieth = null);
 
     /// <summary>
     /// Executes the async function that matches the coproduct value. E.g. if the coproduct is the first value, executes
@@ -4055,27 +4056,27 @@ public interface ICoproduct21<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12,
     /// the <paramref name="ifFirst" /> function. If the function that should be executed is null, does nothing.
     /// </summary>
     void Match(
-        Action<T1> ifFirst = null,
-        Action<T2> ifSecond = null,
-        Action<T3> ifThird = null,
-        Action<T4> ifFourth = null,
-        Action<T5> ifFifth = null,
-        Action<T6> ifSixth = null,
-        Action<T7> ifSeventh = null,
-        Action<T8> ifEighth = null,
-        Action<T9> ifNinth = null,
-        Action<T10> ifTenth = null,
-        Action<T11> ifEleventh = null,
-        Action<T12> ifTwelfth = null,
-        Action<T13> ifThirteenth = null,
-        Action<T14> ifFourteenth = null,
-        Action<T15> ifFifteenth = null,
-        Action<T16> ifSixteenth = null,
-        Action<T17> ifSeventeenth = null,
-        Action<T18> ifEighteenth = null,
-        Action<T19> ifNineteenth = null,
-        Action<T20> ifTwentieth = null,
-        Action<T21> ifTwentyFirst = null);
+        Action<T1>? ifFirst = null,
+        Action<T2>? ifSecond = null,
+        Action<T3>? ifThird = null,
+        Action<T4>? ifFourth = null,
+        Action<T5>? ifFifth = null,
+        Action<T6>? ifSixth = null,
+        Action<T7>? ifSeventh = null,
+        Action<T8>? ifEighth = null,
+        Action<T9>? ifNinth = null,
+        Action<T10>? ifTenth = null,
+        Action<T11>? ifEleventh = null,
+        Action<T12>? ifTwelfth = null,
+        Action<T13>? ifThirteenth = null,
+        Action<T14>? ifFourteenth = null,
+        Action<T15>? ifFifteenth = null,
+        Action<T16>? ifSixteenth = null,
+        Action<T17>? ifSeventeenth = null,
+        Action<T18>? ifEighteenth = null,
+        Action<T19>? ifNineteenth = null,
+        Action<T20>? ifTwentieth = null,
+        Action<T21>? ifTwentyFirst = null);
 
     /// <summary>
     /// Executes the async function that matches the coproduct value. E.g. if the coproduct is the first value, executes

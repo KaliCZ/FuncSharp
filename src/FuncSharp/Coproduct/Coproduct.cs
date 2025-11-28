@@ -1,3 +1,4 @@
+﻿
 using System;
 using System.Threading.Tasks;
 
@@ -26,7 +27,7 @@ public abstract class CoproductBase : ICoproduct
         return this.CoproductHashCode();
     }
 
-    public override bool Equals(object obj)
+    public override bool Equals(object? obj)
     {
         return this.CoproductEquals(obj);
     }
@@ -133,7 +134,7 @@ public class Coproduct1<T1> : CoproductBase, ICoproduct1<T1>
     }
 
     public void Match(
-        Action<T1> ifFirst = null)
+        Action<T1>? ifFirst = null)
     {
         switch (CoproductDiscriminator)
         {
@@ -269,8 +270,8 @@ public class Coproduct2<T1, T2> : CoproductBase, ICoproduct2<T1, T2>
     }
 
     public void Match(
-        Action<T1> ifFirst = null,
-        Action<T2> ifSecond = null)
+        Action<T1>? ifFirst = null,
+        Action<T2>? ifSecond = null)
     {
         switch (CoproductDiscriminator)
         {
@@ -439,9 +440,9 @@ public class Coproduct3<T1, T2, T3> : CoproductBase, ICoproduct3<T1, T2, T3>
     }
 
     public void Match(
-        Action<T1> ifFirst = null,
-        Action<T2> ifSecond = null,
-        Action<T3> ifThird = null)
+        Action<T1>? ifFirst = null,
+        Action<T2>? ifSecond = null,
+        Action<T3>? ifThird = null)
     {
         switch (CoproductDiscriminator)
         {
@@ -643,10 +644,10 @@ public class Coproduct4<T1, T2, T3, T4> : CoproductBase, ICoproduct4<T1, T2, T3,
     }
 
     public void Match(
-        Action<T1> ifFirst = null,
-        Action<T2> ifSecond = null,
-        Action<T3> ifThird = null,
-        Action<T4> ifFourth = null)
+        Action<T1>? ifFirst = null,
+        Action<T2>? ifSecond = null,
+        Action<T3>? ifThird = null,
+        Action<T4>? ifFourth = null)
     {
         switch (CoproductDiscriminator)
         {
@@ -881,11 +882,11 @@ public class Coproduct5<T1, T2, T3, T4, T5> : CoproductBase, ICoproduct5<T1, T2,
     }
 
     public void Match(
-        Action<T1> ifFirst = null,
-        Action<T2> ifSecond = null,
-        Action<T3> ifThird = null,
-        Action<T4> ifFourth = null,
-        Action<T5> ifFifth = null)
+        Action<T1>? ifFirst = null,
+        Action<T2>? ifSecond = null,
+        Action<T3>? ifThird = null,
+        Action<T4>? ifFourth = null,
+        Action<T5>? ifFifth = null)
     {
         switch (CoproductDiscriminator)
         {
@@ -1153,12 +1154,12 @@ public class Coproduct6<T1, T2, T3, T4, T5, T6> : CoproductBase, ICoproduct6<T1,
     }
 
     public void Match(
-        Action<T1> ifFirst = null,
-        Action<T2> ifSecond = null,
-        Action<T3> ifThird = null,
-        Action<T4> ifFourth = null,
-        Action<T5> ifFifth = null,
-        Action<T6> ifSixth = null)
+        Action<T1>? ifFirst = null,
+        Action<T2>? ifSecond = null,
+        Action<T3>? ifThird = null,
+        Action<T4>? ifFourth = null,
+        Action<T5>? ifFifth = null,
+        Action<T6>? ifSixth = null)
     {
         switch (CoproductDiscriminator)
         {
@@ -1459,13 +1460,13 @@ public class Coproduct7<T1, T2, T3, T4, T5, T6, T7> : CoproductBase, ICoproduct7
     }
 
     public void Match(
-        Action<T1> ifFirst = null,
-        Action<T2> ifSecond = null,
-        Action<T3> ifThird = null,
-        Action<T4> ifFourth = null,
-        Action<T5> ifFifth = null,
-        Action<T6> ifSixth = null,
-        Action<T7> ifSeventh = null)
+        Action<T1>? ifFirst = null,
+        Action<T2>? ifSecond = null,
+        Action<T3>? ifThird = null,
+        Action<T4>? ifFourth = null,
+        Action<T5>? ifFifth = null,
+        Action<T6>? ifSixth = null,
+        Action<T7>? ifSeventh = null)
     {
         switch (CoproductDiscriminator)
         {
@@ -1799,14 +1800,14 @@ public class Coproduct8<T1, T2, T3, T4, T5, T6, T7, T8> : CoproductBase, ICoprod
     }
 
     public void Match(
-        Action<T1> ifFirst = null,
-        Action<T2> ifSecond = null,
-        Action<T3> ifThird = null,
-        Action<T4> ifFourth = null,
-        Action<T5> ifFifth = null,
-        Action<T6> ifSixth = null,
-        Action<T7> ifSeventh = null,
-        Action<T8> ifEighth = null)
+        Action<T1>? ifFirst = null,
+        Action<T2>? ifSecond = null,
+        Action<T3>? ifThird = null,
+        Action<T4>? ifFourth = null,
+        Action<T5>? ifFifth = null,
+        Action<T6>? ifSixth = null,
+        Action<T7>? ifSeventh = null,
+        Action<T8>? ifEighth = null)
     {
         switch (CoproductDiscriminator)
         {
@@ -2173,15 +2174,15 @@ public class Coproduct9<T1, T2, T3, T4, T5, T6, T7, T8, T9> : CoproductBase, ICo
     }
 
     public void Match(
-        Action<T1> ifFirst = null,
-        Action<T2> ifSecond = null,
-        Action<T3> ifThird = null,
-        Action<T4> ifFourth = null,
-        Action<T5> ifFifth = null,
-        Action<T6> ifSixth = null,
-        Action<T7> ifSeventh = null,
-        Action<T8> ifEighth = null,
-        Action<T9> ifNinth = null)
+        Action<T1>? ifFirst = null,
+        Action<T2>? ifSecond = null,
+        Action<T3>? ifThird = null,
+        Action<T4>? ifFourth = null,
+        Action<T5>? ifFifth = null,
+        Action<T6>? ifSixth = null,
+        Action<T7>? ifSeventh = null,
+        Action<T8>? ifEighth = null,
+        Action<T9>? ifNinth = null)
     {
         switch (CoproductDiscriminator)
         {
@@ -2581,16 +2582,16 @@ public class Coproduct10<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10> : CoproductBas
     }
 
     public void Match(
-        Action<T1> ifFirst = null,
-        Action<T2> ifSecond = null,
-        Action<T3> ifThird = null,
-        Action<T4> ifFourth = null,
-        Action<T5> ifFifth = null,
-        Action<T6> ifSixth = null,
-        Action<T7> ifSeventh = null,
-        Action<T8> ifEighth = null,
-        Action<T9> ifNinth = null,
-        Action<T10> ifTenth = null)
+        Action<T1>? ifFirst = null,
+        Action<T2>? ifSecond = null,
+        Action<T3>? ifThird = null,
+        Action<T4>? ifFourth = null,
+        Action<T5>? ifFifth = null,
+        Action<T6>? ifSixth = null,
+        Action<T7>? ifSeventh = null,
+        Action<T8>? ifEighth = null,
+        Action<T9>? ifNinth = null,
+        Action<T10>? ifTenth = null)
     {
         switch (CoproductDiscriminator)
         {
@@ -3023,17 +3024,17 @@ public class Coproduct11<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11> : Coprodu
     }
 
     public void Match(
-        Action<T1> ifFirst = null,
-        Action<T2> ifSecond = null,
-        Action<T3> ifThird = null,
-        Action<T4> ifFourth = null,
-        Action<T5> ifFifth = null,
-        Action<T6> ifSixth = null,
-        Action<T7> ifSeventh = null,
-        Action<T8> ifEighth = null,
-        Action<T9> ifNinth = null,
-        Action<T10> ifTenth = null,
-        Action<T11> ifEleventh = null)
+        Action<T1>? ifFirst = null,
+        Action<T2>? ifSecond = null,
+        Action<T3>? ifThird = null,
+        Action<T4>? ifFourth = null,
+        Action<T5>? ifFifth = null,
+        Action<T6>? ifSixth = null,
+        Action<T7>? ifSeventh = null,
+        Action<T8>? ifEighth = null,
+        Action<T9>? ifNinth = null,
+        Action<T10>? ifTenth = null,
+        Action<T11>? ifEleventh = null)
     {
         switch (CoproductDiscriminator)
         {
@@ -3499,18 +3500,18 @@ public class Coproduct12<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12> : Co
     }
 
     public void Match(
-        Action<T1> ifFirst = null,
-        Action<T2> ifSecond = null,
-        Action<T3> ifThird = null,
-        Action<T4> ifFourth = null,
-        Action<T5> ifFifth = null,
-        Action<T6> ifSixth = null,
-        Action<T7> ifSeventh = null,
-        Action<T8> ifEighth = null,
-        Action<T9> ifNinth = null,
-        Action<T10> ifTenth = null,
-        Action<T11> ifEleventh = null,
-        Action<T12> ifTwelfth = null)
+        Action<T1>? ifFirst = null,
+        Action<T2>? ifSecond = null,
+        Action<T3>? ifThird = null,
+        Action<T4>? ifFourth = null,
+        Action<T5>? ifFifth = null,
+        Action<T6>? ifSixth = null,
+        Action<T7>? ifSeventh = null,
+        Action<T8>? ifEighth = null,
+        Action<T9>? ifNinth = null,
+        Action<T10>? ifTenth = null,
+        Action<T11>? ifEleventh = null,
+        Action<T12>? ifTwelfth = null)
     {
         switch (CoproductDiscriminator)
         {
@@ -4009,19 +4010,19 @@ public class Coproduct13<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13>
     }
 
     public void Match(
-        Action<T1> ifFirst = null,
-        Action<T2> ifSecond = null,
-        Action<T3> ifThird = null,
-        Action<T4> ifFourth = null,
-        Action<T5> ifFifth = null,
-        Action<T6> ifSixth = null,
-        Action<T7> ifSeventh = null,
-        Action<T8> ifEighth = null,
-        Action<T9> ifNinth = null,
-        Action<T10> ifTenth = null,
-        Action<T11> ifEleventh = null,
-        Action<T12> ifTwelfth = null,
-        Action<T13> ifThirteenth = null)
+        Action<T1>? ifFirst = null,
+        Action<T2>? ifSecond = null,
+        Action<T3>? ifThird = null,
+        Action<T4>? ifFourth = null,
+        Action<T5>? ifFifth = null,
+        Action<T6>? ifSixth = null,
+        Action<T7>? ifSeventh = null,
+        Action<T8>? ifEighth = null,
+        Action<T9>? ifNinth = null,
+        Action<T10>? ifTenth = null,
+        Action<T11>? ifEleventh = null,
+        Action<T12>? ifTwelfth = null,
+        Action<T13>? ifThirteenth = null)
     {
         switch (CoproductDiscriminator)
         {
@@ -4553,20 +4554,20 @@ public class Coproduct14<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13,
     }
 
     public void Match(
-        Action<T1> ifFirst = null,
-        Action<T2> ifSecond = null,
-        Action<T3> ifThird = null,
-        Action<T4> ifFourth = null,
-        Action<T5> ifFifth = null,
-        Action<T6> ifSixth = null,
-        Action<T7> ifSeventh = null,
-        Action<T8> ifEighth = null,
-        Action<T9> ifNinth = null,
-        Action<T10> ifTenth = null,
-        Action<T11> ifEleventh = null,
-        Action<T12> ifTwelfth = null,
-        Action<T13> ifThirteenth = null,
-        Action<T14> ifFourteenth = null)
+        Action<T1>? ifFirst = null,
+        Action<T2>? ifSecond = null,
+        Action<T3>? ifThird = null,
+        Action<T4>? ifFourth = null,
+        Action<T5>? ifFifth = null,
+        Action<T6>? ifSixth = null,
+        Action<T7>? ifSeventh = null,
+        Action<T8>? ifEighth = null,
+        Action<T9>? ifNinth = null,
+        Action<T10>? ifTenth = null,
+        Action<T11>? ifEleventh = null,
+        Action<T12>? ifTwelfth = null,
+        Action<T13>? ifThirteenth = null,
+        Action<T14>? ifFourteenth = null)
     {
         switch (CoproductDiscriminator)
         {
@@ -5131,21 +5132,21 @@ public class Coproduct15<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13,
     }
 
     public void Match(
-        Action<T1> ifFirst = null,
-        Action<T2> ifSecond = null,
-        Action<T3> ifThird = null,
-        Action<T4> ifFourth = null,
-        Action<T5> ifFifth = null,
-        Action<T6> ifSixth = null,
-        Action<T7> ifSeventh = null,
-        Action<T8> ifEighth = null,
-        Action<T9> ifNinth = null,
-        Action<T10> ifTenth = null,
-        Action<T11> ifEleventh = null,
-        Action<T12> ifTwelfth = null,
-        Action<T13> ifThirteenth = null,
-        Action<T14> ifFourteenth = null,
-        Action<T15> ifFifteenth = null)
+        Action<T1>? ifFirst = null,
+        Action<T2>? ifSecond = null,
+        Action<T3>? ifThird = null,
+        Action<T4>? ifFourth = null,
+        Action<T5>? ifFifth = null,
+        Action<T6>? ifSixth = null,
+        Action<T7>? ifSeventh = null,
+        Action<T8>? ifEighth = null,
+        Action<T9>? ifNinth = null,
+        Action<T10>? ifTenth = null,
+        Action<T11>? ifEleventh = null,
+        Action<T12>? ifTwelfth = null,
+        Action<T13>? ifThirteenth = null,
+        Action<T14>? ifFourteenth = null,
+        Action<T15>? ifFifteenth = null)
     {
         switch (CoproductDiscriminator)
         {
@@ -5743,22 +5744,22 @@ public class Coproduct16<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13,
     }
 
     public void Match(
-        Action<T1> ifFirst = null,
-        Action<T2> ifSecond = null,
-        Action<T3> ifThird = null,
-        Action<T4> ifFourth = null,
-        Action<T5> ifFifth = null,
-        Action<T6> ifSixth = null,
-        Action<T7> ifSeventh = null,
-        Action<T8> ifEighth = null,
-        Action<T9> ifNinth = null,
-        Action<T10> ifTenth = null,
-        Action<T11> ifEleventh = null,
-        Action<T12> ifTwelfth = null,
-        Action<T13> ifThirteenth = null,
-        Action<T14> ifFourteenth = null,
-        Action<T15> ifFifteenth = null,
-        Action<T16> ifSixteenth = null)
+        Action<T1>? ifFirst = null,
+        Action<T2>? ifSecond = null,
+        Action<T3>? ifThird = null,
+        Action<T4>? ifFourth = null,
+        Action<T5>? ifFifth = null,
+        Action<T6>? ifSixth = null,
+        Action<T7>? ifSeventh = null,
+        Action<T8>? ifEighth = null,
+        Action<T9>? ifNinth = null,
+        Action<T10>? ifTenth = null,
+        Action<T11>? ifEleventh = null,
+        Action<T12>? ifTwelfth = null,
+        Action<T13>? ifThirteenth = null,
+        Action<T14>? ifFourteenth = null,
+        Action<T15>? ifFifteenth = null,
+        Action<T16>? ifSixteenth = null)
     {
         switch (CoproductDiscriminator)
         {
@@ -6389,23 +6390,23 @@ public class Coproduct17<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13,
     }
 
     public void Match(
-        Action<T1> ifFirst = null,
-        Action<T2> ifSecond = null,
-        Action<T3> ifThird = null,
-        Action<T4> ifFourth = null,
-        Action<T5> ifFifth = null,
-        Action<T6> ifSixth = null,
-        Action<T7> ifSeventh = null,
-        Action<T8> ifEighth = null,
-        Action<T9> ifNinth = null,
-        Action<T10> ifTenth = null,
-        Action<T11> ifEleventh = null,
-        Action<T12> ifTwelfth = null,
-        Action<T13> ifThirteenth = null,
-        Action<T14> ifFourteenth = null,
-        Action<T15> ifFifteenth = null,
-        Action<T16> ifSixteenth = null,
-        Action<T17> ifSeventeenth = null)
+        Action<T1>? ifFirst = null,
+        Action<T2>? ifSecond = null,
+        Action<T3>? ifThird = null,
+        Action<T4>? ifFourth = null,
+        Action<T5>? ifFifth = null,
+        Action<T6>? ifSixth = null,
+        Action<T7>? ifSeventh = null,
+        Action<T8>? ifEighth = null,
+        Action<T9>? ifNinth = null,
+        Action<T10>? ifTenth = null,
+        Action<T11>? ifEleventh = null,
+        Action<T12>? ifTwelfth = null,
+        Action<T13>? ifThirteenth = null,
+        Action<T14>? ifFourteenth = null,
+        Action<T15>? ifFifteenth = null,
+        Action<T16>? ifSixteenth = null,
+        Action<T17>? ifSeventeenth = null)
     {
         switch (CoproductDiscriminator)
         {
@@ -7069,24 +7070,24 @@ public class Coproduct18<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13,
     }
 
     public void Match(
-        Action<T1> ifFirst = null,
-        Action<T2> ifSecond = null,
-        Action<T3> ifThird = null,
-        Action<T4> ifFourth = null,
-        Action<T5> ifFifth = null,
-        Action<T6> ifSixth = null,
-        Action<T7> ifSeventh = null,
-        Action<T8> ifEighth = null,
-        Action<T9> ifNinth = null,
-        Action<T10> ifTenth = null,
-        Action<T11> ifEleventh = null,
-        Action<T12> ifTwelfth = null,
-        Action<T13> ifThirteenth = null,
-        Action<T14> ifFourteenth = null,
-        Action<T15> ifFifteenth = null,
-        Action<T16> ifSixteenth = null,
-        Action<T17> ifSeventeenth = null,
-        Action<T18> ifEighteenth = null)
+        Action<T1>? ifFirst = null,
+        Action<T2>? ifSecond = null,
+        Action<T3>? ifThird = null,
+        Action<T4>? ifFourth = null,
+        Action<T5>? ifFifth = null,
+        Action<T6>? ifSixth = null,
+        Action<T7>? ifSeventh = null,
+        Action<T8>? ifEighth = null,
+        Action<T9>? ifNinth = null,
+        Action<T10>? ifTenth = null,
+        Action<T11>? ifEleventh = null,
+        Action<T12>? ifTwelfth = null,
+        Action<T13>? ifThirteenth = null,
+        Action<T14>? ifFourteenth = null,
+        Action<T15>? ifFifteenth = null,
+        Action<T16>? ifSixteenth = null,
+        Action<T17>? ifSeventeenth = null,
+        Action<T18>? ifEighteenth = null)
     {
         switch (CoproductDiscriminator)
         {
@@ -7783,25 +7784,25 @@ public class Coproduct19<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13,
     }
 
     public void Match(
-        Action<T1> ifFirst = null,
-        Action<T2> ifSecond = null,
-        Action<T3> ifThird = null,
-        Action<T4> ifFourth = null,
-        Action<T5> ifFifth = null,
-        Action<T6> ifSixth = null,
-        Action<T7> ifSeventh = null,
-        Action<T8> ifEighth = null,
-        Action<T9> ifNinth = null,
-        Action<T10> ifTenth = null,
-        Action<T11> ifEleventh = null,
-        Action<T12> ifTwelfth = null,
-        Action<T13> ifThirteenth = null,
-        Action<T14> ifFourteenth = null,
-        Action<T15> ifFifteenth = null,
-        Action<T16> ifSixteenth = null,
-        Action<T17> ifSeventeenth = null,
-        Action<T18> ifEighteenth = null,
-        Action<T19> ifNineteenth = null)
+        Action<T1>? ifFirst = null,
+        Action<T2>? ifSecond = null,
+        Action<T3>? ifThird = null,
+        Action<T4>? ifFourth = null,
+        Action<T5>? ifFifth = null,
+        Action<T6>? ifSixth = null,
+        Action<T7>? ifSeventh = null,
+        Action<T8>? ifEighth = null,
+        Action<T9>? ifNinth = null,
+        Action<T10>? ifTenth = null,
+        Action<T11>? ifEleventh = null,
+        Action<T12>? ifTwelfth = null,
+        Action<T13>? ifThirteenth = null,
+        Action<T14>? ifFourteenth = null,
+        Action<T15>? ifFifteenth = null,
+        Action<T16>? ifSixteenth = null,
+        Action<T17>? ifSeventeenth = null,
+        Action<T18>? ifEighteenth = null,
+        Action<T19>? ifNineteenth = null)
     {
         switch (CoproductDiscriminator)
         {
@@ -8531,26 +8532,26 @@ public class Coproduct20<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13,
     }
 
     public void Match(
-        Action<T1> ifFirst = null,
-        Action<T2> ifSecond = null,
-        Action<T3> ifThird = null,
-        Action<T4> ifFourth = null,
-        Action<T5> ifFifth = null,
-        Action<T6> ifSixth = null,
-        Action<T7> ifSeventh = null,
-        Action<T8> ifEighth = null,
-        Action<T9> ifNinth = null,
-        Action<T10> ifTenth = null,
-        Action<T11> ifEleventh = null,
-        Action<T12> ifTwelfth = null,
-        Action<T13> ifThirteenth = null,
-        Action<T14> ifFourteenth = null,
-        Action<T15> ifFifteenth = null,
-        Action<T16> ifSixteenth = null,
-        Action<T17> ifSeventeenth = null,
-        Action<T18> ifEighteenth = null,
-        Action<T19> ifNineteenth = null,
-        Action<T20> ifTwentieth = null)
+        Action<T1>? ifFirst = null,
+        Action<T2>? ifSecond = null,
+        Action<T3>? ifThird = null,
+        Action<T4>? ifFourth = null,
+        Action<T5>? ifFifth = null,
+        Action<T6>? ifSixth = null,
+        Action<T7>? ifSeventh = null,
+        Action<T8>? ifEighth = null,
+        Action<T9>? ifNinth = null,
+        Action<T10>? ifTenth = null,
+        Action<T11>? ifEleventh = null,
+        Action<T12>? ifTwelfth = null,
+        Action<T13>? ifThirteenth = null,
+        Action<T14>? ifFourteenth = null,
+        Action<T15>? ifFifteenth = null,
+        Action<T16>? ifSixteenth = null,
+        Action<T17>? ifSeventeenth = null,
+        Action<T18>? ifEighteenth = null,
+        Action<T19>? ifNineteenth = null,
+        Action<T20>? ifTwentieth = null)
     {
         switch (CoproductDiscriminator)
         {
@@ -9313,27 +9314,27 @@ public class Coproduct21<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13,
     }
 
     public void Match(
-        Action<T1> ifFirst = null,
-        Action<T2> ifSecond = null,
-        Action<T3> ifThird = null,
-        Action<T4> ifFourth = null,
-        Action<T5> ifFifth = null,
-        Action<T6> ifSixth = null,
-        Action<T7> ifSeventh = null,
-        Action<T8> ifEighth = null,
-        Action<T9> ifNinth = null,
-        Action<T10> ifTenth = null,
-        Action<T11> ifEleventh = null,
-        Action<T12> ifTwelfth = null,
-        Action<T13> ifThirteenth = null,
-        Action<T14> ifFourteenth = null,
-        Action<T15> ifFifteenth = null,
-        Action<T16> ifSixteenth = null,
-        Action<T17> ifSeventeenth = null,
-        Action<T18> ifEighteenth = null,
-        Action<T19> ifNineteenth = null,
-        Action<T20> ifTwentieth = null,
-        Action<T21> ifTwentyFirst = null)
+        Action<T1>? ifFirst = null,
+        Action<T2>? ifSecond = null,
+        Action<T3>? ifThird = null,
+        Action<T4>? ifFourth = null,
+        Action<T5>? ifFifth = null,
+        Action<T6>? ifSixth = null,
+        Action<T7>? ifSeventh = null,
+        Action<T8>? ifEighth = null,
+        Action<T9>? ifNinth = null,
+        Action<T10>? ifTenth = null,
+        Action<T11>? ifEleventh = null,
+        Action<T12>? ifTwelfth = null,
+        Action<T13>? ifThirteenth = null,
+        Action<T14>? ifFourteenth = null,
+        Action<T15>? ifFifteenth = null,
+        Action<T16>? ifSixteenth = null,
+        Action<T17>? ifSeventeenth = null,
+        Action<T18>? ifEighteenth = null,
+        Action<T19>? ifNineteenth = null,
+        Action<T20>? ifTwentieth = null,
+        Action<T21>? ifTwentyFirst = null)
     {
         switch (CoproductDiscriminator)
         {

@@ -73,7 +73,7 @@ public struct NonNegativeInt : IEquatable<NonNegativeInt>
         return Value == other.Value;
     }
 
-    public override bool Equals(object obj)
+    public override bool Equals(object? obj)
     {
         return obj is NonNegativeInt other && Equals(other);
     }

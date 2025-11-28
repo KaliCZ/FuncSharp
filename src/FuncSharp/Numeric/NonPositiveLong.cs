@@ -69,7 +69,7 @@ public struct NonPositiveLong : IEquatable<NonPositiveLong>
         return Value == other.Value;
     }
 
-    public override bool Equals(object obj)
+    public override bool Equals(object? obj)
     {
         return obj is NonPositiveLong other && Equals(other);
     }

@@ -27,7 +27,8 @@ public static class ICoproductExtensions
         { 17, "Seventeenth" },
         { 18, "Eighteenth" },
         { 19, "Nineteenth" },
-        { 20, "Twentieth" }
+        { 20, "Twentieth" },
+        { 21, "TwentyFirst" }
     };
 
     /// <summary>
@@ -41,9 +42,9 @@ public static class ICoproductExtensions
     /// <summary>
     /// Canonical representation of the coproduct.
     /// </summary>
-    public static IProduct3<int, int, object> CoproductRepresentation(this ICoproduct c)
+    public static (int, int, object) CoproductRepresentation(this ICoproduct c)
     {
-        return Product3.Create(c.CoproductArity, c.CoproductDiscriminator, c.CoproductValue);
+        return (c.CoproductArity, c.CoproductDiscriminator, c.CoproductValue);
     }
 
     /// <summary>
@@ -58,7 +59,7 @@ public static class ICoproductExtensions
     /// Returns whether the two specified coproducts are structurally equal. Note that two nulls are
     /// considered structurally equal coproducts.
     /// </summary>
-    public static bool CoproductEquals(this ICoproduct c1, object that)
+    public static bool CoproductEquals(this ICoproduct? c1, object? that)
     {
         if (that is ICoproduct c2 && c1 is not null && c1.GetType() == c2.GetType())
         {

@@ -32,7 +32,7 @@ public abstract class CoproductBase : ICoproduct
         return this.CoproductHashCode();
     }
 
-    public override bool Equals(object obj)
+    public override bool Equals(object? obj)
     {
         return this.CoproductEquals(obj);
     }
@@ -149,7 +149,7 @@ public class <#= CoproductImplType(i) #> : CoproductBase, <#= CoproductType(i) #
     }
 
     public void Match(
-<#= Lines(i, x => Indent(8) + "Action<T" + x + "> " + IfIth(x) + " = null", separator: ",") #>)
+<#= Lines(i, x => Indent(8) + "Action<T" + x + ">? " + IfIth(x) + " = null", separator: ",") #>)
     {
         switch (CoproductDiscriminator)
         {

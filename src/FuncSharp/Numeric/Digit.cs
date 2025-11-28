@@ -36,7 +36,7 @@ public readonly struct Digit : IEquatable<Digit>
 
     public static bool operator !=(Digit left, Digit right) => !left.Equals(right);
 
-    public override bool Equals(object obj)
+    public override bool Equals(object? obj)
     {
         return obj is Digit other && Equals(other);
     }

@@ -15,6 +15,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Other", "Other", "{82E5D417
 	ProjectSection(SolutionItems) = preProject
 		..\license.txt = ..\license.txt
 		..\readme.md = ..\readme.md
+		..\Directory.Build.props = ..\Directory.Build.props
 	EndProjectSection
 EndProject
 Global

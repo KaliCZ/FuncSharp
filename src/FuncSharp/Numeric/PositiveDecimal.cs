@@ -89,7 +89,7 @@ public struct PositiveDecimal : IEquatable<PositiveDecimal>
         return Value == other.Value;
     }
 
-    public override bool Equals(object obj)
+    public override bool Equals(object? obj)
     {
         return obj is PositiveDecimal other && Equals(other);
     }

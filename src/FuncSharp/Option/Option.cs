@@ -259,7 +259,7 @@ public struct Option<A> : IOption, IEquatable<Option<A>>
     }
 
     [Pure]
-    public override bool Equals(object obj)
+    public override bool Equals(object? obj)
     {
         if (obj is Option<A> other)
         {

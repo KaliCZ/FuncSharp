@@ -84,7 +84,7 @@ public struct PositiveLong : IEquatable<PositiveLong>
         return Value == other.Value;
     }
 
-    public override bool Equals(object obj)
+    public override bool Equals(object? obj)
     {
         return obj is PositiveLong other && Equals(other);
     }

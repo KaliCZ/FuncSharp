@@ -299,7 +299,7 @@ public struct Try<TSuccess, TError> : IEquatable<Try<TSuccess, TError>>
     }
 
     [Pure]
-    public override bool Equals(object obj)
+    public override bool Equals(object? obj)
     {
         return obj is Try<TSuccess, TError> other && Equals(other);
     }
