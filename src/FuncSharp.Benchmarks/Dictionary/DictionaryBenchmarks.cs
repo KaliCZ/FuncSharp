@@ -18,13 +18,13 @@ public class DictionaryBenchmarks
     [Benchmark]
     public void Get_Valid()
     {
-        var x = Dictionary.Get(14);
+        var x = Dictionary.TryGet(14);
     }
 
     // Last Result - 26.8.2023 - 4.7 ns - 0 B
     [Benchmark]
     public void Get_Invalid()
     {
-        var x = Dictionary.Get(-14);
+        var x = Dictionary.TryGet(-14);
     }
 }

@@ -65,4 +65,18 @@ public static partial class OptionExtensions
 
         return default;
     }
+
+    /// <summary>
+    /// Returns the value only if it matches the specified predicate. Otherwise returns null.
+    /// </summary>
+    [Pure]
+    public static T? Where<T>(this T value, Func<T, bool> predicate)
+        where T : notnull
+    {
+        if (value is {} v && predicate(v))
+        {
+            return v;
+        }
+        return default;
+    }
 }

@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics.Contracts;
+﻿using System.Diagnostics.Contracts;
 
 namespace FuncSharp;
 
@@ -28,7 +26,7 @@ public static class Option
     /// Creates a new option based on the specified value. Returns option with the value if is is non-null, empty otherwise.
     /// </summary>
     [Pure]
-    public static Option<A> Create<A>(A value)
+    public static Option<A> Create<A>(A? value)
         where A : notnull
     {
         if (value is not null)
@@ -73,10 +71,10 @@ public static class Option
     }
 }
 
-public struct Option<A> : IEquatable<Option<A>>
-    where A : notnull
+public readonly struct Option<T> : IEquatable<Option<T>>
+    where T : notnull
 {
-    public Option(A value)
+    public Option(T value)
     {
         Value = value;
         NonEmpty = true;
@@ -88,11 +86,11 @@ public struct Option<A> : IEquatable<Option<A>>
         NonEmpty = false;
     }
 
-    public static readonly IReadOnlyList<A> EmptyList = new List<A>().AsReadOnly();
+    public static readonly IReadOnlyList<T> EmptyList = new List<T>().AsReadOnly();
 
-    public static Option<A> Empty { get; } = new Option<A>();
+    public static Option<T> Empty { get; } = new Option<T>();
 
-    internal A? Value { get; }
+    internal T? Value { get; }
 
     [Pure]
     public bool NonEmpty { get; }
@@ -101,7 +99,7 @@ public struct Option<A> : IEquatable<Option<A>>
     public bool IsEmpty => !NonEmpty;
 
     [Pure]
-    public R Match<R>(Func<A, R> ifNonEmpty, Func<Unit, R> ifEmpty)
+    public R Match<R>(Func<T, R> ifNonEmpty, Func<Unit, R> ifEmpty)
     {
         if (NonEmpty)
         {
@@ -110,8 +108,7 @@ public struct Option<A> : IEquatable<Option<A>>
         return ifEmpty(Unit.Value);
     }
 
-    [Pure]
-    public void Match(Action<A>? ifNonEmpty = null, Action<Unit>? ifEmpty = null)
+    public void Match(Action<T>? ifNonEmpty = null, Action<Unit>? ifEmpty = null)
     {
         if (NonEmpty)
         {
@@ -124,7 +121,7 @@ public struct Option<A> : IEquatable<Option<A>>
     }
 
     [Pure]
-    public R Get<R>(Func<A, R> func, Func<Unit, Exception>? otherwise = null)
+    public R Get<R>(Func<T, R> func, Func<Unit, Exception>? otherwise = null)
     {
         if (NonEmpty)
         {
@@ -134,11 +131,11 @@ public struct Option<A> : IEquatable<Option<A>>
         {
             throw otherwise(Unit.Value);
         }
-        throw new InvalidOperationException($"An empty option does not have a value of type '{typeof(A).Name}'");
+        throw new InvalidOperationException($"An empty option does not have a value of type '{typeof(T).Name}'");
     }
 
     [Pure]
-    public A Get(Func<Unit, Exception>? otherwise = null)
+    public T Get(Func<Unit, Exception>? otherwise = null)
     {
         if (NonEmpty)
         {
@@ -148,11 +145,11 @@ public struct Option<A> : IEquatable<Option<A>>
         {
             throw otherwise(Unit.Value);
         }
-        throw new InvalidOperationException($"An empty option does not have a value of type '{typeof(A).Name}'");
+        throw new InvalidOperationException($"An empty option does not have a value of type '{typeof(T).Name}'");
     }
 
     [Pure]
-    public Option<B> Map<B>(Func<A, B> f)
+    public Option<B> Map<B>(Func<T, B> f)
         where B : notnull
     {
         if (NonEmpty)
@@ -185,7 +182,7 @@ public struct Option<A> : IEquatable<Option<A>>
     }
 
     [Pure]
-    public Option<B> FlatMap<B>(Func<A, Option<B>> f)
+    public Option<B> FlatMap<B>(Func<T, Option<B>> f)
         where B : notnull
     {
         if (NonEmpty)
@@ -196,7 +193,7 @@ public struct Option<A> : IEquatable<Option<A>>
     }
 
     [Pure]
-    public Option<B> FlatMap<B>(Func<A, B?> f)
+    public Option<B> FlatMap<B>(Func<T, B?> f)
         where B : class
     {
         if (NonEmpty && f(Value!) is {} result)
@@ -207,7 +204,7 @@ public struct Option<A> : IEquatable<Option<A>>
     }
 
     [Pure]
-    public Option<B> FlatMap<B>(Func<A, B?> f)
+    public Option<B> FlatMap<B>(Func<T, B?> f)
         where B : struct
     {
         if (NonEmpty && f(Value!) is {} result)
@@ -218,26 +215,10 @@ public struct Option<A> : IEquatable<Option<A>>
     }
 
     /// <summary>
-    /// Maps value of the current <see cref="Option{A}"/> (if present) into a new option using the specified function and
-    /// returns <see cref="Option{B}"/> wrapped in a <see cref="System.Threading.Tasks.Task"/>.
-    /// </summary>
-    [Pure]
-    public async Task<Option<B>> FlatMapAsync<B>(Func<A, Task<Option<B>>> f)
-        where B : notnull
-    {
-        if (NonEmpty)
-        {
-            return await f(Value!);
-        }
-
-        return Option.Empty<B>();
-    }
-
-    /// <summary>
     /// Returns value of the option if it has value. If not, returns null.
     /// </summary>
     [Pure]
-    public A? GetOrNull()
+    public T? GetOrNull()
     {
         return Value;
     }
@@ -246,7 +227,7 @@ public struct Option<A> : IEquatable<Option<A>>
     /// Returns value of the option if it has value. If not, returns null.
     /// </summary>
     [Pure]
-    public R? GetOrNull<R>(Func<A, R> func)
+    public R? GetOrNull<R>(Func<T, R> func)
     {
         if (NonEmpty)
             return func(Value!);
@@ -258,10 +239,10 @@ public struct Option<A> : IEquatable<Option<A>>
     /// returns a new option with that new value.
     /// </summary>
     [Pure]
-    public Option<B> Select<B>(Func<A, B> f)
+    public Option<B> Select<B>(Func<T, B> f)
         where B : notnull
     {
-        return Map<B>(f);
+        return Map(f);
     }
 
     /// <summary>
@@ -269,7 +250,7 @@ public struct Option<A> : IEquatable<Option<A>>
     /// returns that new option.
     /// </summary>
     [Pure]
-    public Option<B> SelectMany<B>(Func<A, Option<B>> f)
+    public Option<B> SelectMany<B>(Func<T, Option<B>> f)
         where B : notnull
     {
         return FlatMap(f);
@@ -279,7 +260,7 @@ public struct Option<A> : IEquatable<Option<A>>
     /// Maps the current value to a new option using the specified function and combines values of both of the options.
     /// </summary>
     [Pure]
-    public Option<B> SelectMany<X, B>(Func<A, Option<X>> f, Func<A, X, B> compose)
+    public Option<B> SelectMany<X, B>(Func<T, Option<X>> f, Func<T, X, B> compose)
         where B : notnull where X : notnull
     {
         return FlatMap(a => f(a).Map(x => compose(a, x)));
@@ -289,11 +270,11 @@ public struct Option<A> : IEquatable<Option<A>>
     /// Retuns the current option only if its value matches the specified predicate. Otherwise returns an empty option.
     /// </summary>
     [Pure]
-    public Option<A> Where(Func<A, bool> predicate)
+    public Option<T> Where(Func<T, bool> predicate)
     {
         if (IsEmpty || !predicate(Value!))
         {
-            return Option.Empty<A>();
+            return Option.Empty<T>();
         }
         return this;
     }
@@ -302,7 +283,7 @@ public struct Option<A> : IEquatable<Option<A>>
     /// Retuns true if value of the option matches the specified predicate. Otherwise returns false.
     /// </summary>
     [Pure]
-    public bool Is(Func<A, bool> predicate)
+    public bool Is(Func<T, bool> predicate)
     {
         if (NonEmpty)
             return predicate(Value!);
@@ -313,12 +294,12 @@ public struct Option<A> : IEquatable<Option<A>>
     /// Turns the option into a try using the exception in case of empty option.
     /// </summary>
     [Pure]
-    public Try<A, E> ToTry<E>(Func<Unit, E> e)
+    public Try<T, E> ToTry<E>(Func<Unit, E> e)
     {
         if (NonEmpty)
-            return Try.Success<A, E>(Value!);
+            return Try.Success<T, E>(Value!);
 
-        return Try.Error<A, E>(e(Unit.Value));
+        return Try.Error<T, E>(e(Unit.Value));
     }
 
     /// <summary>
@@ -326,7 +307,7 @@ public struct Option<A> : IEquatable<Option<A>>
     /// returns a new <see cref="Option{A}"/> (with that new value) wrapped in a <see cref="System.Threading.Tasks.Task"/>.
     /// </summary>
     [Pure]
-    public async Task<Option<B>> MapAsync<B>(Func<A, Task<B>> f)
+    public async Task<Option<B>> MapAsync<B>(Func<T, Task<B>> f)
         where B : notnull
     {
         if (NonEmpty)
@@ -339,28 +320,36 @@ public struct Option<A> : IEquatable<Option<A>>
         }
     }
 
+    /// <summary>
+    /// Maps value of the current <see cref="Option{A}"/> (if present) into a new option using the specified function and
+    /// returns <see cref="Option{B}"/> wrapped in a <see cref="System.Threading.Tasks.Task"/>.
+    /// </summary>
     [Pure]
-    public async Task MatchAsync(Func<A, Task> ifFirst, Func<Unit, Task>? ifSecond = null)
+    public async Task<Option<B>> FlatMapAsync<B>(Func<T, Task<Option<B>>> f)
+        where B : notnull
     {
         if (NonEmpty)
         {
-            await ifFirst(Value!);
+            return await f(Value!);
         }
-        else if (ifSecond != null)
-        {
-            await ifSecond(Unit.Value);
-        }
+
+        return Option.Empty<B>();
     }
 
+    /// <summary>
+    /// Maps value of the current <see cref="Option{A}"/> (if present) into a new option using the specified function and
+    /// returns <see cref="Option{B}"/> wrapped in a <see cref="System.Threading.Tasks.Task"/>.
+    /// </summary>
     [Pure]
-    public async Task<TResult> MatchAsync<TResult>(Func<A, Task<TResult>> ifFirst, Func<Unit, Task<TResult>> ifSecond)
+    public async Task<Option<B>> FlatMapAsync<B>(Func<T, Task<B?>> f)
+        where B : notnull
     {
         if (NonEmpty)
         {
-            return await ifFirst(Value!);
+            return (await f(Value!)).ToOption();
         }
 
-        return await ifSecond(Unit.Value);
+        return Option.Empty<B>();
     }
 
     /// <summary>
@@ -368,7 +357,7 @@ public struct Option<A> : IEquatable<Option<A>>
     /// For non-empty option, returns a single-item list with the option value.
     /// </summary>
     [Pure]
-    public IReadOnlyList<A> AsReadOnlyList()
+    public IReadOnlyList<T> AsReadOnlyList()
     {
         return NonEmpty
             ? [Value!]
@@ -392,27 +381,27 @@ public struct Option<A> : IEquatable<Option<A>>
     }
 
     [Pure]
-    public static bool operator ==(Option<A> option1, Option<A> option2)
+    public static bool operator ==(Option<T> option1, Option<T> option2)
     {
         return option1.Equals(option2);
     }
 
     [Pure]
-    public static bool operator !=(Option<A> option1, Option<A> option2)
+    public static bool operator !=(Option<T> option1, Option<T> option2)
     {
         return !option1.Equals(option2);
     }
 
     [Pure]
-    public bool Equals(Option<A> other)
+    public bool Equals(Option<T> other)
     {
-        return NonEmpty == other.NonEmpty && EqualityComparer<A>.Default.Equals(Value, other.Value);
+        return NonEmpty == other.NonEmpty && EqualityComparer<T>.Default.Equals(Value, other.Value);
     }
 
     [Pure]
     public override bool Equals(object? obj)
     {
-        if (obj is Option<A> other)
+        if (obj is Option<T> other)
         {
             return Equals(other);
         }

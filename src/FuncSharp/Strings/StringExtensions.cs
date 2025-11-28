@@ -24,72 +24,100 @@ public static class StringExtensions
     [Pure]
     public static byte? ToByte(this NonEmptyString s, IFormatProvider? format = null, NumberStyles style = NumberStyles.Integer)
     {
-        byte.TryParse(s.Value, style, format, out var value);
-        return value;
+        return byte.TryParse(s.Value, style, format, out var value)
+            ? value
+            : null;
     }
 
     [Pure]
     public static short? ToShort(this NonEmptyString s, IFormatProvider? format = null, NumberStyles style = NumberStyles.Integer)
     {
-        short.TryParse(s.Value, style, format, out var value);
-        return value;
+        return short.TryParse(s.Value, style, format, out var value)
+            ? value
+            : null;
     }
 
     [Pure]
     public static int? ToInt(this NonEmptyString s, IFormatProvider? format = null, NumberStyles style = NumberStyles.Integer)
     {
-        int.TryParse(s.Value, style, format, out var value);
-        return value;
+        return int.TryParse(s.Value, style, format, out var value)
+            ? value
+            : null;
     }
 
     [Pure]
     public static long? ToLong(this NonEmptyString s, IFormatProvider? format = null, NumberStyles style = NumberStyles.Integer)
     {
-        long.TryParse(s.Value, style, format, out var value);
-        return value;
+        return long.TryParse(s.Value, style, format, out var value)
+            ? value
+            : null;
     }
 
     [Pure]
     public static float? ToFloat(this NonEmptyString s, IFormatProvider? format = null, NumberStyles style = NumberStyles.Float | NumberStyles.AllowThousands)
     {
-        float.TryParse(s.Value, style, format, out var value);
-        return value;
+        return float.TryParse(s.Value, style, format, out var value)
+            ? value
+            : null;
     }
 
     [Pure]
-    public static double ToDouble(this NonEmptyString s, IFormatProvider? format = null, NumberStyles style = NumberStyles.Float | NumberStyles.AllowThousands)
+    public static double? ToDouble(this NonEmptyString s, IFormatProvider? format = null, NumberStyles style = NumberStyles.Float | NumberStyles.AllowThousands)
     {
-        double.TryParse(s.Value, style, format, out var value);
-        return value;
+        return double.TryParse(s.Value, style, format, out var value)
+            ? value
+            : null;
     }
 
     [Pure]
     public static decimal? ToDecimal(this NonEmptyString s, IFormatProvider? format = null, NumberStyles style = NumberStyles.Number)
     {
-        decimal.TryParse(s.Value, style, format, out var value);
-        return value;
+        return decimal.TryParse(s.Value, style, format, out var value)
+            ? value
+            : null;
     }
 
     [Pure]
     public static bool? ToBool(this NonEmptyString s)
     {
-        bool.TryParse(s.Value, out var value);
-        return value;
+        return bool.TryParse(s.Value, out var value)
+            ? value
+            : null;
     }
 
     [Pure]
     public static DateTime? ToDateTime(this NonEmptyString s, IFormatProvider? format = null, DateTimeStyles style = DateTimeStyles.None)
     {
-        DateTime.TryParse(s.Value, format, style, out var value);
-        return value;
+        return DateTime.TryParse(s.Value, format, style, out var value)
+            ? value
+            : null;
     }
 
     [Pure]
     public static TimeSpan? ToTimeSpan(this NonEmptyString s, IFormatProvider? format = null)
     {
-        TimeSpan.TryParse(s.Value, format, out var value);
-        return value;
+        return TimeSpan.TryParse(s.Value, format, out var value)
+            ? value
+            : null;
     }
+
+    [Pure]
+    public static Guid? ToGuid(this NonEmptyString s)
+    {
+        return Guid.TryParse(s.Value, out var value)
+            ? value
+            : null;
+    }
+
+    [Pure]
+    public static Guid? ToGuidExact(this NonEmptyString s, string format = "D")
+    {
+        return Guid.TryParseExact(s, format, out var value)
+            ? value
+            : null;
+    }
+
+
 
     [Pure]
     public static TEnum? ToEnum<TEnum>(this NonEmptyString s, bool ignoreCase = false)
@@ -105,20 +133,6 @@ public static class StringExtensions
             return null;
         }
 
-        return value;
-    }
-
-    [Pure]
-    public static Guid? ToGuid(this NonEmptyString s)
-    {
-        Guid.TryParse(s.Value, out var value);
-        return value;
-    }
-
-    [Pure]
-    public static Guid? ToGuidExact(this NonEmptyString s, string format = "D")
-    {
-        Guid.TryParseExact(s, format, out var value);
         return value;
     }
 }
