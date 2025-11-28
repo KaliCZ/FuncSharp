@@ -97,48 +97,22 @@ public sealed class NonEmptyString : IEquatable<string>, IEquatable<NonEmptyStri
 
     #endregion Proxy methods to string
 
-    public override int GetHashCode()
-    {
-        return (Value != null ? Value.GetHashCode() : 0);
-    }
+    public override int GetHashCode() => Value.GetHashCode();
+    public static bool operator ==(NonEmptyString left, NonEmptyString right) => left.Equals(right);
+    public static bool operator !=(NonEmptyString left, NonEmptyString right) => !left.Equals(right);
 
-    public static bool operator ==(NonEmptyString left, NonEmptyString right)
-    {
-        if (left is null)
-            return right is null;
-
-        return left.Equals(right);
-    }
-
-    public static bool operator !=(NonEmptyString left, NonEmptyString right)
-    {
-        if (left is null)
-            return right is not null;
-
-        return !left.Equals(right);
-    }
-
+    public bool Equals(NonEmptyString? other) => Equals(other?.Value);
+    public bool Equals(string? other) => Value.Equals(other);
+    public bool Equals(string? other, StringComparison comparison) => Value.Equals(other, comparison);
     public override bool Equals(object? obj)
     {
-        return obj is NonEmptyString otherNonEmpty && Equals(otherNonEmpty) ||
-               obj is string otherString && Equals(otherString);
+        return obj switch
+        {
+            NonEmptyString other => Equals(other),
+            string other => Equals(other),
+            _ => false
+        };
     }
 
-    public bool Equals(string other)
-    {
-        if (ReferenceEquals(null, other))
-            return false;
-        return ReferenceEquals(Value, other) || Value == other;
-    }
-
-    public bool Equals(NonEmptyString other)
-    {
-        return Equals(other?.Value);
-
-    }
-
-    public override string ToString()
-    {
-        return Value;
-    }
+    public override string ToString() => Value;
 }

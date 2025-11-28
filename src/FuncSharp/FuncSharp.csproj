@@ -78,10 +78,6 @@
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>ActionExtensions.cs</LastGenOutput>
     </None>
-    <None Update="Extensions\FuncExtensions.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>FuncExtensions.cs</LastGenOutput>
-    </None>
     <None Update="Product\IProduct.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>IProduct.cs</LastGenOutput>
@@ -134,11 +130,6 @@
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>ActionExtensions.tt</DependentUpon>
-    </Compile>
-    <Compile Update="Extensions\FuncExtensions.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>FuncExtensions.tt</DependentUpon>
     </Compile>
     <Compile Update="Product\IProduct.cs">
       <DesignTime>True</DesignTime>

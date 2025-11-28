@@ -7,219 +7,103 @@ namespace FuncSharp;
 public static class NonEmptyStringExtensions
 {
     [Pure]
-    public static string GetOrElse(this Option<NonEmptyString> option, string otherwise)
+    public static byte? ToByte(this NonEmptyString s, IFormatProvider? format = null, NumberStyles style = NumberStyles.Integer)
     {
-        if (option.NonEmpty)
-        {
-            return option.Value;
-        }
-        else
-        {
-            return otherwise;
-        }
+        byte.TryParse(s.Value, style, format, out var value);
+        return value;
     }
 
     [Pure]
-    public static string GetOrElse(this Option<NonEmptyString> option, Func<Unit, string> otherwise)
+    public static short? ToShort(this NonEmptyString s, IFormatProvider? format = null, NumberStyles style = NumberStyles.Integer)
     {
-        if (option.NonEmpty)
-        {
-            return option.Value;
-        }
-        else
-        {
-            return otherwise(Unit.Value);
-        }
+        short.TryParse(s.Value, style, format, out var value);
+        return value;
     }
 
     [Pure]
-    public static string GetOrElse(this Option<string> option, NonEmptyString otherwise)
+    public static int? ToInt(this NonEmptyString s, IFormatProvider? format = null, NumberStyles style = NumberStyles.Integer)
     {
-        if (option.NonEmpty)
-        {
-            return option.Value;
-        }
-        else
-        {
-            return otherwise;
-        }
+        int.TryParse(s.Value, style, format, out var value);
+        return value;
     }
 
     [Pure]
-    public static string GetOrElse(this Option<string> option, Func<Unit, NonEmptyString> otherwise)
+    public static long? ToLong(this NonEmptyString s, IFormatProvider? format = null, NumberStyles style = NumberStyles.Integer)
     {
-        if (option.NonEmpty)
-        {
-            return option.Value;
-        }
-        else
-        {
-            return otherwise(Unit.Value);
-        }
+        long.TryParse(s.Value, style, format, out var value);
+        return value;
     }
 
     [Pure]
-    public static Option<string> OrElse(this Option<NonEmptyString> option, Option<string> otherwise)
+    public static float? ToFloat(this NonEmptyString s, IFormatProvider? format = null, NumberStyles style = NumberStyles.Float | NumberStyles.AllowThousands)
     {
-        if (option.NonEmpty)
-        {
-            return option.Map(v => v.Value);
-        }
-        else
-        {
-            return otherwise;
-        }
+        float.TryParse(s.Value, style, format, out var value);
+        return value;
     }
 
     [Pure]
-    public static Option<string> OrElse(this Option<NonEmptyString> option, Func<Unit, Option<string>> otherwise)
+    public static double ToDouble(this NonEmptyString s, IFormatProvider? format = null, NumberStyles style = NumberStyles.Float | NumberStyles.AllowThousands)
     {
-        if (option.NonEmpty)
-        {
-            return option.Map(v => v.Value);
-        }
-        else
-        {
-            return otherwise(Unit.Value);
-        }
+        double.TryParse(s.Value, style, format, out var value);
+        return value;
     }
 
     [Pure]
-    public static Option<string> OrElse(this Option<string> option, Option<NonEmptyString> otherwise)
+    public static decimal? ToDecimal(this NonEmptyString s, IFormatProvider? format = null, NumberStyles style = NumberStyles.Number)
     {
-        if (option.NonEmpty)
-        {
-            return option;
-        }
-        else
-        {
-            return otherwise.Map(o => o.Value);
-        }
+        decimal.TryParse(s.Value, style, format, out var value);
+        return value;
     }
 
     [Pure]
-    public static Option<string> OrElse(this Option<string> option, Func<Unit, Option<NonEmptyString>> otherwise)
+    public static bool? ToBool(this NonEmptyString s)
     {
-        if (option.NonEmpty)
-        {
-            return option;
-        }
-        else
-        {
-            return otherwise(Unit.Value).Map(o => o.Value);
-        }
+        bool.TryParse(s.Value, out var value);
+        return value;
     }
 
     [Pure]
-    public static Option<byte> ToByte(this NonEmptyString s, IFormatProvider format = null, NumberStyles style = NumberStyles.Integer)
+    public static DateTime? ToDateTime(this NonEmptyString s, IFormatProvider? format = null, DateTimeStyles style = DateTimeStyles.None)
     {
-        return byte.TryParse(s.Value, style, format, out var value)
-            ? Option.Valued(value)
-            : Option.Empty<byte>();
+        DateTime.TryParse(s.Value, format, style, out var value);
+        return value;
     }
 
     [Pure]
-    public static Option<short> ToShort(this NonEmptyString s, IFormatProvider format = null, NumberStyles style = NumberStyles.Integer)
+    public static TimeSpan? ToTimeSpan(this NonEmptyString s, IFormatProvider? format = null)
     {
-        return short.TryParse(s.Value, style, format, out var value)
-            ? Option.Valued(value)
-            : Option.Empty<short>();
+        TimeSpan.TryParse(s.Value, format, out var value);
+        return value;
     }
 
     [Pure]
-    public static Option<int> ToInt(this NonEmptyString s, IFormatProvider format = null, NumberStyles style = NumberStyles.Integer)
-    {
-        return int.TryParse(s.Value, style, format, out var value)
-            ? Option.Valued(value)
-            : Option.Empty<int>();
-    }
-
-    [Pure]
-    public static Option<long> ToLong(this NonEmptyString s, IFormatProvider format = null, NumberStyles style = NumberStyles.Integer)
-    {
-        return long.TryParse(s.Value, style, format, out var value)
-            ? Option.Valued(value)
-            : Option.Empty<long>();
-    }
-
-    [Pure]
-    public static Option<float> ToFloat(this NonEmptyString s, IFormatProvider format = null, NumberStyles style = NumberStyles.Float | NumberStyles.AllowThousands)
-    {
-        return float.TryParse(s.Value, style, format, out var value)
-            ? Option.Valued(value)
-            : Option.Empty<float>();
-    }
-
-    [Pure]
-    public static Option<double> ToDouble(this NonEmptyString s, IFormatProvider format = null, NumberStyles style = NumberStyles.Float | NumberStyles.AllowThousands)
-    {
-        return double.TryParse(s.Value, style, format, out var value)
-            ? Option.Valued(value)
-            : Option.Empty<double>();
-    }
-
-    [Pure]
-    public static Option<decimal> ToDecimal(this NonEmptyString s, IFormatProvider format = null, NumberStyles style = NumberStyles.Number)
-    {
-        return decimal.TryParse(s.Value, style, format, out var value)
-            ? Option.Valued(value)
-            : Option.Empty<decimal>();
-    }
-
-    [Pure]
-    public static Option<bool> ToBool(this NonEmptyString s)
-    {
-        return bool.TryParse(s.Value, out var value)
-            ? Option.Valued(value)
-            : Option.Empty<bool>();
-    }
-
-    [Pure]
-    public static Option<DateTime> ToDateTime(this NonEmptyString s, IFormatProvider format = null, DateTimeStyles style = DateTimeStyles.None)
-    {
-        return DateTime.TryParse(s.Value, format, style, out var value)
-            ? Option.Valued(value)
-            : Option.Empty<DateTime>();
-    }
-
-    [Pure]
-    public static Option<TimeSpan> ToTimeSpan(this NonEmptyString s, IFormatProvider format = null)
-    {
-        return TimeSpan.TryParse(s.Value, format, out var value)
-            ? Option.Valued(value)
-            : Option.Empty<TimeSpan>();
-    }
-
-    [Pure]
-    public static Option<TEnum> ToEnum<TEnum>(this NonEmptyString s, bool ignoreCase = false)
+    public static TEnum? ToEnum<TEnum>(this NonEmptyString s, bool ignoreCase = false)
         where TEnum : struct
     {
-        if (s is null || s.Contains(",") || !Enum.TryParse<TEnum>(s, ignoreCase, out var value))
+        if (s.Contains(",") || !Enum.TryParse(s, ignoreCase, out TEnum value))
         {
-            return Option.Empty<TEnum>();
+            return null;
         }
 
-        if (!Enum.IsDefined(typeof(TEnum), value) || !value.ToString().Equals(s, StringComparison.InvariantCultureIgnoreCase))
+        if (!Enum.IsDefined(typeof(TEnum), value) || !s.Equals(value.ToString(), StringComparison.InvariantCultureIgnoreCase))
         {
-            return Option.Empty<TEnum>();
+            return null;
         }
 
-        return Option.Valued(value);
+        return value;
     }
 
     [Pure]
-    public static Option<Guid> ToGuid(this NonEmptyString s)
+    public static Guid? ToGuid(this NonEmptyString s)
     {
-        return Guid.TryParse(s.Value, out var value)
-            ? Option.Valued(value)
-            : Option.Empty<Guid>();
+        Guid.TryParse(s.Value, out var value);
+        return value;
     }
 
     [Pure]
-    public static Option<Guid> ToGuidExact(this NonEmptyString s, string format = "D")
+    public static Guid ToGuidExact(this NonEmptyString s, string format = "D")
     {
-        return Guid.TryParseExact(s, format, out var value)
-            ? Option.Valued(value)
-            : Option.Empty<Guid>();
+        Guid.TryParseExact(s, format, out var value);
+        return value;
     }
 }
