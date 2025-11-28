@@ -188,17 +188,6 @@ namespace FuncSharp
         }
 
         /// <summary>
-        /// Returns string representation of the object. If the object is null, return the optionally specified null text.
-        /// </summary>
-        [Pure]
-        public static string SafeToString(this object o, string nullText = "null")
-        {
-            return o == null
-                ? nullText
-                : o.ToString();
-        }
-
-        /// <summary>
         /// Turns the specified value into an option.
         /// </summary>
         [Pure]

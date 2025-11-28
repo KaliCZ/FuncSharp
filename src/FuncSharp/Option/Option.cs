@@ -29,6 +29,7 @@ public static class Option
     /// </summary>
     [Pure]
     public static Option<A> Create<A>(A value)
+        where A : notnull
     {
         if (value is not null)
         {
@@ -56,6 +57,7 @@ public static class Option
     /// </summary>
     [Pure]
     public static Option<A> Valued<A>(A value)
+        where A : notnull
     {
         return new Option<A>(value);
     }
@@ -65,12 +67,14 @@ public static class Option
     /// </summary>
     [Pure]
     public static Option<A> Empty<A>()
+        where A : notnull
     {
         return Option<A>.Empty;
     }
 }
 
-public struct Option<A> : IOption, IEquatable<Option<A>>
+public struct Option<A> : IEquatable<Option<A>>
+    where A : notnull
 {
     public Option(A value)
     {
@@ -88,11 +92,7 @@ public struct Option<A> : IOption, IEquatable<Option<A>>
 
     public static Option<A> Empty { get; } = new Option<A>();
 
-    object IOption.Value => Value;
-    bool IOption.IsEmpty => IsEmpty;
-    bool IOption.NonEmpty => NonEmpty;
-
-    internal A Value { get; }
+    internal A? Value { get; }
 
     [Pure]
     public bool NonEmpty { get; }
@@ -105,36 +105,30 @@ public struct Option<A> : IOption, IEquatable<Option<A>>
     {
         if (NonEmpty)
         {
-            return ifNonEmpty(Value);
+            return ifNonEmpty(Value!);
         }
         return ifEmpty(Unit.Value);
     }
 
     [Pure]
-    public void Match(Action<A> ifNonEmpty = null, Action<Unit> ifEmpty = null)
+    public void Match(Action<A>? ifNonEmpty = null, Action<Unit>? ifEmpty = null)
     {
         if (NonEmpty)
         {
-            if (ifNonEmpty != null)
-            {
-                ifNonEmpty(Value);
-            }
+            ifNonEmpty?.Invoke(Value!);
         }
         else
         {
-            if (ifEmpty != null)
-            {
-                ifEmpty(Unit.Value);
-            }
+            ifEmpty?.Invoke(Unit.Value);
         }
     }
 
     [Pure]
-    public R Get<R>(Func<A, R> func, Func<Unit, Exception> otherwise = null)
+    public R Get<R>(Func<A, R> func, Func<Unit, Exception>? otherwise = null)
     {
         if (NonEmpty)
         {
-            return func(Value);
+            return func(Value!);
         }
         if (otherwise != null)
         {
@@ -144,11 +138,11 @@ public struct Option<A> : IOption, IEquatable<Option<A>>
     }
 
     [Pure]
-    public A Get(Func<Unit, Exception> otherwise = null)
+    public A Get(Func<Unit, Exception>? otherwise = null)
     {
         if (NonEmpty)
         {
-            return Value;
+            return Value!;
         }
         if (otherwise != null)
         {
@@ -159,16 +153,18 @@ public struct Option<A> : IOption, IEquatable<Option<A>>
 
     [Pure]
     public Option<B> Map<B>(Func<A, B> f)
+        where B : notnull
     {
         if (NonEmpty)
         {
-            return new Option<B>(f(Value));
+            return new Option<B>(f(Value!));
         }
         return Option<B>.Empty;
     }
 
     [Pure]
     public Option<B> MapEmpty<B>(Func<Unit, B> f)
+        where B : notnull
     {
         if (NonEmpty)
         {
@@ -179,6 +175,7 @@ public struct Option<A> : IOption, IEquatable<Option<A>>
 
     [Pure]
     public Option<B> FlatMapEmpty<B>(Func<Unit, Option<B>> f)
+        where B : notnull
     {
         if (NonEmpty)
         {
@@ -189,27 +186,51 @@ public struct Option<A> : IOption, IEquatable<Option<A>>
 
     [Pure]
     public Option<B> FlatMap<B>(Func<A, Option<B>> f)
+        where B : notnull
     {
         if (NonEmpty)
         {
-            return f(Value);
+            return f(Value!);
         }
         return Option<B>.Empty;
     }
 
     [Pure]
-    public Option<B> FlatMap<B>(Func<A, B?> f) where B : struct
+    public Option<B> FlatMap<B>(Func<A, B?> f)
+        where B : class
+    {
+        if (NonEmpty && f(Value!) is {} result)
+        {
+            return Option.Valued(result);
+        }
+        return Option<B>.Empty;
+    }
+
+    [Pure]
+    public Option<B> FlatMap<B>(Func<A, B?> f)
+        where B : struct
+    {
+        if (NonEmpty && f(Value!) is {} result)
+        {
+            return Option.Valued(result);
+        }
+        return Option<B>.Empty;
+    }
+
+    /// <summary>
+    /// Maps value of the current <see cref="Option{A}"/> (if present) into a new option using the specified function and
+    /// returns <see cref="Option{B}"/> wrapped in a <see cref="System.Threading.Tasks.Task"/>.
+    /// </summary>
+    [Pure]
+    public async Task<Option<B>> FlatMapAsync<B>(Func<A, Task<Option<B>>> f)
+        where B : notnull
     {
         if (NonEmpty)
         {
-            var result = f(Value);
-            if (result is not null)
-            {
-                return Option.Valued(result.Value);
-            }
-            return Option<B>.Empty;
+            return await f(Value!);
         }
-        return Option<B>.Empty;
+
+        return Option.Empty<B>();
     }
 
     /// <summary>
@@ -220,7 +241,7 @@ public struct Option<A> : IOption, IEquatable<Option<A>>
     public IReadOnlyList<A> AsReadOnlyList()
     {
         return NonEmpty
-            ? new[] { Value }
+            ? [Value!]
             : EmptyList;
     }
 
@@ -229,7 +250,7 @@ public struct Option<A> : IOption, IEquatable<Option<A>>
     {
         if (NonEmpty)
         {
-            return "Value(" + Value.SafeToString() + ")";
+            return "Value(" + Value + ")";
         }
         return "Empty";
     }
@@ -264,14 +285,6 @@ public struct Option<A> : IOption, IEquatable<Option<A>>
         if (obj is Option<A> other)
         {
             return Equals(other);
-        }
-        if (typeof(A) == typeof(NonEmptyString) && obj is Option<string> otherString)
-        {
-            return NonEmpty == otherString.NonEmpty && string.Equals(otherString.Value, Value as NonEmptyString);
-        }
-        if (typeof(A) == typeof(string) && obj is Option<NonEmptyString> otherNonEmptyString)
-        {
-            return NonEmpty == otherNonEmptyString.NonEmpty && string.Equals(otherNonEmptyString.Value, Value);
         }
         return false;
     }

@@ -7,79 +7,11 @@ namespace FuncSharp;
 public static partial class OptionExtensions
 {
     /// <summary>
-    /// Gets the value inside the option or the default value for the type.
-    /// </summary>
-    [Pure]
-    public static T GetOrDefault<T>(this Option<T> option)
-    {
-        return option.Value;
-    }
-
-    /// <summary>
-    /// Gets the value inside the option mapped using the function provided. For empty option returns the default value for the result type.
-    /// </summary>
-    [Pure]
-    public static R GetOrDefault<T, R>(this Option<T> option, Func<T, R> func)
-    {
-        if (option.NonEmpty)
-            return func(option.Value);
-        return default(R);
-    }
-
-    /// <summary>
-    /// Turns the option into a nullable value.
-    /// </summary>
-    [Pure]
-    public static A? ToNullable<A>(this Option<A> option)
-        where A : struct
-    {
-        if (option.NonEmpty)
-            return option.Value;
-        return null;
-    }
-
-    /// <summary>
-    /// Turns the option into a nullable value.
-    /// </summary>
-    [Pure]
-    public static A? ToNullable<A>(this Option<A?> option)
-        where A : struct
-    {
-        if (option.NonEmpty)
-            return option.Value;
-        return null;
-    }
-
-    /// <summary>
-    /// Turns the option into a nullable value.
-    /// </summary>
-    [Pure]
-    public static B? ToNullable<A, B>(this Option<A> option, Func<A, B?> func)
-        where B : struct
-    {
-        if (option.NonEmpty)
-            return func(option.Value);
-        return null;
-    }
-
-    /// <summary>
-    /// Turns the option into a nullable value.
-    /// </summary>
-    [Pure]
-    public static B? ToNullable<A, B>(this Option<A> option, Func<A, B> func)
-        where B : struct
-    {
-        if (option.NonEmpty)
-            return func(option.Value);
-        return null;
-    }
-
-    /// <summary>
     /// Returns value of the option if it has value. If not, returns null.
     /// </summary>
     [Pure]
-    public static T GetOrNull<T>(this Option<T> option)
-        where T : class
+    public static T? GetOrNull<T>(this Option<T> option)
+        where T : notnull
     {
         return option.Value;
     }
@@ -88,127 +20,12 @@ public static partial class OptionExtensions
     /// Returns value of the option if it has value. If not, returns null.
     /// </summary>
     [Pure]
-    public static R GetOrNull<T, R>(this Option<T> option, Func<T, R> func)
-        where R : class
+    public static R? GetOrNull<T, R>(this Option<T> option, Func<T, R> func)
+        where T : notnull
     {
-        return option.GetOrDefault(func);
-    }
-
-    /// <summary>
-    /// Returns value of the option if it has value. If not, returns empty string.
-    /// </summary>
-    [Pure]
-    public static string GetOrEmpty(this Option<string> option)
-    {
-        return option.GetOrElse(string.Empty);
-    }
-
-    /// <summary>
-    /// Returns value of the option if it has value. If not, returns zero.
-    /// </summary>
-    [Pure]
-    public static short GetOrZero(this Option<short> option)
-    {
-        return option.Value;
-    }
-
-    /// <summary>
-    /// Returns value of the option if it has value. If not, returns zero.
-    /// </summary>
-    [Pure]
-    public static short GetOrZero<T>(this Option<T> option, Func<T, short> func)
-    {
-        return option.GetOrDefault(func);
-    }
-
-    /// <summary>
-    /// Returns value of the option if it has value. If not, returns zero.
-    /// </summary>
-    [Pure]
-    public static int GetOrZero(this Option<int> option)
-    {
-        return option.Value;
-    }
-
-    /// <summary>
-    /// Returns value of the option if it has value. If not, returns zero.
-    /// </summary>
-    [Pure]
-    public static int GetOrZero<T>(this Option<T> option, Func<T, int> func)
-    {
-        return option.GetOrDefault(func);
-    }
-
-    /// <summary>
-    /// Returns value of the option if it has value. If not, returns zero.
-    /// </summary>
-    [Pure]
-    public static long GetOrZero(this Option<long> option)
-    {
-        return option.Value;
-    }
-
-    /// <summary>
-    /// Returns value of the option if it has value. If not, returns zero.
-    /// </summary>
-    [Pure]
-    public static long GetOrZero<T>(this Option<T> option, Func<T, long> func)
-    {
-        return option.GetOrDefault(func);
-    }
-
-    /// <summary>
-    /// Returns value of the option if it has value. If not, returns zero.
-    /// </summary>
-    [Pure]
-    public static decimal GetOrZero(this Option<decimal> option)
-    {
-        return option.Value;
-    }
-
-    /// <summary>
-    /// Returns value of the option if it has value. If not, returns zero.
-    /// </summary>
-    [Pure]
-    public static decimal GetOrZero<T>(this Option<T> option, Func<T, decimal> func)
-    {
-        return option.GetOrDefault(func);
-    }
-
-    /// <summary>
-    /// Returns value of the option if it has value. If not, returns zero.
-    /// </summary>
-    [Pure]
-    public static double GetOrZero(this Option<double> option)
-    {
-        return option.Value;
-    }
-
-    /// <summary>
-    /// Returns value of the option if it has value. If not, returns zero.
-    /// </summary>
-    [Pure]
-    public static double GetOrZero<T>(this Option<T> option, Func<T, double> func)
-    {
-        return option.GetOrDefault(func);
-    }
-
-    /// <summary>
-    /// Returns value of the option if it has value. If not, returns false.
-    /// </summary>
-    [Pure]
-    public static bool GetOrFalse(this Option<bool> option)
-    {
-        return option.Value;
-    }
-
-    /// <summary>
-    /// Returns value of the option if it has value. If not, returns false.
-    /// </summary>
-    [Pure]
-    public static bool GetOrFalse<T>(this Option<T> option, Func<T, bool> func)
-    {
-        return option.GetOrDefault(func);
+        if (option.NonEmpty)
+            return func(option.Value!);
+        return default;
     }
 
     /// <summary>
@@ -216,11 +33,11 @@ public static partial class OptionExtensions
     /// </summary>
     [Pure]
     public static B GetOrElse<A, B>(this Option<A> option, B otherwise)
-        where A : B
+        where A : notnull, B
     {
         if (option.NonEmpty)
         {
-            return option.Value;
+            return option.Value!;
         }
         return otherwise;
     }
@@ -230,11 +47,11 @@ public static partial class OptionExtensions
     /// </summary>
     [Pure]
     public static B GetOrElse<A, B>(this Option<A> option, Func<Unit, B> otherwise)
-        where A : B
+        where A : notnull, B
     {
         if (option.NonEmpty)
         {
-            return option.Value;
+            return option.Value!;
         }
         return otherwise(Unit.Value);
     }
@@ -244,7 +61,7 @@ public static partial class OptionExtensions
     /// </summary>
     [Pure]
     public static Option<B> OrElse<A, B>(this Option<A> option, Option<B> alternative)
-        where A : B
+        where A : B where B : notnull
     {
         if (option.NonEmpty)
         {
@@ -258,7 +75,7 @@ public static partial class OptionExtensions
     /// </summary>
     [Pure]
     public static Option<B> OrElse<A, B>(this Option<A> option, Func<Unit, Option<B>> alternative)
-        where A : B
+        where A : B where B : notnull
     {
         if (option.NonEmpty)
         {
@@ -268,30 +85,12 @@ public static partial class OptionExtensions
     }
 
     /// <summary>
-    /// Returns the value of the outer option or an empty opion.
-    /// </summary>
-    [Pure]
-    public static Option<A> Flatten<A>(this Option<Option<A>> option)
-    {
-        return option.FlatMap(o => o);
-    }
-
-    /// <summary>
-    /// Turns the option of nullable into an option.
-    /// </summary>
-    [Pure]
-    public static Option<A> Flatten<A>(this Option<A?> option)
-        where A : struct
-    {
-        return option.FlatMap(a => a.ToOption());
-    }
-
-    /// <summary>
     /// Maps value of the current option (if present) into a new value using the specified function and
     /// returns a new option with that new value.
     /// </summary>
     [Pure]
     public static Option<B> Select<A, B>(this Option<A> option, Func<A, B> f)
+        where A : notnull where B : notnull
     {
         return option.Map(f);
     }
@@ -302,6 +101,7 @@ public static partial class OptionExtensions
     /// </summary>
     [Pure]
     public static Option<B> SelectMany<A, B>(this Option<A> option, Func<A, Option<B>> f)
+        where B : notnull where A : notnull
     {
         return option.FlatMap(f);
     }
@@ -311,6 +111,7 @@ public static partial class OptionExtensions
     /// </summary>
     [Pure]
     public static Option<B> SelectMany<A, X, B>(this Option<A> option, Func<A, Option<X>> f, Func<A, X, B> compose)
+        where B : notnull where A : notnull where X : notnull
     {
         return option.FlatMap(a => f(a).Map(x => compose(a, x)));
     }
@@ -320,8 +121,9 @@ public static partial class OptionExtensions
     /// </summary>
     [Pure]
     public static Option<A> Where<A>(this Option<A> option, Func<A, bool> predicate)
+        where A : notnull
     {
-        if (option.IsEmpty || !predicate(option.Value))
+        if (option.IsEmpty || !predicate(option.Value!))
         {
             return Option.Empty<A>();
         }
@@ -333,9 +135,10 @@ public static partial class OptionExtensions
     /// </summary>
     [Pure]
     public static bool Is<A>(this Option<A> option, Func<A, bool> predicate)
+        where A : notnull
     {
         if (option.NonEmpty)
-            return predicate(option.Value);
+            return predicate(option.Value!);
         return false;
     }
 
@@ -344,9 +147,10 @@ public static partial class OptionExtensions
     /// </summary>
     [Pure]
     public static Try<A, E> ToTry<A, E>(this Option<A> option, Func<Unit, E> e)
+        where A : notnull
     {
         if (option.NonEmpty)
-            return Try.Success<A, E>(option.Value);
+            return Try.Success<A, E>(option.Value!);
 
         return Try.Error<A, E>(e(Unit.Value));
     }
@@ -357,10 +161,11 @@ public static partial class OptionExtensions
     /// </summary>
     [Pure]
     public static async Task<Option<B>> MapAsync<A, B>(this Option<A> option, Func<A, Task<B>> f)
+        where B : notnull where A : notnull
     {
         if (option.NonEmpty)
         {
-            return Option.Valued(await f(option.Value));
+            return Option.Valued(await f(option.Value!));
         }
         else
         {
@@ -369,11 +174,12 @@ public static partial class OptionExtensions
     }
 
     [Pure]
-    public static async Task MatchAsync<A>(this Option<A> option, Func<A, Task> ifFirst, Func<Unit, Task> ifSecond = null)
+    public static async Task MatchAsync<A>(this Option<A> option, Func<A, Task> ifFirst, Func<Unit, Task>? ifSecond = null)
+        where A : notnull
     {
         if (option.NonEmpty)
         {
-            await ifFirst(option.Value);
+            await ifFirst(option.Value!);
         }
         else
         {
@@ -386,31 +192,15 @@ public static partial class OptionExtensions
 
     [Pure]
     public static async Task<TResult> MatchAsync<A, TResult>(this Option<A> option, Func<A, Task<TResult>> ifFirst, Func<Unit, Task<TResult>> ifSecond)
+        where A : notnull
     {
         if (option.NonEmpty)
         {
-            return await ifFirst(option.Value);
+            return await ifFirst(option.Value!);
         }
         else
         {
             return await ifSecond(Unit.Value);
-        }
-    }
-
-    /// <summary>
-    /// Maps value of the current <see cref="Option{A}"/> (if present) into a new option using the specified function and
-    /// returns <see cref="Option{B}"/> wrapped in a <see cref="System.Threading.Tasks.Task"/>.
-    /// </summary>
-    [Pure]
-    public static async Task<Option<B>> FlatMapAsync<A, B>(this Option<A> option, Func<A, Task<Option<B>>> f)
-    {
-        if (option.NonEmpty)
-        {
-            return await f(option.Value);
-        }
-        else
-        {
-            return Option.Empty<B>();
         }
     }
 }
