@@ -22,7 +22,7 @@ public interface ICoproduct
     /// <summary>
     /// Value of the coproduct type no matter which one of the possible values it is.
     /// </summary>
-    object CoproductValue { get; }
+    object? CoproductValue { get; }
 }
 
 /// <summary>

@@ -59,13 +59,13 @@ public static class ICoproductExtensions
     /// Returns whether the two specified coproducts are structurally equal. Note that two nulls are
     /// considered structurally equal coproducts.
     /// </summary>
-    public static bool CoproductEquals(this ICoproduct? c1, object? that)
+    public static bool CoproductEquals(this ICoproduct c1, object? that)
     {
-        if (that is ICoproduct c2 && c1 is not null && c1.GetType() == c2.GetType())
+        if (that is ICoproduct c2 && c1.GetType() == c2.GetType())
         {
             return c1.CoproductRepresentation().Equals(c2.CoproductRepresentation());
         }
-        return c1 == that;
+        return false;
     }
 
     /// <summary>

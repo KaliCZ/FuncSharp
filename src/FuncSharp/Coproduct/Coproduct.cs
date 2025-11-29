@@ -9,7 +9,7 @@ namespace FuncSharp;
 /// </summary>
 public abstract class CoproductBase : ICoproduct
 {
-    public CoproductBase(int arity, int discriminator, object value)
+    public CoproductBase(int arity, int discriminator, object? value)
     {
         CoproductArity = arity;
         CoproductDiscriminator = discriminator;
@@ -20,7 +20,7 @@ public abstract class CoproductBase : ICoproduct
 
     public int CoproductDiscriminator { get; }
 
-    public object CoproductValue { get; }
+    public object? CoproductValue { get; }
 
     public override int GetHashCode()
     {
@@ -35,15 +35,6 @@ public abstract class CoproductBase : ICoproduct
     public override string ToString()
     {
         return this.CoproductToString();
-    }
-
-	protected T GetCoproductValue<T>()
-    {
-        if (CoproductValue is T)
-        {
-            return (T)CoproductValue;
-        }
-        return default(T);
     }
 }
 
@@ -88,7 +79,7 @@ public class Coproduct1<T1> : CoproductBase, ICoproduct1<T1>
     /// </summary>
     /// <param name="discriminator">Discriminator of the value from interval [1, arity].</param>
     /// <param name="value">Value of the coproduct on the position defined by the discriminator.</param>
-    protected Coproduct1(int discriminator, object value)
+    protected Coproduct1(int discriminator, object? value)
         : base(1, discriminator, value)
     {
     }
@@ -100,7 +91,7 @@ public class Coproduct1<T1> : CoproductBase, ICoproduct1<T1>
 
     public Option<T1> First
     {
-        get { return IsFirst ? Option.Valued((T1)CoproductValue) : Option.Empty<T1>(); }
+        get { return IsFirst ? Option.Valued((T1)CoproductValue!) : Option.Empty<T1>(); }
     }
 
     public Coproduct1<R1> Map<R1>(
@@ -108,7 +99,7 @@ public class Coproduct1<T1> : CoproductBase, ICoproduct1<T1>
     {
         switch (CoproductDiscriminator)
         {
-            case 1: return Coproduct1.CreateFirst<R1>(ifFirst((T1)CoproductValue));
+            case 1: return Coproduct1.CreateFirst<R1>(ifFirst((T1)CoproductValue!));
             default: throw new InvalidOperationException();
         }
     }
@@ -118,7 +109,7 @@ public class Coproduct1<T1> : CoproductBase, ICoproduct1<T1>
     {
         switch (CoproductDiscriminator)
         {
-            case 1: return ifFirst((T1)CoproductValue);
+            case 1: return ifFirst((T1)CoproductValue!);
             default: throw new InvalidOperationException();
         }
     }
@@ -128,7 +119,7 @@ public class Coproduct1<T1> : CoproductBase, ICoproduct1<T1>
     {
         switch (CoproductDiscriminator)
         {
-            case 1: return await ifFirst((T1)CoproductValue);
+            case 1: return await ifFirst((T1)CoproductValue!);
             default: throw new InvalidOperationException();
         }
     }
@@ -138,7 +129,7 @@ public class Coproduct1<T1> : CoproductBase, ICoproduct1<T1>
     {
         switch (CoproductDiscriminator)
         {
-            case 1: ifFirst?.Invoke((T1)CoproductValue); break;
+            case 1: ifFirst?.Invoke((T1)CoproductValue!); break;
         }
     }
 
@@ -147,7 +138,7 @@ public class Coproduct1<T1> : CoproductBase, ICoproduct1<T1>
     {
         switch (CoproductDiscriminator)
         {
-            case 1: await (ifFirst?.Invoke((T1)CoproductValue) ?? Task.CompletedTask); break;
+            case 1: await (ifFirst?.Invoke((T1)CoproductValue!) ?? Task.CompletedTask); break;
         }
     }
 
@@ -210,7 +201,7 @@ public class Coproduct2<T1, T2> : CoproductBase, ICoproduct2<T1, T2>
     /// </summary>
     /// <param name="discriminator">Discriminator of the value from interval [1, arity].</param>
     /// <param name="value">Value of the coproduct on the position defined by the discriminator.</param>
-    protected Coproduct2(int discriminator, object value)
+    protected Coproduct2(int discriminator, object? value)
         : base(2, discriminator, value)
     {
     }
@@ -226,11 +217,11 @@ public class Coproduct2<T1, T2> : CoproductBase, ICoproduct2<T1, T2>
 
     public Option<T1> First
     {
-        get { return IsFirst ? Option.Valued((T1)CoproductValue) : Option.Empty<T1>(); }
+        get { return IsFirst ? Option.Valued((T1)CoproductValue!) : Option.Empty<T1>(); }
     }
     public Option<T2> Second
     {
-        get { return IsSecond ? Option.Valued((T2)CoproductValue) : Option.Empty<T2>(); }
+        get { return IsSecond ? Option.Valued((T2)CoproductValue!) : Option.Empty<T2>(); }
     }
 
     public Coproduct2<R1, R2> Map<R1, R2>(
@@ -239,8 +230,8 @@ public class Coproduct2<T1, T2> : CoproductBase, ICoproduct2<T1, T2>
     {
         switch (CoproductDiscriminator)
         {
-            case 1: return Coproduct2.CreateFirst<R1, R2>(ifFirst((T1)CoproductValue));
-            case 2: return Coproduct2.CreateSecond<R1, R2>(ifSecond((T2)CoproductValue));
+            case 1: return Coproduct2.CreateFirst<R1, R2>(ifFirst((T1)CoproductValue!));
+            case 2: return Coproduct2.CreateSecond<R1, R2>(ifSecond((T2)CoproductValue!));
             default: throw new InvalidOperationException();
         }
     }
@@ -251,8 +242,8 @@ public class Coproduct2<T1, T2> : CoproductBase, ICoproduct2<T1, T2>
     {
         switch (CoproductDiscriminator)
         {
-            case 1: return ifFirst((T1)CoproductValue);
-            case 2: return ifSecond((T2)CoproductValue);
+            case 1: return ifFirst((T1)CoproductValue!);
+            case 2: return ifSecond((T2)CoproductValue!);
             default: throw new InvalidOperationException();
         }
     }
@@ -263,8 +254,8 @@ public class Coproduct2<T1, T2> : CoproductBase, ICoproduct2<T1, T2>
     {
         switch (CoproductDiscriminator)
         {
-            case 1: return await ifFirst((T1)CoproductValue);
-            case 2: return await ifSecond((T2)CoproductValue);
+            case 1: return await ifFirst((T1)CoproductValue!);
+            case 2: return await ifSecond((T2)CoproductValue!);
             default: throw new InvalidOperationException();
         }
     }
@@ -275,8 +266,8 @@ public class Coproduct2<T1, T2> : CoproductBase, ICoproduct2<T1, T2>
     {
         switch (CoproductDiscriminator)
         {
-            case 1: ifFirst?.Invoke((T1)CoproductValue); break;
-            case 2: ifSecond?.Invoke((T2)CoproductValue); break;
+            case 1: ifFirst?.Invoke((T1)CoproductValue!); break;
+            case 2: ifSecond?.Invoke((T2)CoproductValue!); break;
         }
     }
 
@@ -286,8 +277,8 @@ public class Coproduct2<T1, T2> : CoproductBase, ICoproduct2<T1, T2>
     {
         switch (CoproductDiscriminator)
         {
-            case 1: await (ifFirst?.Invoke((T1)CoproductValue) ?? Task.CompletedTask); break;
-            case 2: await (ifSecond?.Invoke((T2)CoproductValue) ?? Task.CompletedTask); break;
+            case 1: await (ifFirst?.Invoke((T1)CoproductValue!) ?? Task.CompletedTask); break;
+            case 2: await (ifSecond?.Invoke((T2)CoproductValue!) ?? Task.CompletedTask); break;
         }
     }
 
@@ -366,7 +357,7 @@ public class Coproduct3<T1, T2, T3> : CoproductBase, ICoproduct3<T1, T2, T3>
     /// </summary>
     /// <param name="discriminator">Discriminator of the value from interval [1, arity].</param>
     /// <param name="value">Value of the coproduct on the position defined by the discriminator.</param>
-    protected Coproduct3(int discriminator, object value)
+    protected Coproduct3(int discriminator, object? value)
         : base(3, discriminator, value)
     {
     }
@@ -386,15 +377,15 @@ public class Coproduct3<T1, T2, T3> : CoproductBase, ICoproduct3<T1, T2, T3>
 
     public Option<T1> First
     {
-        get { return IsFirst ? Option.Valued((T1)CoproductValue) : Option.Empty<T1>(); }
+        get { return IsFirst ? Option.Valued((T1)CoproductValue!) : Option.Empty<T1>(); }
     }
     public Option<T2> Second
     {
-        get { return IsSecond ? Option.Valued((T2)CoproductValue) : Option.Empty<T2>(); }
+        get { return IsSecond ? Option.Valued((T2)CoproductValue!) : Option.Empty<T2>(); }
     }
     public Option<T3> Third
     {
-        get { return IsThird ? Option.Valued((T3)CoproductValue) : Option.Empty<T3>(); }
+        get { return IsThird ? Option.Valued((T3)CoproductValue!) : Option.Empty<T3>(); }
     }
 
     public Coproduct3<R1, R2, R3> Map<R1, R2, R3>(
@@ -404,9 +395,9 @@ public class Coproduct3<T1, T2, T3> : CoproductBase, ICoproduct3<T1, T2, T3>
     {
         switch (CoproductDiscriminator)
         {
-            case 1: return Coproduct3.CreateFirst<R1, R2, R3>(ifFirst((T1)CoproductValue));
-            case 2: return Coproduct3.CreateSecond<R1, R2, R3>(ifSecond((T2)CoproductValue));
-            case 3: return Coproduct3.CreateThird<R1, R2, R3>(ifThird((T3)CoproductValue));
+            case 1: return Coproduct3.CreateFirst<R1, R2, R3>(ifFirst((T1)CoproductValue!));
+            case 2: return Coproduct3.CreateSecond<R1, R2, R3>(ifSecond((T2)CoproductValue!));
+            case 3: return Coproduct3.CreateThird<R1, R2, R3>(ifThird((T3)CoproductValue!));
             default: throw new InvalidOperationException();
         }
     }
@@ -418,9 +409,9 @@ public class Coproduct3<T1, T2, T3> : CoproductBase, ICoproduct3<T1, T2, T3>
     {
         switch (CoproductDiscriminator)
         {
-            case 1: return ifFirst((T1)CoproductValue);
-            case 2: return ifSecond((T2)CoproductValue);
-            case 3: return ifThird((T3)CoproductValue);
+            case 1: return ifFirst((T1)CoproductValue!);
+            case 2: return ifSecond((T2)CoproductValue!);
+            case 3: return ifThird((T3)CoproductValue!);
             default: throw new InvalidOperationException();
         }
     }
@@ -432,9 +423,9 @@ public class Coproduct3<T1, T2, T3> : CoproductBase, ICoproduct3<T1, T2, T3>
     {
         switch (CoproductDiscriminator)
         {
-            case 1: return await ifFirst((T1)CoproductValue);
-            case 2: return await ifSecond((T2)CoproductValue);
-            case 3: return await ifThird((T3)CoproductValue);
+            case 1: return await ifFirst((T1)CoproductValue!);
+            case 2: return await ifSecond((T2)CoproductValue!);
+            case 3: return await ifThird((T3)CoproductValue!);
             default: throw new InvalidOperationException();
         }
     }
@@ -446,9 +437,9 @@ public class Coproduct3<T1, T2, T3> : CoproductBase, ICoproduct3<T1, T2, T3>
     {
         switch (CoproductDiscriminator)
         {
-            case 1: ifFirst?.Invoke((T1)CoproductValue); break;
-            case 2: ifSecond?.Invoke((T2)CoproductValue); break;
-            case 3: ifThird?.Invoke((T3)CoproductValue); break;
+            case 1: ifFirst?.Invoke((T1)CoproductValue!); break;
+            case 2: ifSecond?.Invoke((T2)CoproductValue!); break;
+            case 3: ifThird?.Invoke((T3)CoproductValue!); break;
         }
     }
 
@@ -459,9 +450,9 @@ public class Coproduct3<T1, T2, T3> : CoproductBase, ICoproduct3<T1, T2, T3>
     {
         switch (CoproductDiscriminator)
         {
-            case 1: await (ifFirst?.Invoke((T1)CoproductValue) ?? Task.CompletedTask); break;
-            case 2: await (ifSecond?.Invoke((T2)CoproductValue) ?? Task.CompletedTask); break;
-            case 3: await (ifThird?.Invoke((T3)CoproductValue) ?? Task.CompletedTask); break;
+            case 1: await (ifFirst?.Invoke((T1)CoproductValue!) ?? Task.CompletedTask); break;
+            case 2: await (ifSecond?.Invoke((T2)CoproductValue!) ?? Task.CompletedTask); break;
+            case 3: await (ifThird?.Invoke((T3)CoproductValue!) ?? Task.CompletedTask); break;
         }
     }
 
@@ -556,7 +547,7 @@ public class Coproduct4<T1, T2, T3, T4> : CoproductBase, ICoproduct4<T1, T2, T3,
     /// </summary>
     /// <param name="discriminator">Discriminator of the value from interval [1, arity].</param>
     /// <param name="value">Value of the coproduct on the position defined by the discriminator.</param>
-    protected Coproduct4(int discriminator, object value)
+    protected Coproduct4(int discriminator, object? value)
         : base(4, discriminator, value)
     {
     }
@@ -580,19 +571,19 @@ public class Coproduct4<T1, T2, T3, T4> : CoproductBase, ICoproduct4<T1, T2, T3,
 
     public Option<T1> First
     {
-        get { return IsFirst ? Option.Valued((T1)CoproductValue) : Option.Empty<T1>(); }
+        get { return IsFirst ? Option.Valued((T1)CoproductValue!) : Option.Empty<T1>(); }
     }
     public Option<T2> Second
     {
-        get { return IsSecond ? Option.Valued((T2)CoproductValue) : Option.Empty<T2>(); }
+        get { return IsSecond ? Option.Valued((T2)CoproductValue!) : Option.Empty<T2>(); }
     }
     public Option<T3> Third
     {
-        get { return IsThird ? Option.Valued((T3)CoproductValue) : Option.Empty<T3>(); }
+        get { return IsThird ? Option.Valued((T3)CoproductValue!) : Option.Empty<T3>(); }
     }
     public Option<T4> Fourth
     {
-        get { return IsFourth ? Option.Valued((T4)CoproductValue) : Option.Empty<T4>(); }
+        get { return IsFourth ? Option.Valued((T4)CoproductValue!) : Option.Empty<T4>(); }
     }
 
     public Coproduct4<R1, R2, R3, R4> Map<R1, R2, R3, R4>(
@@ -603,10 +594,10 @@ public class Coproduct4<T1, T2, T3, T4> : CoproductBase, ICoproduct4<T1, T2, T3,
     {
         switch (CoproductDiscriminator)
         {
-            case 1: return Coproduct4.CreateFirst<R1, R2, R3, R4>(ifFirst((T1)CoproductValue));
-            case 2: return Coproduct4.CreateSecond<R1, R2, R3, R4>(ifSecond((T2)CoproductValue));
-            case 3: return Coproduct4.CreateThird<R1, R2, R3, R4>(ifThird((T3)CoproductValue));
-            case 4: return Coproduct4.CreateFourth<R1, R2, R3, R4>(ifFourth((T4)CoproductValue));
+            case 1: return Coproduct4.CreateFirst<R1, R2, R3, R4>(ifFirst((T1)CoproductValue!));
+            case 2: return Coproduct4.CreateSecond<R1, R2, R3, R4>(ifSecond((T2)CoproductValue!));
+            case 3: return Coproduct4.CreateThird<R1, R2, R3, R4>(ifThird((T3)CoproductValue!));
+            case 4: return Coproduct4.CreateFourth<R1, R2, R3, R4>(ifFourth((T4)CoproductValue!));
             default: throw new InvalidOperationException();
         }
     }
@@ -619,10 +610,10 @@ public class Coproduct4<T1, T2, T3, T4> : CoproductBase, ICoproduct4<T1, T2, T3,
     {
         switch (CoproductDiscriminator)
         {
-            case 1: return ifFirst((T1)CoproductValue);
-            case 2: return ifSecond((T2)CoproductValue);
-            case 3: return ifThird((T3)CoproductValue);
-            case 4: return ifFourth((T4)CoproductValue);
+            case 1: return ifFirst((T1)CoproductValue!);
+            case 2: return ifSecond((T2)CoproductValue!);
+            case 3: return ifThird((T3)CoproductValue!);
+            case 4: return ifFourth((T4)CoproductValue!);
             default: throw new InvalidOperationException();
         }
     }
@@ -635,10 +626,10 @@ public class Coproduct4<T1, T2, T3, T4> : CoproductBase, ICoproduct4<T1, T2, T3,
     {
         switch (CoproductDiscriminator)
         {
-            case 1: return await ifFirst((T1)CoproductValue);
-            case 2: return await ifSecond((T2)CoproductValue);
-            case 3: return await ifThird((T3)CoproductValue);
-            case 4: return await ifFourth((T4)CoproductValue);
+            case 1: return await ifFirst((T1)CoproductValue!);
+            case 2: return await ifSecond((T2)CoproductValue!);
+            case 3: return await ifThird((T3)CoproductValue!);
+            case 4: return await ifFourth((T4)CoproductValue!);
             default: throw new InvalidOperationException();
         }
     }
@@ -651,10 +642,10 @@ public class Coproduct4<T1, T2, T3, T4> : CoproductBase, ICoproduct4<T1, T2, T3,
     {
         switch (CoproductDiscriminator)
         {
-            case 1: ifFirst?.Invoke((T1)CoproductValue); break;
-            case 2: ifSecond?.Invoke((T2)CoproductValue); break;
-            case 3: ifThird?.Invoke((T3)CoproductValue); break;
-            case 4: ifFourth?.Invoke((T4)CoproductValue); break;
+            case 1: ifFirst?.Invoke((T1)CoproductValue!); break;
+            case 2: ifSecond?.Invoke((T2)CoproductValue!); break;
+            case 3: ifThird?.Invoke((T3)CoproductValue!); break;
+            case 4: ifFourth?.Invoke((T4)CoproductValue!); break;
         }
     }
 
@@ -666,10 +657,10 @@ public class Coproduct4<T1, T2, T3, T4> : CoproductBase, ICoproduct4<T1, T2, T3,
     {
         switch (CoproductDiscriminator)
         {
-            case 1: await (ifFirst?.Invoke((T1)CoproductValue) ?? Task.CompletedTask); break;
-            case 2: await (ifSecond?.Invoke((T2)CoproductValue) ?? Task.CompletedTask); break;
-            case 3: await (ifThird?.Invoke((T3)CoproductValue) ?? Task.CompletedTask); break;
-            case 4: await (ifFourth?.Invoke((T4)CoproductValue) ?? Task.CompletedTask); break;
+            case 1: await (ifFirst?.Invoke((T1)CoproductValue!) ?? Task.CompletedTask); break;
+            case 2: await (ifSecond?.Invoke((T2)CoproductValue!) ?? Task.CompletedTask); break;
+            case 3: await (ifThird?.Invoke((T3)CoproductValue!) ?? Task.CompletedTask); break;
+            case 4: await (ifFourth?.Invoke((T4)CoproductValue!) ?? Task.CompletedTask); break;
         }
     }
 
@@ -780,7 +771,7 @@ public class Coproduct5<T1, T2, T3, T4, T5> : CoproductBase, ICoproduct5<T1, T2,
     /// </summary>
     /// <param name="discriminator">Discriminator of the value from interval [1, arity].</param>
     /// <param name="value">Value of the coproduct on the position defined by the discriminator.</param>
-    protected Coproduct5(int discriminator, object value)
+    protected Coproduct5(int discriminator, object? value)
         : base(5, discriminator, value)
     {
     }
@@ -808,23 +799,23 @@ public class Coproduct5<T1, T2, T3, T4, T5> : CoproductBase, ICoproduct5<T1, T2,
 
     public Option<T1> First
     {
-        get { return IsFirst ? Option.Valued((T1)CoproductValue) : Option.Empty<T1>(); }
+        get { return IsFirst ? Option.Valued((T1)CoproductValue!) : Option.Empty<T1>(); }
     }
     public Option<T2> Second
     {
-        get { return IsSecond ? Option.Valued((T2)CoproductValue) : Option.Empty<T2>(); }
+        get { return IsSecond ? Option.Valued((T2)CoproductValue!) : Option.Empty<T2>(); }
     }
     public Option<T3> Third
     {
-        get { return IsThird ? Option.Valued((T3)CoproductValue) : Option.Empty<T3>(); }
+        get { return IsThird ? Option.Valued((T3)CoproductValue!) : Option.Empty<T3>(); }
     }
     public Option<T4> Fourth
     {
-        get { return IsFourth ? Option.Valued((T4)CoproductValue) : Option.Empty<T4>(); }
+        get { return IsFourth ? Option.Valued((T4)CoproductValue!) : Option.Empty<T4>(); }
     }
     public Option<T5> Fifth
     {
-        get { return IsFifth ? Option.Valued((T5)CoproductValue) : Option.Empty<T5>(); }
+        get { return IsFifth ? Option.Valued((T5)CoproductValue!) : Option.Empty<T5>(); }
     }
 
     public Coproduct5<R1, R2, R3, R4, R5> Map<R1, R2, R3, R4, R5>(
@@ -836,11 +827,11 @@ public class Coproduct5<T1, T2, T3, T4, T5> : CoproductBase, ICoproduct5<T1, T2,
     {
         switch (CoproductDiscriminator)
         {
-            case 1: return Coproduct5.CreateFirst<R1, R2, R3, R4, R5>(ifFirst((T1)CoproductValue));
-            case 2: return Coproduct5.CreateSecond<R1, R2, R3, R4, R5>(ifSecond((T2)CoproductValue));
-            case 3: return Coproduct5.CreateThird<R1, R2, R3, R4, R5>(ifThird((T3)CoproductValue));
-            case 4: return Coproduct5.CreateFourth<R1, R2, R3, R4, R5>(ifFourth((T4)CoproductValue));
-            case 5: return Coproduct5.CreateFifth<R1, R2, R3, R4, R5>(ifFifth((T5)CoproductValue));
+            case 1: return Coproduct5.CreateFirst<R1, R2, R3, R4, R5>(ifFirst((T1)CoproductValue!));
+            case 2: return Coproduct5.CreateSecond<R1, R2, R3, R4, R5>(ifSecond((T2)CoproductValue!));
+            case 3: return Coproduct5.CreateThird<R1, R2, R3, R4, R5>(ifThird((T3)CoproductValue!));
+            case 4: return Coproduct5.CreateFourth<R1, R2, R3, R4, R5>(ifFourth((T4)CoproductValue!));
+            case 5: return Coproduct5.CreateFifth<R1, R2, R3, R4, R5>(ifFifth((T5)CoproductValue!));
             default: throw new InvalidOperationException();
         }
     }
@@ -854,11 +845,11 @@ public class Coproduct5<T1, T2, T3, T4, T5> : CoproductBase, ICoproduct5<T1, T2,
     {
         switch (CoproductDiscriminator)
         {
-            case 1: return ifFirst((T1)CoproductValue);
-            case 2: return ifSecond((T2)CoproductValue);
-            case 3: return ifThird((T3)CoproductValue);
-            case 4: return ifFourth((T4)CoproductValue);
-            case 5: return ifFifth((T5)CoproductValue);
+            case 1: return ifFirst((T1)CoproductValue!);
+            case 2: return ifSecond((T2)CoproductValue!);
+            case 3: return ifThird((T3)CoproductValue!);
+            case 4: return ifFourth((T4)CoproductValue!);
+            case 5: return ifFifth((T5)CoproductValue!);
             default: throw new InvalidOperationException();
         }
     }
@@ -872,11 +863,11 @@ public class Coproduct5<T1, T2, T3, T4, T5> : CoproductBase, ICoproduct5<T1, T2,
     {
         switch (CoproductDiscriminator)
         {
-            case 1: return await ifFirst((T1)CoproductValue);
-            case 2: return await ifSecond((T2)CoproductValue);
-            case 3: return await ifThird((T3)CoproductValue);
-            case 4: return await ifFourth((T4)CoproductValue);
-            case 5: return await ifFifth((T5)CoproductValue);
+            case 1: return await ifFirst((T1)CoproductValue!);
+            case 2: return await ifSecond((T2)CoproductValue!);
+            case 3: return await ifThird((T3)CoproductValue!);
+            case 4: return await ifFourth((T4)CoproductValue!);
+            case 5: return await ifFifth((T5)CoproductValue!);
             default: throw new InvalidOperationException();
         }
     }
@@ -890,11 +881,11 @@ public class Coproduct5<T1, T2, T3, T4, T5> : CoproductBase, ICoproduct5<T1, T2,
     {
         switch (CoproductDiscriminator)
         {
-            case 1: ifFirst?.Invoke((T1)CoproductValue); break;
-            case 2: ifSecond?.Invoke((T2)CoproductValue); break;
-            case 3: ifThird?.Invoke((T3)CoproductValue); break;
-            case 4: ifFourth?.Invoke((T4)CoproductValue); break;
-            case 5: ifFifth?.Invoke((T5)CoproductValue); break;
+            case 1: ifFirst?.Invoke((T1)CoproductValue!); break;
+            case 2: ifSecond?.Invoke((T2)CoproductValue!); break;
+            case 3: ifThird?.Invoke((T3)CoproductValue!); break;
+            case 4: ifFourth?.Invoke((T4)CoproductValue!); break;
+            case 5: ifFifth?.Invoke((T5)CoproductValue!); break;
         }
     }
 
@@ -907,11 +898,11 @@ public class Coproduct5<T1, T2, T3, T4, T5> : CoproductBase, ICoproduct5<T1, T2,
     {
         switch (CoproductDiscriminator)
         {
-            case 1: await (ifFirst?.Invoke((T1)CoproductValue) ?? Task.CompletedTask); break;
-            case 2: await (ifSecond?.Invoke((T2)CoproductValue) ?? Task.CompletedTask); break;
-            case 3: await (ifThird?.Invoke((T3)CoproductValue) ?? Task.CompletedTask); break;
-            case 4: await (ifFourth?.Invoke((T4)CoproductValue) ?? Task.CompletedTask); break;
-            case 5: await (ifFifth?.Invoke((T5)CoproductValue) ?? Task.CompletedTask); break;
+            case 1: await (ifFirst?.Invoke((T1)CoproductValue!) ?? Task.CompletedTask); break;
+            case 2: await (ifSecond?.Invoke((T2)CoproductValue!) ?? Task.CompletedTask); break;
+            case 3: await (ifThird?.Invoke((T3)CoproductValue!) ?? Task.CompletedTask); break;
+            case 4: await (ifFourth?.Invoke((T4)CoproductValue!) ?? Task.CompletedTask); break;
+            case 5: await (ifFifth?.Invoke((T5)CoproductValue!) ?? Task.CompletedTask); break;
         }
     }
 
@@ -1038,7 +1029,7 @@ public class Coproduct6<T1, T2, T3, T4, T5, T6> : CoproductBase, ICoproduct6<T1,
     /// </summary>
     /// <param name="discriminator">Discriminator of the value from interval [1, arity].</param>
     /// <param name="value">Value of the coproduct on the position defined by the discriminator.</param>
-    protected Coproduct6(int discriminator, object value)
+    protected Coproduct6(int discriminator, object? value)
         : base(6, discriminator, value)
     {
     }
@@ -1070,27 +1061,27 @@ public class Coproduct6<T1, T2, T3, T4, T5, T6> : CoproductBase, ICoproduct6<T1,
 
     public Option<T1> First
     {
-        get { return IsFirst ? Option.Valued((T1)CoproductValue) : Option.Empty<T1>(); }
+        get { return IsFirst ? Option.Valued((T1)CoproductValue!) : Option.Empty<T1>(); }
     }
     public Option<T2> Second
     {
-        get { return IsSecond ? Option.Valued((T2)CoproductValue) : Option.Empty<T2>(); }
+        get { return IsSecond ? Option.Valued((T2)CoproductValue!) : Option.Empty<T2>(); }
     }
     public Option<T3> Third
     {
-        get { return IsThird ? Option.Valued((T3)CoproductValue) : Option.Empty<T3>(); }
+        get { return IsThird ? Option.Valued((T3)CoproductValue!) : Option.Empty<T3>(); }
     }
     public Option<T4> Fourth
     {
-        get { return IsFourth ? Option.Valued((T4)CoproductValue) : Option.Empty<T4>(); }
+        get { return IsFourth ? Option.Valued((T4)CoproductValue!) : Option.Empty<T4>(); }
     }
     public Option<T5> Fifth
     {
-        get { return IsFifth ? Option.Valued((T5)CoproductValue) : Option.Empty<T5>(); }
+        get { return IsFifth ? Option.Valued((T5)CoproductValue!) : Option.Empty<T5>(); }
     }
     public Option<T6> Sixth
     {
-        get { return IsSixth ? Option.Valued((T6)CoproductValue) : Option.Empty<T6>(); }
+        get { return IsSixth ? Option.Valued((T6)CoproductValue!) : Option.Empty<T6>(); }
     }
 
     public Coproduct6<R1, R2, R3, R4, R5, R6> Map<R1, R2, R3, R4, R5, R6>(
@@ -1103,12 +1094,12 @@ public class Coproduct6<T1, T2, T3, T4, T5, T6> : CoproductBase, ICoproduct6<T1,
     {
         switch (CoproductDiscriminator)
         {
-            case 1: return Coproduct6.CreateFirst<R1, R2, R3, R4, R5, R6>(ifFirst((T1)CoproductValue));
-            case 2: return Coproduct6.CreateSecond<R1, R2, R3, R4, R5, R6>(ifSecond((T2)CoproductValue));
-            case 3: return Coproduct6.CreateThird<R1, R2, R3, R4, R5, R6>(ifThird((T3)CoproductValue));
-            case 4: return Coproduct6.CreateFourth<R1, R2, R3, R4, R5, R6>(ifFourth((T4)CoproductValue));
-            case 5: return Coproduct6.CreateFifth<R1, R2, R3, R4, R5, R6>(ifFifth((T5)CoproductValue));
-            case 6: return Coproduct6.CreateSixth<R1, R2, R3, R4, R5, R6>(ifSixth((T6)CoproductValue));
+            case 1: return Coproduct6.CreateFirst<R1, R2, R3, R4, R5, R6>(ifFirst((T1)CoproductValue!));
+            case 2: return Coproduct6.CreateSecond<R1, R2, R3, R4, R5, R6>(ifSecond((T2)CoproductValue!));
+            case 3: return Coproduct6.CreateThird<R1, R2, R3, R4, R5, R6>(ifThird((T3)CoproductValue!));
+            case 4: return Coproduct6.CreateFourth<R1, R2, R3, R4, R5, R6>(ifFourth((T4)CoproductValue!));
+            case 5: return Coproduct6.CreateFifth<R1, R2, R3, R4, R5, R6>(ifFifth((T5)CoproductValue!));
+            case 6: return Coproduct6.CreateSixth<R1, R2, R3, R4, R5, R6>(ifSixth((T6)CoproductValue!));
             default: throw new InvalidOperationException();
         }
     }
@@ -1123,12 +1114,12 @@ public class Coproduct6<T1, T2, T3, T4, T5, T6> : CoproductBase, ICoproduct6<T1,
     {
         switch (CoproductDiscriminator)
         {
-            case 1: return ifFirst((T1)CoproductValue);
-            case 2: return ifSecond((T2)CoproductValue);
-            case 3: return ifThird((T3)CoproductValue);
-            case 4: return ifFourth((T4)CoproductValue);
-            case 5: return ifFifth((T5)CoproductValue);
-            case 6: return ifSixth((T6)CoproductValue);
+            case 1: return ifFirst((T1)CoproductValue!);
+            case 2: return ifSecond((T2)CoproductValue!);
+            case 3: return ifThird((T3)CoproductValue!);
+            case 4: return ifFourth((T4)CoproductValue!);
+            case 5: return ifFifth((T5)CoproductValue!);
+            case 6: return ifSixth((T6)CoproductValue!);
             default: throw new InvalidOperationException();
         }
     }
@@ -1143,12 +1134,12 @@ public class Coproduct6<T1, T2, T3, T4, T5, T6> : CoproductBase, ICoproduct6<T1,
     {
         switch (CoproductDiscriminator)
         {
-            case 1: return await ifFirst((T1)CoproductValue);
-            case 2: return await ifSecond((T2)CoproductValue);
-            case 3: return await ifThird((T3)CoproductValue);
-            case 4: return await ifFourth((T4)CoproductValue);
-            case 5: return await ifFifth((T5)CoproductValue);
-            case 6: return await ifSixth((T6)CoproductValue);
+            case 1: return await ifFirst((T1)CoproductValue!);
+            case 2: return await ifSecond((T2)CoproductValue!);
+            case 3: return await ifThird((T3)CoproductValue!);
+            case 4: return await ifFourth((T4)CoproductValue!);
+            case 5: return await ifFifth((T5)CoproductValue!);
+            case 6: return await ifSixth((T6)CoproductValue!);
             default: throw new InvalidOperationException();
         }
     }
@@ -1163,12 +1154,12 @@ public class Coproduct6<T1, T2, T3, T4, T5, T6> : CoproductBase, ICoproduct6<T1,
     {
         switch (CoproductDiscriminator)
         {
-            case 1: ifFirst?.Invoke((T1)CoproductValue); break;
-            case 2: ifSecond?.Invoke((T2)CoproductValue); break;
-            case 3: ifThird?.Invoke((T3)CoproductValue); break;
-            case 4: ifFourth?.Invoke((T4)CoproductValue); break;
-            case 5: ifFifth?.Invoke((T5)CoproductValue); break;
-            case 6: ifSixth?.Invoke((T6)CoproductValue); break;
+            case 1: ifFirst?.Invoke((T1)CoproductValue!); break;
+            case 2: ifSecond?.Invoke((T2)CoproductValue!); break;
+            case 3: ifThird?.Invoke((T3)CoproductValue!); break;
+            case 4: ifFourth?.Invoke((T4)CoproductValue!); break;
+            case 5: ifFifth?.Invoke((T5)CoproductValue!); break;
+            case 6: ifSixth?.Invoke((T6)CoproductValue!); break;
         }
     }
 
@@ -1182,12 +1173,12 @@ public class Coproduct6<T1, T2, T3, T4, T5, T6> : CoproductBase, ICoproduct6<T1,
     {
         switch (CoproductDiscriminator)
         {
-            case 1: await (ifFirst?.Invoke((T1)CoproductValue) ?? Task.CompletedTask); break;
-            case 2: await (ifSecond?.Invoke((T2)CoproductValue) ?? Task.CompletedTask); break;
-            case 3: await (ifThird?.Invoke((T3)CoproductValue) ?? Task.CompletedTask); break;
-            case 4: await (ifFourth?.Invoke((T4)CoproductValue) ?? Task.CompletedTask); break;
-            case 5: await (ifFifth?.Invoke((T5)CoproductValue) ?? Task.CompletedTask); break;
-            case 6: await (ifSixth?.Invoke((T6)CoproductValue) ?? Task.CompletedTask); break;
+            case 1: await (ifFirst?.Invoke((T1)CoproductValue!) ?? Task.CompletedTask); break;
+            case 2: await (ifSecond?.Invoke((T2)CoproductValue!) ?? Task.CompletedTask); break;
+            case 3: await (ifThird?.Invoke((T3)CoproductValue!) ?? Task.CompletedTask); break;
+            case 4: await (ifFourth?.Invoke((T4)CoproductValue!) ?? Task.CompletedTask); break;
+            case 5: await (ifFifth?.Invoke((T5)CoproductValue!) ?? Task.CompletedTask); break;
+            case 6: await (ifSixth?.Invoke((T6)CoproductValue!) ?? Task.CompletedTask); break;
         }
     }
 
@@ -1330,7 +1321,7 @@ public class Coproduct7<T1, T2, T3, T4, T5, T6, T7> : CoproductBase, ICoproduct7
     /// </summary>
     /// <param name="discriminator">Discriminator of the value from interval [1, arity].</param>
     /// <param name="value">Value of the coproduct on the position defined by the discriminator.</param>
-    protected Coproduct7(int discriminator, object value)
+    protected Coproduct7(int discriminator, object? value)
         : base(7, discriminator, value)
     {
     }
@@ -1366,31 +1357,31 @@ public class Coproduct7<T1, T2, T3, T4, T5, T6, T7> : CoproductBase, ICoproduct7
 
     public Option<T1> First
     {
-        get { return IsFirst ? Option.Valued((T1)CoproductValue) : Option.Empty<T1>(); }
+        get { return IsFirst ? Option.Valued((T1)CoproductValue!) : Option.Empty<T1>(); }
     }
     public Option<T2> Second
     {
-        get { return IsSecond ? Option.Valued((T2)CoproductValue) : Option.Empty<T2>(); }
+        get { return IsSecond ? Option.Valued((T2)CoproductValue!) : Option.Empty<T2>(); }
     }
     public Option<T3> Third
     {
-        get { return IsThird ? Option.Valued((T3)CoproductValue) : Option.Empty<T3>(); }
+        get { return IsThird ? Option.Valued((T3)CoproductValue!) : Option.Empty<T3>(); }
     }
     public Option<T4> Fourth
     {
-        get { return IsFourth ? Option.Valued((T4)CoproductValue) : Option.Empty<T4>(); }
+        get { return IsFourth ? Option.Valued((T4)CoproductValue!) : Option.Empty<T4>(); }
     }
     public Option<T5> Fifth
     {
-        get { return IsFifth ? Option.Valued((T5)CoproductValue) : Option.Empty<T5>(); }
+        get { return IsFifth ? Option.Valued((T5)CoproductValue!) : Option.Empty<T5>(); }
     }
     public Option<T6> Sixth
     {
-        get { return IsSixth ? Option.Valued((T6)CoproductValue) : Option.Empty<T6>(); }
+        get { return IsSixth ? Option.Valued((T6)CoproductValue!) : Option.Empty<T6>(); }
     }
     public Option<T7> Seventh
     {
-        get { return IsSeventh ? Option.Valued((T7)CoproductValue) : Option.Empty<T7>(); }
+        get { return IsSeventh ? Option.Valued((T7)CoproductValue!) : Option.Empty<T7>(); }
     }
 
     public Coproduct7<R1, R2, R3, R4, R5, R6, R7> Map<R1, R2, R3, R4, R5, R6, R7>(
@@ -1404,13 +1395,13 @@ public class Coproduct7<T1, T2, T3, T4, T5, T6, T7> : CoproductBase, ICoproduct7
     {
         switch (CoproductDiscriminator)
         {
-            case 1: return Coproduct7.CreateFirst<R1, R2, R3, R4, R5, R6, R7>(ifFirst((T1)CoproductValue));
-            case 2: return Coproduct7.CreateSecond<R1, R2, R3, R4, R5, R6, R7>(ifSecond((T2)CoproductValue));
-            case 3: return Coproduct7.CreateThird<R1, R2, R3, R4, R5, R6, R7>(ifThird((T3)CoproductValue));
-            case 4: return Coproduct7.CreateFourth<R1, R2, R3, R4, R5, R6, R7>(ifFourth((T4)CoproductValue));
-            case 5: return Coproduct7.CreateFifth<R1, R2, R3, R4, R5, R6, R7>(ifFifth((T5)CoproductValue));
-            case 6: return Coproduct7.CreateSixth<R1, R2, R3, R4, R5, R6, R7>(ifSixth((T6)CoproductValue));
-            case 7: return Coproduct7.CreateSeventh<R1, R2, R3, R4, R5, R6, R7>(ifSeventh((T7)CoproductValue));
+            case 1: return Coproduct7.CreateFirst<R1, R2, R3, R4, R5, R6, R7>(ifFirst((T1)CoproductValue!));
+            case 2: return Coproduct7.CreateSecond<R1, R2, R3, R4, R5, R6, R7>(ifSecond((T2)CoproductValue!));
+            case 3: return Coproduct7.CreateThird<R1, R2, R3, R4, R5, R6, R7>(ifThird((T3)CoproductValue!));
+            case 4: return Coproduct7.CreateFourth<R1, R2, R3, R4, R5, R6, R7>(ifFourth((T4)CoproductValue!));
+            case 5: return Coproduct7.CreateFifth<R1, R2, R3, R4, R5, R6, R7>(ifFifth((T5)CoproductValue!));
+            case 6: return Coproduct7.CreateSixth<R1, R2, R3, R4, R5, R6, R7>(ifSixth((T6)CoproductValue!));
+            case 7: return Coproduct7.CreateSeventh<R1, R2, R3, R4, R5, R6, R7>(ifSeventh((T7)CoproductValue!));
             default: throw new InvalidOperationException();
         }
     }
@@ -1426,13 +1417,13 @@ public class Coproduct7<T1, T2, T3, T4, T5, T6, T7> : CoproductBase, ICoproduct7
     {
         switch (CoproductDiscriminator)
         {
-            case 1: return ifFirst((T1)CoproductValue);
-            case 2: return ifSecond((T2)CoproductValue);
-            case 3: return ifThird((T3)CoproductValue);
-            case 4: return ifFourth((T4)CoproductValue);
-            case 5: return ifFifth((T5)CoproductValue);
-            case 6: return ifSixth((T6)CoproductValue);
-            case 7: return ifSeventh((T7)CoproductValue);
+            case 1: return ifFirst((T1)CoproductValue!);
+            case 2: return ifSecond((T2)CoproductValue!);
+            case 3: return ifThird((T3)CoproductValue!);
+            case 4: return ifFourth((T4)CoproductValue!);
+            case 5: return ifFifth((T5)CoproductValue!);
+            case 6: return ifSixth((T6)CoproductValue!);
+            case 7: return ifSeventh((T7)CoproductValue!);
             default: throw new InvalidOperationException();
         }
     }
@@ -1448,13 +1439,13 @@ public class Coproduct7<T1, T2, T3, T4, T5, T6, T7> : CoproductBase, ICoproduct7
     {
         switch (CoproductDiscriminator)
         {
-            case 1: return await ifFirst((T1)CoproductValue);
-            case 2: return await ifSecond((T2)CoproductValue);
-            case 3: return await ifThird((T3)CoproductValue);
-            case 4: return await ifFourth((T4)CoproductValue);
-            case 5: return await ifFifth((T5)CoproductValue);
-            case 6: return await ifSixth((T6)CoproductValue);
-            case 7: return await ifSeventh((T7)CoproductValue);
+            case 1: return await ifFirst((T1)CoproductValue!);
+            case 2: return await ifSecond((T2)CoproductValue!);
+            case 3: return await ifThird((T3)CoproductValue!);
+            case 4: return await ifFourth((T4)CoproductValue!);
+            case 5: return await ifFifth((T5)CoproductValue!);
+            case 6: return await ifSixth((T6)CoproductValue!);
+            case 7: return await ifSeventh((T7)CoproductValue!);
             default: throw new InvalidOperationException();
         }
     }
@@ -1470,13 +1461,13 @@ public class Coproduct7<T1, T2, T3, T4, T5, T6, T7> : CoproductBase, ICoproduct7
     {
         switch (CoproductDiscriminator)
         {
-            case 1: ifFirst?.Invoke((T1)CoproductValue); break;
-            case 2: ifSecond?.Invoke((T2)CoproductValue); break;
-            case 3: ifThird?.Invoke((T3)CoproductValue); break;
-            case 4: ifFourth?.Invoke((T4)CoproductValue); break;
-            case 5: ifFifth?.Invoke((T5)CoproductValue); break;
-            case 6: ifSixth?.Invoke((T6)CoproductValue); break;
-            case 7: ifSeventh?.Invoke((T7)CoproductValue); break;
+            case 1: ifFirst?.Invoke((T1)CoproductValue!); break;
+            case 2: ifSecond?.Invoke((T2)CoproductValue!); break;
+            case 3: ifThird?.Invoke((T3)CoproductValue!); break;
+            case 4: ifFourth?.Invoke((T4)CoproductValue!); break;
+            case 5: ifFifth?.Invoke((T5)CoproductValue!); break;
+            case 6: ifSixth?.Invoke((T6)CoproductValue!); break;
+            case 7: ifSeventh?.Invoke((T7)CoproductValue!); break;
         }
     }
 
@@ -1491,13 +1482,13 @@ public class Coproduct7<T1, T2, T3, T4, T5, T6, T7> : CoproductBase, ICoproduct7
     {
         switch (CoproductDiscriminator)
         {
-            case 1: await (ifFirst?.Invoke((T1)CoproductValue) ?? Task.CompletedTask); break;
-            case 2: await (ifSecond?.Invoke((T2)CoproductValue) ?? Task.CompletedTask); break;
-            case 3: await (ifThird?.Invoke((T3)CoproductValue) ?? Task.CompletedTask); break;
-            case 4: await (ifFourth?.Invoke((T4)CoproductValue) ?? Task.CompletedTask); break;
-            case 5: await (ifFifth?.Invoke((T5)CoproductValue) ?? Task.CompletedTask); break;
-            case 6: await (ifSixth?.Invoke((T6)CoproductValue) ?? Task.CompletedTask); break;
-            case 7: await (ifSeventh?.Invoke((T7)CoproductValue) ?? Task.CompletedTask); break;
+            case 1: await (ifFirst?.Invoke((T1)CoproductValue!) ?? Task.CompletedTask); break;
+            case 2: await (ifSecond?.Invoke((T2)CoproductValue!) ?? Task.CompletedTask); break;
+            case 3: await (ifThird?.Invoke((T3)CoproductValue!) ?? Task.CompletedTask); break;
+            case 4: await (ifFourth?.Invoke((T4)CoproductValue!) ?? Task.CompletedTask); break;
+            case 5: await (ifFifth?.Invoke((T5)CoproductValue!) ?? Task.CompletedTask); break;
+            case 6: await (ifSixth?.Invoke((T6)CoproductValue!) ?? Task.CompletedTask); break;
+            case 7: await (ifSeventh?.Invoke((T7)CoproductValue!) ?? Task.CompletedTask); break;
         }
     }
 
@@ -1656,7 +1647,7 @@ public class Coproduct8<T1, T2, T3, T4, T5, T6, T7, T8> : CoproductBase, ICoprod
     /// </summary>
     /// <param name="discriminator">Discriminator of the value from interval [1, arity].</param>
     /// <param name="value">Value of the coproduct on the position defined by the discriminator.</param>
-    protected Coproduct8(int discriminator, object value)
+    protected Coproduct8(int discriminator, object? value)
         : base(8, discriminator, value)
     {
     }
@@ -1696,35 +1687,35 @@ public class Coproduct8<T1, T2, T3, T4, T5, T6, T7, T8> : CoproductBase, ICoprod
 
     public Option<T1> First
     {
-        get { return IsFirst ? Option.Valued((T1)CoproductValue) : Option.Empty<T1>(); }
+        get { return IsFirst ? Option.Valued((T1)CoproductValue!) : Option.Empty<T1>(); }
     }
     public Option<T2> Second
     {
-        get { return IsSecond ? Option.Valued((T2)CoproductValue) : Option.Empty<T2>(); }
+        get { return IsSecond ? Option.Valued((T2)CoproductValue!) : Option.Empty<T2>(); }
     }
     public Option<T3> Third
     {
-        get { return IsThird ? Option.Valued((T3)CoproductValue) : Option.Empty<T3>(); }
+        get { return IsThird ? Option.Valued((T3)CoproductValue!) : Option.Empty<T3>(); }
     }
     public Option<T4> Fourth
     {
-        get { return IsFourth ? Option.Valued((T4)CoproductValue) : Option.Empty<T4>(); }
+        get { return IsFourth ? Option.Valued((T4)CoproductValue!) : Option.Empty<T4>(); }
     }
     public Option<T5> Fifth
     {
-        get { return IsFifth ? Option.Valued((T5)CoproductValue) : Option.Empty<T5>(); }
+        get { return IsFifth ? Option.Valued((T5)CoproductValue!) : Option.Empty<T5>(); }
     }
     public Option<T6> Sixth
     {
-        get { return IsSixth ? Option.Valued((T6)CoproductValue) : Option.Empty<T6>(); }
+        get { return IsSixth ? Option.Valued((T6)CoproductValue!) : Option.Empty<T6>(); }
     }
     public Option<T7> Seventh
     {
-        get { return IsSeventh ? Option.Valued((T7)CoproductValue) : Option.Empty<T7>(); }
+        get { return IsSeventh ? Option.Valued((T7)CoproductValue!) : Option.Empty<T7>(); }
     }
     public Option<T8> Eighth
     {
-        get { return IsEighth ? Option.Valued((T8)CoproductValue) : Option.Empty<T8>(); }
+        get { return IsEighth ? Option.Valued((T8)CoproductValue!) : Option.Empty<T8>(); }
     }
 
     public Coproduct8<R1, R2, R3, R4, R5, R6, R7, R8> Map<R1, R2, R3, R4, R5, R6, R7, R8>(
@@ -1739,14 +1730,14 @@ public class Coproduct8<T1, T2, T3, T4, T5, T6, T7, T8> : CoproductBase, ICoprod
     {
         switch (CoproductDiscriminator)
         {
-            case 1: return Coproduct8.CreateFirst<R1, R2, R3, R4, R5, R6, R7, R8>(ifFirst((T1)CoproductValue));
-            case 2: return Coproduct8.CreateSecond<R1, R2, R3, R4, R5, R6, R7, R8>(ifSecond((T2)CoproductValue));
-            case 3: return Coproduct8.CreateThird<R1, R2, R3, R4, R5, R6, R7, R8>(ifThird((T3)CoproductValue));
-            case 4: return Coproduct8.CreateFourth<R1, R2, R3, R4, R5, R6, R7, R8>(ifFourth((T4)CoproductValue));
-            case 5: return Coproduct8.CreateFifth<R1, R2, R3, R4, R5, R6, R7, R8>(ifFifth((T5)CoproductValue));
-            case 6: return Coproduct8.CreateSixth<R1, R2, R3, R4, R5, R6, R7, R8>(ifSixth((T6)CoproductValue));
-            case 7: return Coproduct8.CreateSeventh<R1, R2, R3, R4, R5, R6, R7, R8>(ifSeventh((T7)CoproductValue));
-            case 8: return Coproduct8.CreateEighth<R1, R2, R3, R4, R5, R6, R7, R8>(ifEighth((T8)CoproductValue));
+            case 1: return Coproduct8.CreateFirst<R1, R2, R3, R4, R5, R6, R7, R8>(ifFirst((T1)CoproductValue!));
+            case 2: return Coproduct8.CreateSecond<R1, R2, R3, R4, R5, R6, R7, R8>(ifSecond((T2)CoproductValue!));
+            case 3: return Coproduct8.CreateThird<R1, R2, R3, R4, R5, R6, R7, R8>(ifThird((T3)CoproductValue!));
+            case 4: return Coproduct8.CreateFourth<R1, R2, R3, R4, R5, R6, R7, R8>(ifFourth((T4)CoproductValue!));
+            case 5: return Coproduct8.CreateFifth<R1, R2, R3, R4, R5, R6, R7, R8>(ifFifth((T5)CoproductValue!));
+            case 6: return Coproduct8.CreateSixth<R1, R2, R3, R4, R5, R6, R7, R8>(ifSixth((T6)CoproductValue!));
+            case 7: return Coproduct8.CreateSeventh<R1, R2, R3, R4, R5, R6, R7, R8>(ifSeventh((T7)CoproductValue!));
+            case 8: return Coproduct8.CreateEighth<R1, R2, R3, R4, R5, R6, R7, R8>(ifEighth((T8)CoproductValue!));
             default: throw new InvalidOperationException();
         }
     }
@@ -1763,14 +1754,14 @@ public class Coproduct8<T1, T2, T3, T4, T5, T6, T7, T8> : CoproductBase, ICoprod
     {
         switch (CoproductDiscriminator)
         {
-            case 1: return ifFirst((T1)CoproductValue);
-            case 2: return ifSecond((T2)CoproductValue);
-            case 3: return ifThird((T3)CoproductValue);
-            case 4: return ifFourth((T4)CoproductValue);
-            case 5: return ifFifth((T5)CoproductValue);
-            case 6: return ifSixth((T6)CoproductValue);
-            case 7: return ifSeventh((T7)CoproductValue);
-            case 8: return ifEighth((T8)CoproductValue);
+            case 1: return ifFirst((T1)CoproductValue!);
+            case 2: return ifSecond((T2)CoproductValue!);
+            case 3: return ifThird((T3)CoproductValue!);
+            case 4: return ifFourth((T4)CoproductValue!);
+            case 5: return ifFifth((T5)CoproductValue!);
+            case 6: return ifSixth((T6)CoproductValue!);
+            case 7: return ifSeventh((T7)CoproductValue!);
+            case 8: return ifEighth((T8)CoproductValue!);
             default: throw new InvalidOperationException();
         }
     }
@@ -1787,14 +1778,14 @@ public class Coproduct8<T1, T2, T3, T4, T5, T6, T7, T8> : CoproductBase, ICoprod
     {
         switch (CoproductDiscriminator)
         {
-            case 1: return await ifFirst((T1)CoproductValue);
-            case 2: return await ifSecond((T2)CoproductValue);
-            case 3: return await ifThird((T3)CoproductValue);
-            case 4: return await ifFourth((T4)CoproductValue);
-            case 5: return await ifFifth((T5)CoproductValue);
-            case 6: return await ifSixth((T6)CoproductValue);
-            case 7: return await ifSeventh((T7)CoproductValue);
-            case 8: return await ifEighth((T8)CoproductValue);
+            case 1: return await ifFirst((T1)CoproductValue!);
+            case 2: return await ifSecond((T2)CoproductValue!);
+            case 3: return await ifThird((T3)CoproductValue!);
+            case 4: return await ifFourth((T4)CoproductValue!);
+            case 5: return await ifFifth((T5)CoproductValue!);
+            case 6: return await ifSixth((T6)CoproductValue!);
+            case 7: return await ifSeventh((T7)CoproductValue!);
+            case 8: return await ifEighth((T8)CoproductValue!);
             default: throw new InvalidOperationException();
         }
     }
@@ -1811,14 +1802,14 @@ public class Coproduct8<T1, T2, T3, T4, T5, T6, T7, T8> : CoproductBase, ICoprod
     {
         switch (CoproductDiscriminator)
         {
-            case 1: ifFirst?.Invoke((T1)CoproductValue); break;
-            case 2: ifSecond?.Invoke((T2)CoproductValue); break;
-            case 3: ifThird?.Invoke((T3)CoproductValue); break;
-            case 4: ifFourth?.Invoke((T4)CoproductValue); break;
-            case 5: ifFifth?.Invoke((T5)CoproductValue); break;
-            case 6: ifSixth?.Invoke((T6)CoproductValue); break;
-            case 7: ifSeventh?.Invoke((T7)CoproductValue); break;
-            case 8: ifEighth?.Invoke((T8)CoproductValue); break;
+            case 1: ifFirst?.Invoke((T1)CoproductValue!); break;
+            case 2: ifSecond?.Invoke((T2)CoproductValue!); break;
+            case 3: ifThird?.Invoke((T3)CoproductValue!); break;
+            case 4: ifFourth?.Invoke((T4)CoproductValue!); break;
+            case 5: ifFifth?.Invoke((T5)CoproductValue!); break;
+            case 6: ifSixth?.Invoke((T6)CoproductValue!); break;
+            case 7: ifSeventh?.Invoke((T7)CoproductValue!); break;
+            case 8: ifEighth?.Invoke((T8)CoproductValue!); break;
         }
     }
 
@@ -1834,14 +1825,14 @@ public class Coproduct8<T1, T2, T3, T4, T5, T6, T7, T8> : CoproductBase, ICoprod
     {
         switch (CoproductDiscriminator)
         {
-            case 1: await (ifFirst?.Invoke((T1)CoproductValue) ?? Task.CompletedTask); break;
-            case 2: await (ifSecond?.Invoke((T2)CoproductValue) ?? Task.CompletedTask); break;
-            case 3: await (ifThird?.Invoke((T3)CoproductValue) ?? Task.CompletedTask); break;
-            case 4: await (ifFourth?.Invoke((T4)CoproductValue) ?? Task.CompletedTask); break;
-            case 5: await (ifFifth?.Invoke((T5)CoproductValue) ?? Task.CompletedTask); break;
-            case 6: await (ifSixth?.Invoke((T6)CoproductValue) ?? Task.CompletedTask); break;
-            case 7: await (ifSeventh?.Invoke((T7)CoproductValue) ?? Task.CompletedTask); break;
-            case 8: await (ifEighth?.Invoke((T8)CoproductValue) ?? Task.CompletedTask); break;
+            case 1: await (ifFirst?.Invoke((T1)CoproductValue!) ?? Task.CompletedTask); break;
+            case 2: await (ifSecond?.Invoke((T2)CoproductValue!) ?? Task.CompletedTask); break;
+            case 3: await (ifThird?.Invoke((T3)CoproductValue!) ?? Task.CompletedTask); break;
+            case 4: await (ifFourth?.Invoke((T4)CoproductValue!) ?? Task.CompletedTask); break;
+            case 5: await (ifFifth?.Invoke((T5)CoproductValue!) ?? Task.CompletedTask); break;
+            case 6: await (ifSixth?.Invoke((T6)CoproductValue!) ?? Task.CompletedTask); break;
+            case 7: await (ifSeventh?.Invoke((T7)CoproductValue!) ?? Task.CompletedTask); break;
+            case 8: await (ifEighth?.Invoke((T8)CoproductValue!) ?? Task.CompletedTask); break;
         }
     }
 
@@ -2016,7 +2007,7 @@ public class Coproduct9<T1, T2, T3, T4, T5, T6, T7, T8, T9> : CoproductBase, ICo
     /// </summary>
     /// <param name="discriminator">Discriminator of the value from interval [1, arity].</param>
     /// <param name="value">Value of the coproduct on the position defined by the discriminator.</param>
-    protected Coproduct9(int discriminator, object value)
+    protected Coproduct9(int discriminator, object? value)
         : base(9, discriminator, value)
     {
     }
@@ -2060,39 +2051,39 @@ public class Coproduct9<T1, T2, T3, T4, T5, T6, T7, T8, T9> : CoproductBase, ICo
 
     public Option<T1> First
     {
-        get { return IsFirst ? Option.Valued((T1)CoproductValue) : Option.Empty<T1>(); }
+        get { return IsFirst ? Option.Valued((T1)CoproductValue!) : Option.Empty<T1>(); }
     }
     public Option<T2> Second
     {
-        get { return IsSecond ? Option.Valued((T2)CoproductValue) : Option.Empty<T2>(); }
+        get { return IsSecond ? Option.Valued((T2)CoproductValue!) : Option.Empty<T2>(); }
     }
     public Option<T3> Third
     {
-        get { return IsThird ? Option.Valued((T3)CoproductValue) : Option.Empty<T3>(); }
+        get { return IsThird ? Option.Valued((T3)CoproductValue!) : Option.Empty<T3>(); }
     }
     public Option<T4> Fourth
     {
-        get { return IsFourth ? Option.Valued((T4)CoproductValue) : Option.Empty<T4>(); }
+        get { return IsFourth ? Option.Valued((T4)CoproductValue!) : Option.Empty<T4>(); }
     }
     public Option<T5> Fifth
     {
-        get { return IsFifth ? Option.Valued((T5)CoproductValue) : Option.Empty<T5>(); }
+        get { return IsFifth ? Option.Valued((T5)CoproductValue!) : Option.Empty<T5>(); }
     }
     public Option<T6> Sixth
     {
-        get { return IsSixth ? Option.Valued((T6)CoproductValue) : Option.Empty<T6>(); }
+        get { return IsSixth ? Option.Valued((T6)CoproductValue!) : Option.Empty<T6>(); }
     }
     public Option<T7> Seventh
     {
-        get { return IsSeventh ? Option.Valued((T7)CoproductValue) : Option.Empty<T7>(); }
+        get { return IsSeventh ? Option.Valued((T7)CoproductValue!) : Option.Empty<T7>(); }
     }
     public Option<T8> Eighth
     {
-        get { return IsEighth ? Option.Valued((T8)CoproductValue) : Option.Empty<T8>(); }
+        get { return IsEighth ? Option.Valued((T8)CoproductValue!) : Option.Empty<T8>(); }
     }
     public Option<T9> Ninth
     {
-        get { return IsNinth ? Option.Valued((T9)CoproductValue) : Option.Empty<T9>(); }
+        get { return IsNinth ? Option.Valued((T9)CoproductValue!) : Option.Empty<T9>(); }
     }
 
     public Coproduct9<R1, R2, R3, R4, R5, R6, R7, R8, R9> Map<R1, R2, R3, R4, R5, R6, R7, R8, R9>(
@@ -2108,15 +2099,15 @@ public class Coproduct9<T1, T2, T3, T4, T5, T6, T7, T8, T9> : CoproductBase, ICo
     {
         switch (CoproductDiscriminator)
         {
-            case 1: return Coproduct9.CreateFirst<R1, R2, R3, R4, R5, R6, R7, R8, R9>(ifFirst((T1)CoproductValue));
-            case 2: return Coproduct9.CreateSecond<R1, R2, R3, R4, R5, R6, R7, R8, R9>(ifSecond((T2)CoproductValue));
-            case 3: return Coproduct9.CreateThird<R1, R2, R3, R4, R5, R6, R7, R8, R9>(ifThird((T3)CoproductValue));
-            case 4: return Coproduct9.CreateFourth<R1, R2, R3, R4, R5, R6, R7, R8, R9>(ifFourth((T4)CoproductValue));
-            case 5: return Coproduct9.CreateFifth<R1, R2, R3, R4, R5, R6, R7, R8, R9>(ifFifth((T5)CoproductValue));
-            case 6: return Coproduct9.CreateSixth<R1, R2, R3, R4, R5, R6, R7, R8, R9>(ifSixth((T6)CoproductValue));
-            case 7: return Coproduct9.CreateSeventh<R1, R2, R3, R4, R5, R6, R7, R8, R9>(ifSeventh((T7)CoproductValue));
-            case 8: return Coproduct9.CreateEighth<R1, R2, R3, R4, R5, R6, R7, R8, R9>(ifEighth((T8)CoproductValue));
-            case 9: return Coproduct9.CreateNinth<R1, R2, R3, R4, R5, R6, R7, R8, R9>(ifNinth((T9)CoproductValue));
+            case 1: return Coproduct9.CreateFirst<R1, R2, R3, R4, R5, R6, R7, R8, R9>(ifFirst((T1)CoproductValue!));
+            case 2: return Coproduct9.CreateSecond<R1, R2, R3, R4, R5, R6, R7, R8, R9>(ifSecond((T2)CoproductValue!));
+            case 3: return Coproduct9.CreateThird<R1, R2, R3, R4, R5, R6, R7, R8, R9>(ifThird((T3)CoproductValue!));
+            case 4: return Coproduct9.CreateFourth<R1, R2, R3, R4, R5, R6, R7, R8, R9>(ifFourth((T4)CoproductValue!));
+            case 5: return Coproduct9.CreateFifth<R1, R2, R3, R4, R5, R6, R7, R8, R9>(ifFifth((T5)CoproductValue!));
+            case 6: return Coproduct9.CreateSixth<R1, R2, R3, R4, R5, R6, R7, R8, R9>(ifSixth((T6)CoproductValue!));
+            case 7: return Coproduct9.CreateSeventh<R1, R2, R3, R4, R5, R6, R7, R8, R9>(ifSeventh((T7)CoproductValue!));
+            case 8: return Coproduct9.CreateEighth<R1, R2, R3, R4, R5, R6, R7, R8, R9>(ifEighth((T8)CoproductValue!));
+            case 9: return Coproduct9.CreateNinth<R1, R2, R3, R4, R5, R6, R7, R8, R9>(ifNinth((T9)CoproductValue!));
             default: throw new InvalidOperationException();
         }
     }
@@ -2134,15 +2125,15 @@ public class Coproduct9<T1, T2, T3, T4, T5, T6, T7, T8, T9> : CoproductBase, ICo
     {
         switch (CoproductDiscriminator)
         {
-            case 1: return ifFirst((T1)CoproductValue);
-            case 2: return ifSecond((T2)CoproductValue);
-            case 3: return ifThird((T3)CoproductValue);
-            case 4: return ifFourth((T4)CoproductValue);
-            case 5: return ifFifth((T5)CoproductValue);
-            case 6: return ifSixth((T6)CoproductValue);
-            case 7: return ifSeventh((T7)CoproductValue);
-            case 8: return ifEighth((T8)CoproductValue);
-            case 9: return ifNinth((T9)CoproductValue);
+            case 1: return ifFirst((T1)CoproductValue!);
+            case 2: return ifSecond((T2)CoproductValue!);
+            case 3: return ifThird((T3)CoproductValue!);
+            case 4: return ifFourth((T4)CoproductValue!);
+            case 5: return ifFifth((T5)CoproductValue!);
+            case 6: return ifSixth((T6)CoproductValue!);
+            case 7: return ifSeventh((T7)CoproductValue!);
+            case 8: return ifEighth((T8)CoproductValue!);
+            case 9: return ifNinth((T9)CoproductValue!);
             default: throw new InvalidOperationException();
         }
     }
@@ -2160,15 +2151,15 @@ public class Coproduct9<T1, T2, T3, T4, T5, T6, T7, T8, T9> : CoproductBase, ICo
     {
         switch (CoproductDiscriminator)
         {
-            case 1: return await ifFirst((T1)CoproductValue);
-            case 2: return await ifSecond((T2)CoproductValue);
-            case 3: return await ifThird((T3)CoproductValue);
-            case 4: return await ifFourth((T4)CoproductValue);
-            case 5: return await ifFifth((T5)CoproductValue);
-            case 6: return await ifSixth((T6)CoproductValue);
-            case 7: return await ifSeventh((T7)CoproductValue);
-            case 8: return await ifEighth((T8)CoproductValue);
-            case 9: return await ifNinth((T9)CoproductValue);
+            case 1: return await ifFirst((T1)CoproductValue!);
+            case 2: return await ifSecond((T2)CoproductValue!);
+            case 3: return await ifThird((T3)CoproductValue!);
+            case 4: return await ifFourth((T4)CoproductValue!);
+            case 5: return await ifFifth((T5)CoproductValue!);
+            case 6: return await ifSixth((T6)CoproductValue!);
+            case 7: return await ifSeventh((T7)CoproductValue!);
+            case 8: return await ifEighth((T8)CoproductValue!);
+            case 9: return await ifNinth((T9)CoproductValue!);
             default: throw new InvalidOperationException();
         }
     }
@@ -2186,15 +2177,15 @@ public class Coproduct9<T1, T2, T3, T4, T5, T6, T7, T8, T9> : CoproductBase, ICo
     {
         switch (CoproductDiscriminator)
         {
-            case 1: ifFirst?.Invoke((T1)CoproductValue); break;
-            case 2: ifSecond?.Invoke((T2)CoproductValue); break;
-            case 3: ifThird?.Invoke((T3)CoproductValue); break;
-            case 4: ifFourth?.Invoke((T4)CoproductValue); break;
-            case 5: ifFifth?.Invoke((T5)CoproductValue); break;
-            case 6: ifSixth?.Invoke((T6)CoproductValue); break;
-            case 7: ifSeventh?.Invoke((T7)CoproductValue); break;
-            case 8: ifEighth?.Invoke((T8)CoproductValue); break;
-            case 9: ifNinth?.Invoke((T9)CoproductValue); break;
+            case 1: ifFirst?.Invoke((T1)CoproductValue!); break;
+            case 2: ifSecond?.Invoke((T2)CoproductValue!); break;
+            case 3: ifThird?.Invoke((T3)CoproductValue!); break;
+            case 4: ifFourth?.Invoke((T4)CoproductValue!); break;
+            case 5: ifFifth?.Invoke((T5)CoproductValue!); break;
+            case 6: ifSixth?.Invoke((T6)CoproductValue!); break;
+            case 7: ifSeventh?.Invoke((T7)CoproductValue!); break;
+            case 8: ifEighth?.Invoke((T8)CoproductValue!); break;
+            case 9: ifNinth?.Invoke((T9)CoproductValue!); break;
         }
     }
 
@@ -2211,15 +2202,15 @@ public class Coproduct9<T1, T2, T3, T4, T5, T6, T7, T8, T9> : CoproductBase, ICo
     {
         switch (CoproductDiscriminator)
         {
-            case 1: await (ifFirst?.Invoke((T1)CoproductValue) ?? Task.CompletedTask); break;
-            case 2: await (ifSecond?.Invoke((T2)CoproductValue) ?? Task.CompletedTask); break;
-            case 3: await (ifThird?.Invoke((T3)CoproductValue) ?? Task.CompletedTask); break;
-            case 4: await (ifFourth?.Invoke((T4)CoproductValue) ?? Task.CompletedTask); break;
-            case 5: await (ifFifth?.Invoke((T5)CoproductValue) ?? Task.CompletedTask); break;
-            case 6: await (ifSixth?.Invoke((T6)CoproductValue) ?? Task.CompletedTask); break;
-            case 7: await (ifSeventh?.Invoke((T7)CoproductValue) ?? Task.CompletedTask); break;
-            case 8: await (ifEighth?.Invoke((T8)CoproductValue) ?? Task.CompletedTask); break;
-            case 9: await (ifNinth?.Invoke((T9)CoproductValue) ?? Task.CompletedTask); break;
+            case 1: await (ifFirst?.Invoke((T1)CoproductValue!) ?? Task.CompletedTask); break;
+            case 2: await (ifSecond?.Invoke((T2)CoproductValue!) ?? Task.CompletedTask); break;
+            case 3: await (ifThird?.Invoke((T3)CoproductValue!) ?? Task.CompletedTask); break;
+            case 4: await (ifFourth?.Invoke((T4)CoproductValue!) ?? Task.CompletedTask); break;
+            case 5: await (ifFifth?.Invoke((T5)CoproductValue!) ?? Task.CompletedTask); break;
+            case 6: await (ifSixth?.Invoke((T6)CoproductValue!) ?? Task.CompletedTask); break;
+            case 7: await (ifSeventh?.Invoke((T7)CoproductValue!) ?? Task.CompletedTask); break;
+            case 8: await (ifEighth?.Invoke((T8)CoproductValue!) ?? Task.CompletedTask); break;
+            case 9: await (ifNinth?.Invoke((T9)CoproductValue!) ?? Task.CompletedTask); break;
         }
     }
 
@@ -2410,7 +2401,7 @@ public class Coproduct10<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10> : CoproductBas
     /// </summary>
     /// <param name="discriminator">Discriminator of the value from interval [1, arity].</param>
     /// <param name="value">Value of the coproduct on the position defined by the discriminator.</param>
-    protected Coproduct10(int discriminator, object value)
+    protected Coproduct10(int discriminator, object? value)
         : base(10, discriminator, value)
     {
     }
@@ -2458,43 +2449,43 @@ public class Coproduct10<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10> : CoproductBas
 
     public Option<T1> First
     {
-        get { return IsFirst ? Option.Valued((T1)CoproductValue) : Option.Empty<T1>(); }
+        get { return IsFirst ? Option.Valued((T1)CoproductValue!) : Option.Empty<T1>(); }
     }
     public Option<T2> Second
     {
-        get { return IsSecond ? Option.Valued((T2)CoproductValue) : Option.Empty<T2>(); }
+        get { return IsSecond ? Option.Valued((T2)CoproductValue!) : Option.Empty<T2>(); }
     }
     public Option<T3> Third
     {
-        get { return IsThird ? Option.Valued((T3)CoproductValue) : Option.Empty<T3>(); }
+        get { return IsThird ? Option.Valued((T3)CoproductValue!) : Option.Empty<T3>(); }
     }
     public Option<T4> Fourth
     {
-        get { return IsFourth ? Option.Valued((T4)CoproductValue) : Option.Empty<T4>(); }
+        get { return IsFourth ? Option.Valued((T4)CoproductValue!) : Option.Empty<T4>(); }
     }
     public Option<T5> Fifth
     {
-        get { return IsFifth ? Option.Valued((T5)CoproductValue) : Option.Empty<T5>(); }
+        get { return IsFifth ? Option.Valued((T5)CoproductValue!) : Option.Empty<T5>(); }
     }
     public Option<T6> Sixth
     {
-        get { return IsSixth ? Option.Valued((T6)CoproductValue) : Option.Empty<T6>(); }
+        get { return IsSixth ? Option.Valued((T6)CoproductValue!) : Option.Empty<T6>(); }
     }
     public Option<T7> Seventh
     {
-        get { return IsSeventh ? Option.Valued((T7)CoproductValue) : Option.Empty<T7>(); }
+        get { return IsSeventh ? Option.Valued((T7)CoproductValue!) : Option.Empty<T7>(); }
     }
     public Option<T8> Eighth
     {
-        get { return IsEighth ? Option.Valued((T8)CoproductValue) : Option.Empty<T8>(); }
+        get { return IsEighth ? Option.Valued((T8)CoproductValue!) : Option.Empty<T8>(); }
     }
     public Option<T9> Ninth
     {
-        get { return IsNinth ? Option.Valued((T9)CoproductValue) : Option.Empty<T9>(); }
+        get { return IsNinth ? Option.Valued((T9)CoproductValue!) : Option.Empty<T9>(); }
     }
     public Option<T10> Tenth
     {
-        get { return IsTenth ? Option.Valued((T10)CoproductValue) : Option.Empty<T10>(); }
+        get { return IsTenth ? Option.Valued((T10)CoproductValue!) : Option.Empty<T10>(); }
     }
 
     public Coproduct10<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10> Map<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10>(
@@ -2511,16 +2502,16 @@ public class Coproduct10<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10> : CoproductBas
     {
         switch (CoproductDiscriminator)
         {
-            case 1: return Coproduct10.CreateFirst<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10>(ifFirst((T1)CoproductValue));
-            case 2: return Coproduct10.CreateSecond<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10>(ifSecond((T2)CoproductValue));
-            case 3: return Coproduct10.CreateThird<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10>(ifThird((T3)CoproductValue));
-            case 4: return Coproduct10.CreateFourth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10>(ifFourth((T4)CoproductValue));
-            case 5: return Coproduct10.CreateFifth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10>(ifFifth((T5)CoproductValue));
-            case 6: return Coproduct10.CreateSixth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10>(ifSixth((T6)CoproductValue));
-            case 7: return Coproduct10.CreateSeventh<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10>(ifSeventh((T7)CoproductValue));
-            case 8: return Coproduct10.CreateEighth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10>(ifEighth((T8)CoproductValue));
-            case 9: return Coproduct10.CreateNinth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10>(ifNinth((T9)CoproductValue));
-            case 10: return Coproduct10.CreateTenth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10>(ifTenth((T10)CoproductValue));
+            case 1: return Coproduct10.CreateFirst<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10>(ifFirst((T1)CoproductValue!));
+            case 2: return Coproduct10.CreateSecond<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10>(ifSecond((T2)CoproductValue!));
+            case 3: return Coproduct10.CreateThird<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10>(ifThird((T3)CoproductValue!));
+            case 4: return Coproduct10.CreateFourth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10>(ifFourth((T4)CoproductValue!));
+            case 5: return Coproduct10.CreateFifth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10>(ifFifth((T5)CoproductValue!));
+            case 6: return Coproduct10.CreateSixth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10>(ifSixth((T6)CoproductValue!));
+            case 7: return Coproduct10.CreateSeventh<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10>(ifSeventh((T7)CoproductValue!));
+            case 8: return Coproduct10.CreateEighth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10>(ifEighth((T8)CoproductValue!));
+            case 9: return Coproduct10.CreateNinth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10>(ifNinth((T9)CoproductValue!));
+            case 10: return Coproduct10.CreateTenth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10>(ifTenth((T10)CoproductValue!));
             default: throw new InvalidOperationException();
         }
     }
@@ -2539,16 +2530,16 @@ public class Coproduct10<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10> : CoproductBas
     {
         switch (CoproductDiscriminator)
         {
-            case 1: return ifFirst((T1)CoproductValue);
-            case 2: return ifSecond((T2)CoproductValue);
-            case 3: return ifThird((T3)CoproductValue);
-            case 4: return ifFourth((T4)CoproductValue);
-            case 5: return ifFifth((T5)CoproductValue);
-            case 6: return ifSixth((T6)CoproductValue);
-            case 7: return ifSeventh((T7)CoproductValue);
-            case 8: return ifEighth((T8)CoproductValue);
-            case 9: return ifNinth((T9)CoproductValue);
-            case 10: return ifTenth((T10)CoproductValue);
+            case 1: return ifFirst((T1)CoproductValue!);
+            case 2: return ifSecond((T2)CoproductValue!);
+            case 3: return ifThird((T3)CoproductValue!);
+            case 4: return ifFourth((T4)CoproductValue!);
+            case 5: return ifFifth((T5)CoproductValue!);
+            case 6: return ifSixth((T6)CoproductValue!);
+            case 7: return ifSeventh((T7)CoproductValue!);
+            case 8: return ifEighth((T8)CoproductValue!);
+            case 9: return ifNinth((T9)CoproductValue!);
+            case 10: return ifTenth((T10)CoproductValue!);
             default: throw new InvalidOperationException();
         }
     }
@@ -2567,16 +2558,16 @@ public class Coproduct10<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10> : CoproductBas
     {
         switch (CoproductDiscriminator)
         {
-            case 1: return await ifFirst((T1)CoproductValue);
-            case 2: return await ifSecond((T2)CoproductValue);
-            case 3: return await ifThird((T3)CoproductValue);
-            case 4: return await ifFourth((T4)CoproductValue);
-            case 5: return await ifFifth((T5)CoproductValue);
-            case 6: return await ifSixth((T6)CoproductValue);
-            case 7: return await ifSeventh((T7)CoproductValue);
-            case 8: return await ifEighth((T8)CoproductValue);
-            case 9: return await ifNinth((T9)CoproductValue);
-            case 10: return await ifTenth((T10)CoproductValue);
+            case 1: return await ifFirst((T1)CoproductValue!);
+            case 2: return await ifSecond((T2)CoproductValue!);
+            case 3: return await ifThird((T3)CoproductValue!);
+            case 4: return await ifFourth((T4)CoproductValue!);
+            case 5: return await ifFifth((T5)CoproductValue!);
+            case 6: return await ifSixth((T6)CoproductValue!);
+            case 7: return await ifSeventh((T7)CoproductValue!);
+            case 8: return await ifEighth((T8)CoproductValue!);
+            case 9: return await ifNinth((T9)CoproductValue!);
+            case 10: return await ifTenth((T10)CoproductValue!);
             default: throw new InvalidOperationException();
         }
     }
@@ -2595,16 +2586,16 @@ public class Coproduct10<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10> : CoproductBas
     {
         switch (CoproductDiscriminator)
         {
-            case 1: ifFirst?.Invoke((T1)CoproductValue); break;
-            case 2: ifSecond?.Invoke((T2)CoproductValue); break;
-            case 3: ifThird?.Invoke((T3)CoproductValue); break;
-            case 4: ifFourth?.Invoke((T4)CoproductValue); break;
-            case 5: ifFifth?.Invoke((T5)CoproductValue); break;
-            case 6: ifSixth?.Invoke((T6)CoproductValue); break;
-            case 7: ifSeventh?.Invoke((T7)CoproductValue); break;
-            case 8: ifEighth?.Invoke((T8)CoproductValue); break;
-            case 9: ifNinth?.Invoke((T9)CoproductValue); break;
-            case 10: ifTenth?.Invoke((T10)CoproductValue); break;
+            case 1: ifFirst?.Invoke((T1)CoproductValue!); break;
+            case 2: ifSecond?.Invoke((T2)CoproductValue!); break;
+            case 3: ifThird?.Invoke((T3)CoproductValue!); break;
+            case 4: ifFourth?.Invoke((T4)CoproductValue!); break;
+            case 5: ifFifth?.Invoke((T5)CoproductValue!); break;
+            case 6: ifSixth?.Invoke((T6)CoproductValue!); break;
+            case 7: ifSeventh?.Invoke((T7)CoproductValue!); break;
+            case 8: ifEighth?.Invoke((T8)CoproductValue!); break;
+            case 9: ifNinth?.Invoke((T9)CoproductValue!); break;
+            case 10: ifTenth?.Invoke((T10)CoproductValue!); break;
         }
     }
 
@@ -2622,16 +2613,16 @@ public class Coproduct10<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10> : CoproductBas
     {
         switch (CoproductDiscriminator)
         {
-            case 1: await (ifFirst?.Invoke((T1)CoproductValue) ?? Task.CompletedTask); break;
-            case 2: await (ifSecond?.Invoke((T2)CoproductValue) ?? Task.CompletedTask); break;
-            case 3: await (ifThird?.Invoke((T3)CoproductValue) ?? Task.CompletedTask); break;
-            case 4: await (ifFourth?.Invoke((T4)CoproductValue) ?? Task.CompletedTask); break;
-            case 5: await (ifFifth?.Invoke((T5)CoproductValue) ?? Task.CompletedTask); break;
-            case 6: await (ifSixth?.Invoke((T6)CoproductValue) ?? Task.CompletedTask); break;
-            case 7: await (ifSeventh?.Invoke((T7)CoproductValue) ?? Task.CompletedTask); break;
-            case 8: await (ifEighth?.Invoke((T8)CoproductValue) ?? Task.CompletedTask); break;
-            case 9: await (ifNinth?.Invoke((T9)CoproductValue) ?? Task.CompletedTask); break;
-            case 10: await (ifTenth?.Invoke((T10)CoproductValue) ?? Task.CompletedTask); break;
+            case 1: await (ifFirst?.Invoke((T1)CoproductValue!) ?? Task.CompletedTask); break;
+            case 2: await (ifSecond?.Invoke((T2)CoproductValue!) ?? Task.CompletedTask); break;
+            case 3: await (ifThird?.Invoke((T3)CoproductValue!) ?? Task.CompletedTask); break;
+            case 4: await (ifFourth?.Invoke((T4)CoproductValue!) ?? Task.CompletedTask); break;
+            case 5: await (ifFifth?.Invoke((T5)CoproductValue!) ?? Task.CompletedTask); break;
+            case 6: await (ifSixth?.Invoke((T6)CoproductValue!) ?? Task.CompletedTask); break;
+            case 7: await (ifSeventh?.Invoke((T7)CoproductValue!) ?? Task.CompletedTask); break;
+            case 8: await (ifEighth?.Invoke((T8)CoproductValue!) ?? Task.CompletedTask); break;
+            case 9: await (ifNinth?.Invoke((T9)CoproductValue!) ?? Task.CompletedTask); break;
+            case 10: await (ifTenth?.Invoke((T10)CoproductValue!) ?? Task.CompletedTask); break;
         }
     }
 
@@ -2838,7 +2829,7 @@ public class Coproduct11<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11> : Coprodu
     /// </summary>
     /// <param name="discriminator">Discriminator of the value from interval [1, arity].</param>
     /// <param name="value">Value of the coproduct on the position defined by the discriminator.</param>
-    protected Coproduct11(int discriminator, object value)
+    protected Coproduct11(int discriminator, object? value)
         : base(11, discriminator, value)
     {
     }
@@ -2890,47 +2881,47 @@ public class Coproduct11<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11> : Coprodu
 
     public Option<T1> First
     {
-        get { return IsFirst ? Option.Valued((T1)CoproductValue) : Option.Empty<T1>(); }
+        get { return IsFirst ? Option.Valued((T1)CoproductValue!) : Option.Empty<T1>(); }
     }
     public Option<T2> Second
     {
-        get { return IsSecond ? Option.Valued((T2)CoproductValue) : Option.Empty<T2>(); }
+        get { return IsSecond ? Option.Valued((T2)CoproductValue!) : Option.Empty<T2>(); }
     }
     public Option<T3> Third
     {
-        get { return IsThird ? Option.Valued((T3)CoproductValue) : Option.Empty<T3>(); }
+        get { return IsThird ? Option.Valued((T3)CoproductValue!) : Option.Empty<T3>(); }
     }
     public Option<T4> Fourth
     {
-        get { return IsFourth ? Option.Valued((T4)CoproductValue) : Option.Empty<T4>(); }
+        get { return IsFourth ? Option.Valued((T4)CoproductValue!) : Option.Empty<T4>(); }
     }
     public Option<T5> Fifth
     {
-        get { return IsFifth ? Option.Valued((T5)CoproductValue) : Option.Empty<T5>(); }
+        get { return IsFifth ? Option.Valued((T5)CoproductValue!) : Option.Empty<T5>(); }
     }
     public Option<T6> Sixth
     {
-        get { return IsSixth ? Option.Valued((T6)CoproductValue) : Option.Empty<T6>(); }
+        get { return IsSixth ? Option.Valued((T6)CoproductValue!) : Option.Empty<T6>(); }
     }
     public Option<T7> Seventh
     {
-        get { return IsSeventh ? Option.Valued((T7)CoproductValue) : Option.Empty<T7>(); }
+        get { return IsSeventh ? Option.Valued((T7)CoproductValue!) : Option.Empty<T7>(); }
     }
     public Option<T8> Eighth
     {
-        get { return IsEighth ? Option.Valued((T8)CoproductValue) : Option.Empty<T8>(); }
+        get { return IsEighth ? Option.Valued((T8)CoproductValue!) : Option.Empty<T8>(); }
     }
     public Option<T9> Ninth
     {
-        get { return IsNinth ? Option.Valued((T9)CoproductValue) : Option.Empty<T9>(); }
+        get { return IsNinth ? Option.Valued((T9)CoproductValue!) : Option.Empty<T9>(); }
     }
     public Option<T10> Tenth
     {
-        get { return IsTenth ? Option.Valued((T10)CoproductValue) : Option.Empty<T10>(); }
+        get { return IsTenth ? Option.Valued((T10)CoproductValue!) : Option.Empty<T10>(); }
     }
     public Option<T11> Eleventh
     {
-        get { return IsEleventh ? Option.Valued((T11)CoproductValue) : Option.Empty<T11>(); }
+        get { return IsEleventh ? Option.Valued((T11)CoproductValue!) : Option.Empty<T11>(); }
     }
 
     public Coproduct11<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11> Map<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11>(
@@ -2948,17 +2939,17 @@ public class Coproduct11<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11> : Coprodu
     {
         switch (CoproductDiscriminator)
         {
-            case 1: return Coproduct11.CreateFirst<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11>(ifFirst((T1)CoproductValue));
-            case 2: return Coproduct11.CreateSecond<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11>(ifSecond((T2)CoproductValue));
-            case 3: return Coproduct11.CreateThird<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11>(ifThird((T3)CoproductValue));
-            case 4: return Coproduct11.CreateFourth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11>(ifFourth((T4)CoproductValue));
-            case 5: return Coproduct11.CreateFifth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11>(ifFifth((T5)CoproductValue));
-            case 6: return Coproduct11.CreateSixth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11>(ifSixth((T6)CoproductValue));
-            case 7: return Coproduct11.CreateSeventh<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11>(ifSeventh((T7)CoproductValue));
-            case 8: return Coproduct11.CreateEighth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11>(ifEighth((T8)CoproductValue));
-            case 9: return Coproduct11.CreateNinth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11>(ifNinth((T9)CoproductValue));
-            case 10: return Coproduct11.CreateTenth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11>(ifTenth((T10)CoproductValue));
-            case 11: return Coproduct11.CreateEleventh<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11>(ifEleventh((T11)CoproductValue));
+            case 1: return Coproduct11.CreateFirst<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11>(ifFirst((T1)CoproductValue!));
+            case 2: return Coproduct11.CreateSecond<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11>(ifSecond((T2)CoproductValue!));
+            case 3: return Coproduct11.CreateThird<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11>(ifThird((T3)CoproductValue!));
+            case 4: return Coproduct11.CreateFourth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11>(ifFourth((T4)CoproductValue!));
+            case 5: return Coproduct11.CreateFifth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11>(ifFifth((T5)CoproductValue!));
+            case 6: return Coproduct11.CreateSixth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11>(ifSixth((T6)CoproductValue!));
+            case 7: return Coproduct11.CreateSeventh<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11>(ifSeventh((T7)CoproductValue!));
+            case 8: return Coproduct11.CreateEighth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11>(ifEighth((T8)CoproductValue!));
+            case 9: return Coproduct11.CreateNinth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11>(ifNinth((T9)CoproductValue!));
+            case 10: return Coproduct11.CreateTenth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11>(ifTenth((T10)CoproductValue!));
+            case 11: return Coproduct11.CreateEleventh<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11>(ifEleventh((T11)CoproductValue!));
             default: throw new InvalidOperationException();
         }
     }
@@ -2978,17 +2969,17 @@ public class Coproduct11<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11> : Coprodu
     {
         switch (CoproductDiscriminator)
         {
-            case 1: return ifFirst((T1)CoproductValue);
-            case 2: return ifSecond((T2)CoproductValue);
-            case 3: return ifThird((T3)CoproductValue);
-            case 4: return ifFourth((T4)CoproductValue);
-            case 5: return ifFifth((T5)CoproductValue);
-            case 6: return ifSixth((T6)CoproductValue);
-            case 7: return ifSeventh((T7)CoproductValue);
-            case 8: return ifEighth((T8)CoproductValue);
-            case 9: return ifNinth((T9)CoproductValue);
-            case 10: return ifTenth((T10)CoproductValue);
-            case 11: return ifEleventh((T11)CoproductValue);
+            case 1: return ifFirst((T1)CoproductValue!);
+            case 2: return ifSecond((T2)CoproductValue!);
+            case 3: return ifThird((T3)CoproductValue!);
+            case 4: return ifFourth((T4)CoproductValue!);
+            case 5: return ifFifth((T5)CoproductValue!);
+            case 6: return ifSixth((T6)CoproductValue!);
+            case 7: return ifSeventh((T7)CoproductValue!);
+            case 8: return ifEighth((T8)CoproductValue!);
+            case 9: return ifNinth((T9)CoproductValue!);
+            case 10: return ifTenth((T10)CoproductValue!);
+            case 11: return ifEleventh((T11)CoproductValue!);
             default: throw new InvalidOperationException();
         }
     }
@@ -3008,17 +2999,17 @@ public class Coproduct11<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11> : Coprodu
     {
         switch (CoproductDiscriminator)
         {
-            case 1: return await ifFirst((T1)CoproductValue);
-            case 2: return await ifSecond((T2)CoproductValue);
-            case 3: return await ifThird((T3)CoproductValue);
-            case 4: return await ifFourth((T4)CoproductValue);
-            case 5: return await ifFifth((T5)CoproductValue);
-            case 6: return await ifSixth((T6)CoproductValue);
-            case 7: return await ifSeventh((T7)CoproductValue);
-            case 8: return await ifEighth((T8)CoproductValue);
-            case 9: return await ifNinth((T9)CoproductValue);
-            case 10: return await ifTenth((T10)CoproductValue);
-            case 11: return await ifEleventh((T11)CoproductValue);
+            case 1: return await ifFirst((T1)CoproductValue!);
+            case 2: return await ifSecond((T2)CoproductValue!);
+            case 3: return await ifThird((T3)CoproductValue!);
+            case 4: return await ifFourth((T4)CoproductValue!);
+            case 5: return await ifFifth((T5)CoproductValue!);
+            case 6: return await ifSixth((T6)CoproductValue!);
+            case 7: return await ifSeventh((T7)CoproductValue!);
+            case 8: return await ifEighth((T8)CoproductValue!);
+            case 9: return await ifNinth((T9)CoproductValue!);
+            case 10: return await ifTenth((T10)CoproductValue!);
+            case 11: return await ifEleventh((T11)CoproductValue!);
             default: throw new InvalidOperationException();
         }
     }
@@ -3038,17 +3029,17 @@ public class Coproduct11<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11> : Coprodu
     {
         switch (CoproductDiscriminator)
         {
-            case 1: ifFirst?.Invoke((T1)CoproductValue); break;
-            case 2: ifSecond?.Invoke((T2)CoproductValue); break;
-            case 3: ifThird?.Invoke((T3)CoproductValue); break;
-            case 4: ifFourth?.Invoke((T4)CoproductValue); break;
-            case 5: ifFifth?.Invoke((T5)CoproductValue); break;
-            case 6: ifSixth?.Invoke((T6)CoproductValue); break;
-            case 7: ifSeventh?.Invoke((T7)CoproductValue); break;
-            case 8: ifEighth?.Invoke((T8)CoproductValue); break;
-            case 9: ifNinth?.Invoke((T9)CoproductValue); break;
-            case 10: ifTenth?.Invoke((T10)CoproductValue); break;
-            case 11: ifEleventh?.Invoke((T11)CoproductValue); break;
+            case 1: ifFirst?.Invoke((T1)CoproductValue!); break;
+            case 2: ifSecond?.Invoke((T2)CoproductValue!); break;
+            case 3: ifThird?.Invoke((T3)CoproductValue!); break;
+            case 4: ifFourth?.Invoke((T4)CoproductValue!); break;
+            case 5: ifFifth?.Invoke((T5)CoproductValue!); break;
+            case 6: ifSixth?.Invoke((T6)CoproductValue!); break;
+            case 7: ifSeventh?.Invoke((T7)CoproductValue!); break;
+            case 8: ifEighth?.Invoke((T8)CoproductValue!); break;
+            case 9: ifNinth?.Invoke((T9)CoproductValue!); break;
+            case 10: ifTenth?.Invoke((T10)CoproductValue!); break;
+            case 11: ifEleventh?.Invoke((T11)CoproductValue!); break;
         }
     }
 
@@ -3067,17 +3058,17 @@ public class Coproduct11<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11> : Coprodu
     {
         switch (CoproductDiscriminator)
         {
-            case 1: await (ifFirst?.Invoke((T1)CoproductValue) ?? Task.CompletedTask); break;
-            case 2: await (ifSecond?.Invoke((T2)CoproductValue) ?? Task.CompletedTask); break;
-            case 3: await (ifThird?.Invoke((T3)CoproductValue) ?? Task.CompletedTask); break;
-            case 4: await (ifFourth?.Invoke((T4)CoproductValue) ?? Task.CompletedTask); break;
-            case 5: await (ifFifth?.Invoke((T5)CoproductValue) ?? Task.CompletedTask); break;
-            case 6: await (ifSixth?.Invoke((T6)CoproductValue) ?? Task.CompletedTask); break;
-            case 7: await (ifSeventh?.Invoke((T7)CoproductValue) ?? Task.CompletedTask); break;
-            case 8: await (ifEighth?.Invoke((T8)CoproductValue) ?? Task.CompletedTask); break;
-            case 9: await (ifNinth?.Invoke((T9)CoproductValue) ?? Task.CompletedTask); break;
-            case 10: await (ifTenth?.Invoke((T10)CoproductValue) ?? Task.CompletedTask); break;
-            case 11: await (ifEleventh?.Invoke((T11)CoproductValue) ?? Task.CompletedTask); break;
+            case 1: await (ifFirst?.Invoke((T1)CoproductValue!) ?? Task.CompletedTask); break;
+            case 2: await (ifSecond?.Invoke((T2)CoproductValue!) ?? Task.CompletedTask); break;
+            case 3: await (ifThird?.Invoke((T3)CoproductValue!) ?? Task.CompletedTask); break;
+            case 4: await (ifFourth?.Invoke((T4)CoproductValue!) ?? Task.CompletedTask); break;
+            case 5: await (ifFifth?.Invoke((T5)CoproductValue!) ?? Task.CompletedTask); break;
+            case 6: await (ifSixth?.Invoke((T6)CoproductValue!) ?? Task.CompletedTask); break;
+            case 7: await (ifSeventh?.Invoke((T7)CoproductValue!) ?? Task.CompletedTask); break;
+            case 8: await (ifEighth?.Invoke((T8)CoproductValue!) ?? Task.CompletedTask); break;
+            case 9: await (ifNinth?.Invoke((T9)CoproductValue!) ?? Task.CompletedTask); break;
+            case 10: await (ifTenth?.Invoke((T10)CoproductValue!) ?? Task.CompletedTask); break;
+            case 11: await (ifEleventh?.Invoke((T11)CoproductValue!) ?? Task.CompletedTask); break;
         }
     }
 
@@ -3300,7 +3291,7 @@ public class Coproduct12<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12> : Co
     /// </summary>
     /// <param name="discriminator">Discriminator of the value from interval [1, arity].</param>
     /// <param name="value">Value of the coproduct on the position defined by the discriminator.</param>
-    protected Coproduct12(int discriminator, object value)
+    protected Coproduct12(int discriminator, object? value)
         : base(12, discriminator, value)
     {
     }
@@ -3356,51 +3347,51 @@ public class Coproduct12<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12> : Co
 
     public Option<T1> First
     {
-        get { return IsFirst ? Option.Valued((T1)CoproductValue) : Option.Empty<T1>(); }
+        get { return IsFirst ? Option.Valued((T1)CoproductValue!) : Option.Empty<T1>(); }
     }
     public Option<T2> Second
     {
-        get { return IsSecond ? Option.Valued((T2)CoproductValue) : Option.Empty<T2>(); }
+        get { return IsSecond ? Option.Valued((T2)CoproductValue!) : Option.Empty<T2>(); }
     }
     public Option<T3> Third
     {
-        get { return IsThird ? Option.Valued((T3)CoproductValue) : Option.Empty<T3>(); }
+        get { return IsThird ? Option.Valued((T3)CoproductValue!) : Option.Empty<T3>(); }
     }
     public Option<T4> Fourth
     {
-        get { return IsFourth ? Option.Valued((T4)CoproductValue) : Option.Empty<T4>(); }
+        get { return IsFourth ? Option.Valued((T4)CoproductValue!) : Option.Empty<T4>(); }
     }
     public Option<T5> Fifth
     {
-        get { return IsFifth ? Option.Valued((T5)CoproductValue) : Option.Empty<T5>(); }
+        get { return IsFifth ? Option.Valued((T5)CoproductValue!) : Option.Empty<T5>(); }
     }
     public Option<T6> Sixth
     {
-        get { return IsSixth ? Option.Valued((T6)CoproductValue) : Option.Empty<T6>(); }
+        get { return IsSixth ? Option.Valued((T6)CoproductValue!) : Option.Empty<T6>(); }
     }
     public Option<T7> Seventh
     {
-        get { return IsSeventh ? Option.Valued((T7)CoproductValue) : Option.Empty<T7>(); }
+        get { return IsSeventh ? Option.Valued((T7)CoproductValue!) : Option.Empty<T7>(); }
     }
     public Option<T8> Eighth
     {
-        get { return IsEighth ? Option.Valued((T8)CoproductValue) : Option.Empty<T8>(); }
+        get { return IsEighth ? Option.Valued((T8)CoproductValue!) : Option.Empty<T8>(); }
     }
     public Option<T9> Ninth
     {
-        get { return IsNinth ? Option.Valued((T9)CoproductValue) : Option.Empty<T9>(); }
+        get { return IsNinth ? Option.Valued((T9)CoproductValue!) : Option.Empty<T9>(); }
     }
     public Option<T10> Tenth
     {
-        get { return IsTenth ? Option.Valued((T10)CoproductValue) : Option.Empty<T10>(); }
+        get { return IsTenth ? Option.Valued((T10)CoproductValue!) : Option.Empty<T10>(); }
     }
     public Option<T11> Eleventh
     {
-        get { return IsEleventh ? Option.Valued((T11)CoproductValue) : Option.Empty<T11>(); }
+        get { return IsEleventh ? Option.Valued((T11)CoproductValue!) : Option.Empty<T11>(); }
     }
     public Option<T12> Twelfth
     {
-        get { return IsTwelfth ? Option.Valued((T12)CoproductValue) : Option.Empty<T12>(); }
+        get { return IsTwelfth ? Option.Valued((T12)CoproductValue!) : Option.Empty<T12>(); }
     }
 
     public Coproduct12<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12> Map<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12>(
@@ -3419,18 +3410,18 @@ public class Coproduct12<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12> : Co
     {
         switch (CoproductDiscriminator)
         {
-            case 1: return Coproduct12.CreateFirst<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12>(ifFirst((T1)CoproductValue));
-            case 2: return Coproduct12.CreateSecond<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12>(ifSecond((T2)CoproductValue));
-            case 3: return Coproduct12.CreateThird<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12>(ifThird((T3)CoproductValue));
-            case 4: return Coproduct12.CreateFourth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12>(ifFourth((T4)CoproductValue));
-            case 5: return Coproduct12.CreateFifth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12>(ifFifth((T5)CoproductValue));
-            case 6: return Coproduct12.CreateSixth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12>(ifSixth((T6)CoproductValue));
-            case 7: return Coproduct12.CreateSeventh<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12>(ifSeventh((T7)CoproductValue));
-            case 8: return Coproduct12.CreateEighth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12>(ifEighth((T8)CoproductValue));
-            case 9: return Coproduct12.CreateNinth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12>(ifNinth((T9)CoproductValue));
-            case 10: return Coproduct12.CreateTenth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12>(ifTenth((T10)CoproductValue));
-            case 11: return Coproduct12.CreateEleventh<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12>(ifEleventh((T11)CoproductValue));
-            case 12: return Coproduct12.CreateTwelfth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12>(ifTwelfth((T12)CoproductValue));
+            case 1: return Coproduct12.CreateFirst<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12>(ifFirst((T1)CoproductValue!));
+            case 2: return Coproduct12.CreateSecond<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12>(ifSecond((T2)CoproductValue!));
+            case 3: return Coproduct12.CreateThird<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12>(ifThird((T3)CoproductValue!));
+            case 4: return Coproduct12.CreateFourth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12>(ifFourth((T4)CoproductValue!));
+            case 5: return Coproduct12.CreateFifth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12>(ifFifth((T5)CoproductValue!));
+            case 6: return Coproduct12.CreateSixth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12>(ifSixth((T6)CoproductValue!));
+            case 7: return Coproduct12.CreateSeventh<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12>(ifSeventh((T7)CoproductValue!));
+            case 8: return Coproduct12.CreateEighth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12>(ifEighth((T8)CoproductValue!));
+            case 9: return Coproduct12.CreateNinth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12>(ifNinth((T9)CoproductValue!));
+            case 10: return Coproduct12.CreateTenth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12>(ifTenth((T10)CoproductValue!));
+            case 11: return Coproduct12.CreateEleventh<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12>(ifEleventh((T11)CoproductValue!));
+            case 12: return Coproduct12.CreateTwelfth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12>(ifTwelfth((T12)CoproductValue!));
             default: throw new InvalidOperationException();
         }
     }
@@ -3451,18 +3442,18 @@ public class Coproduct12<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12> : Co
     {
         switch (CoproductDiscriminator)
         {
-            case 1: return ifFirst((T1)CoproductValue);
-            case 2: return ifSecond((T2)CoproductValue);
-            case 3: return ifThird((T3)CoproductValue);
-            case 4: return ifFourth((T4)CoproductValue);
-            case 5: return ifFifth((T5)CoproductValue);
-            case 6: return ifSixth((T6)CoproductValue);
-            case 7: return ifSeventh((T7)CoproductValue);
-            case 8: return ifEighth((T8)CoproductValue);
-            case 9: return ifNinth((T9)CoproductValue);
-            case 10: return ifTenth((T10)CoproductValue);
-            case 11: return ifEleventh((T11)CoproductValue);
-            case 12: return ifTwelfth((T12)CoproductValue);
+            case 1: return ifFirst((T1)CoproductValue!);
+            case 2: return ifSecond((T2)CoproductValue!);
+            case 3: return ifThird((T3)CoproductValue!);
+            case 4: return ifFourth((T4)CoproductValue!);
+            case 5: return ifFifth((T5)CoproductValue!);
+            case 6: return ifSixth((T6)CoproductValue!);
+            case 7: return ifSeventh((T7)CoproductValue!);
+            case 8: return ifEighth((T8)CoproductValue!);
+            case 9: return ifNinth((T9)CoproductValue!);
+            case 10: return ifTenth((T10)CoproductValue!);
+            case 11: return ifEleventh((T11)CoproductValue!);
+            case 12: return ifTwelfth((T12)CoproductValue!);
             default: throw new InvalidOperationException();
         }
     }
@@ -3483,18 +3474,18 @@ public class Coproduct12<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12> : Co
     {
         switch (CoproductDiscriminator)
         {
-            case 1: return await ifFirst((T1)CoproductValue);
-            case 2: return await ifSecond((T2)CoproductValue);
-            case 3: return await ifThird((T3)CoproductValue);
-            case 4: return await ifFourth((T4)CoproductValue);
-            case 5: return await ifFifth((T5)CoproductValue);
-            case 6: return await ifSixth((T6)CoproductValue);
-            case 7: return await ifSeventh((T7)CoproductValue);
-            case 8: return await ifEighth((T8)CoproductValue);
-            case 9: return await ifNinth((T9)CoproductValue);
-            case 10: return await ifTenth((T10)CoproductValue);
-            case 11: return await ifEleventh((T11)CoproductValue);
-            case 12: return await ifTwelfth((T12)CoproductValue);
+            case 1: return await ifFirst((T1)CoproductValue!);
+            case 2: return await ifSecond((T2)CoproductValue!);
+            case 3: return await ifThird((T3)CoproductValue!);
+            case 4: return await ifFourth((T4)CoproductValue!);
+            case 5: return await ifFifth((T5)CoproductValue!);
+            case 6: return await ifSixth((T6)CoproductValue!);
+            case 7: return await ifSeventh((T7)CoproductValue!);
+            case 8: return await ifEighth((T8)CoproductValue!);
+            case 9: return await ifNinth((T9)CoproductValue!);
+            case 10: return await ifTenth((T10)CoproductValue!);
+            case 11: return await ifEleventh((T11)CoproductValue!);
+            case 12: return await ifTwelfth((T12)CoproductValue!);
             default: throw new InvalidOperationException();
         }
     }
@@ -3515,18 +3506,18 @@ public class Coproduct12<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12> : Co
     {
         switch (CoproductDiscriminator)
         {
-            case 1: ifFirst?.Invoke((T1)CoproductValue); break;
-            case 2: ifSecond?.Invoke((T2)CoproductValue); break;
-            case 3: ifThird?.Invoke((T3)CoproductValue); break;
-            case 4: ifFourth?.Invoke((T4)CoproductValue); break;
-            case 5: ifFifth?.Invoke((T5)CoproductValue); break;
-            case 6: ifSixth?.Invoke((T6)CoproductValue); break;
-            case 7: ifSeventh?.Invoke((T7)CoproductValue); break;
-            case 8: ifEighth?.Invoke((T8)CoproductValue); break;
-            case 9: ifNinth?.Invoke((T9)CoproductValue); break;
-            case 10: ifTenth?.Invoke((T10)CoproductValue); break;
-            case 11: ifEleventh?.Invoke((T11)CoproductValue); break;
-            case 12: ifTwelfth?.Invoke((T12)CoproductValue); break;
+            case 1: ifFirst?.Invoke((T1)CoproductValue!); break;
+            case 2: ifSecond?.Invoke((T2)CoproductValue!); break;
+            case 3: ifThird?.Invoke((T3)CoproductValue!); break;
+            case 4: ifFourth?.Invoke((T4)CoproductValue!); break;
+            case 5: ifFifth?.Invoke((T5)CoproductValue!); break;
+            case 6: ifSixth?.Invoke((T6)CoproductValue!); break;
+            case 7: ifSeventh?.Invoke((T7)CoproductValue!); break;
+            case 8: ifEighth?.Invoke((T8)CoproductValue!); break;
+            case 9: ifNinth?.Invoke((T9)CoproductValue!); break;
+            case 10: ifTenth?.Invoke((T10)CoproductValue!); break;
+            case 11: ifEleventh?.Invoke((T11)CoproductValue!); break;
+            case 12: ifTwelfth?.Invoke((T12)CoproductValue!); break;
         }
     }
 
@@ -3546,18 +3537,18 @@ public class Coproduct12<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12> : Co
     {
         switch (CoproductDiscriminator)
         {
-            case 1: await (ifFirst?.Invoke((T1)CoproductValue) ?? Task.CompletedTask); break;
-            case 2: await (ifSecond?.Invoke((T2)CoproductValue) ?? Task.CompletedTask); break;
-            case 3: await (ifThird?.Invoke((T3)CoproductValue) ?? Task.CompletedTask); break;
-            case 4: await (ifFourth?.Invoke((T4)CoproductValue) ?? Task.CompletedTask); break;
-            case 5: await (ifFifth?.Invoke((T5)CoproductValue) ?? Task.CompletedTask); break;
-            case 6: await (ifSixth?.Invoke((T6)CoproductValue) ?? Task.CompletedTask); break;
-            case 7: await (ifSeventh?.Invoke((T7)CoproductValue) ?? Task.CompletedTask); break;
-            case 8: await (ifEighth?.Invoke((T8)CoproductValue) ?? Task.CompletedTask); break;
-            case 9: await (ifNinth?.Invoke((T9)CoproductValue) ?? Task.CompletedTask); break;
-            case 10: await (ifTenth?.Invoke((T10)CoproductValue) ?? Task.CompletedTask); break;
-            case 11: await (ifEleventh?.Invoke((T11)CoproductValue) ?? Task.CompletedTask); break;
-            case 12: await (ifTwelfth?.Invoke((T12)CoproductValue) ?? Task.CompletedTask); break;
+            case 1: await (ifFirst?.Invoke((T1)CoproductValue!) ?? Task.CompletedTask); break;
+            case 2: await (ifSecond?.Invoke((T2)CoproductValue!) ?? Task.CompletedTask); break;
+            case 3: await (ifThird?.Invoke((T3)CoproductValue!) ?? Task.CompletedTask); break;
+            case 4: await (ifFourth?.Invoke((T4)CoproductValue!) ?? Task.CompletedTask); break;
+            case 5: await (ifFifth?.Invoke((T5)CoproductValue!) ?? Task.CompletedTask); break;
+            case 6: await (ifSixth?.Invoke((T6)CoproductValue!) ?? Task.CompletedTask); break;
+            case 7: await (ifSeventh?.Invoke((T7)CoproductValue!) ?? Task.CompletedTask); break;
+            case 8: await (ifEighth?.Invoke((T8)CoproductValue!) ?? Task.CompletedTask); break;
+            case 9: await (ifNinth?.Invoke((T9)CoproductValue!) ?? Task.CompletedTask); break;
+            case 10: await (ifTenth?.Invoke((T10)CoproductValue!) ?? Task.CompletedTask); break;
+            case 11: await (ifEleventh?.Invoke((T11)CoproductValue!) ?? Task.CompletedTask); break;
+            case 12: await (ifTwelfth?.Invoke((T12)CoproductValue!) ?? Task.CompletedTask); break;
         }
     }
 
@@ -3796,7 +3787,7 @@ public class Coproduct13<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13>
     /// </summary>
     /// <param name="discriminator">Discriminator of the value from interval [1, arity].</param>
     /// <param name="value">Value of the coproduct on the position defined by the discriminator.</param>
-    protected Coproduct13(int discriminator, object value)
+    protected Coproduct13(int discriminator, object? value)
         : base(13, discriminator, value)
     {
     }
@@ -3856,55 +3847,55 @@ public class Coproduct13<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13>
 
     public Option<T1> First
     {
-        get { return IsFirst ? Option.Valued((T1)CoproductValue) : Option.Empty<T1>(); }
+        get { return IsFirst ? Option.Valued((T1)CoproductValue!) : Option.Empty<T1>(); }
     }
     public Option<T2> Second
     {
-        get { return IsSecond ? Option.Valued((T2)CoproductValue) : Option.Empty<T2>(); }
+        get { return IsSecond ? Option.Valued((T2)CoproductValue!) : Option.Empty<T2>(); }
     }
     public Option<T3> Third
     {
-        get { return IsThird ? Option.Valued((T3)CoproductValue) : Option.Empty<T3>(); }
+        get { return IsThird ? Option.Valued((T3)CoproductValue!) : Option.Empty<T3>(); }
     }
     public Option<T4> Fourth
     {
-        get { return IsFourth ? Option.Valued((T4)CoproductValue) : Option.Empty<T4>(); }
+        get { return IsFourth ? Option.Valued((T4)CoproductValue!) : Option.Empty<T4>(); }
     }
     public Option<T5> Fifth
     {
-        get { return IsFifth ? Option.Valued((T5)CoproductValue) : Option.Empty<T5>(); }
+        get { return IsFifth ? Option.Valued((T5)CoproductValue!) : Option.Empty<T5>(); }
     }
     public Option<T6> Sixth
     {
-        get { return IsSixth ? Option.Valued((T6)CoproductValue) : Option.Empty<T6>(); }
+        get { return IsSixth ? Option.Valued((T6)CoproductValue!) : Option.Empty<T6>(); }
     }
     public Option<T7> Seventh
     {
-        get { return IsSeventh ? Option.Valued((T7)CoproductValue) : Option.Empty<T7>(); }
+        get { return IsSeventh ? Option.Valued((T7)CoproductValue!) : Option.Empty<T7>(); }
     }
     public Option<T8> Eighth
     {
-        get { return IsEighth ? Option.Valued((T8)CoproductValue) : Option.Empty<T8>(); }
+        get { return IsEighth ? Option.Valued((T8)CoproductValue!) : Option.Empty<T8>(); }
     }
     public Option<T9> Ninth
     {
-        get { return IsNinth ? Option.Valued((T9)CoproductValue) : Option.Empty<T9>(); }
+        get { return IsNinth ? Option.Valued((T9)CoproductValue!) : Option.Empty<T9>(); }
     }
     public Option<T10> Tenth
     {
-        get { return IsTenth ? Option.Valued((T10)CoproductValue) : Option.Empty<T10>(); }
+        get { return IsTenth ? Option.Valued((T10)CoproductValue!) : Option.Empty<T10>(); }
     }
     public Option<T11> Eleventh
     {
-        get { return IsEleventh ? Option.Valued((T11)CoproductValue) : Option.Empty<T11>(); }
+        get { return IsEleventh ? Option.Valued((T11)CoproductValue!) : Option.Empty<T11>(); }
     }
     public Option<T12> Twelfth
     {
-        get { return IsTwelfth ? Option.Valued((T12)CoproductValue) : Option.Empty<T12>(); }
+        get { return IsTwelfth ? Option.Valued((T12)CoproductValue!) : Option.Empty<T12>(); }
     }
     public Option<T13> Thirteenth
     {
-        get { return IsThirteenth ? Option.Valued((T13)CoproductValue) : Option.Empty<T13>(); }
+        get { return IsThirteenth ? Option.Valued((T13)CoproductValue!) : Option.Empty<T13>(); }
     }
 
     public Coproduct13<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13> Map<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13>(
@@ -3924,19 +3915,19 @@ public class Coproduct13<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13>
     {
         switch (CoproductDiscriminator)
         {
-            case 1: return Coproduct13.CreateFirst<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13>(ifFirst((T1)CoproductValue));
-            case 2: return Coproduct13.CreateSecond<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13>(ifSecond((T2)CoproductValue));
-            case 3: return Coproduct13.CreateThird<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13>(ifThird((T3)CoproductValue));
-            case 4: return Coproduct13.CreateFourth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13>(ifFourth((T4)CoproductValue));
-            case 5: return Coproduct13.CreateFifth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13>(ifFifth((T5)CoproductValue));
-            case 6: return Coproduct13.CreateSixth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13>(ifSixth((T6)CoproductValue));
-            case 7: return Coproduct13.CreateSeventh<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13>(ifSeventh((T7)CoproductValue));
-            case 8: return Coproduct13.CreateEighth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13>(ifEighth((T8)CoproductValue));
-            case 9: return Coproduct13.CreateNinth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13>(ifNinth((T9)CoproductValue));
-            case 10: return Coproduct13.CreateTenth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13>(ifTenth((T10)CoproductValue));
-            case 11: return Coproduct13.CreateEleventh<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13>(ifEleventh((T11)CoproductValue));
-            case 12: return Coproduct13.CreateTwelfth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13>(ifTwelfth((T12)CoproductValue));
-            case 13: return Coproduct13.CreateThirteenth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13>(ifThirteenth((T13)CoproductValue));
+            case 1: return Coproduct13.CreateFirst<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13>(ifFirst((T1)CoproductValue!));
+            case 2: return Coproduct13.CreateSecond<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13>(ifSecond((T2)CoproductValue!));
+            case 3: return Coproduct13.CreateThird<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13>(ifThird((T3)CoproductValue!));
+            case 4: return Coproduct13.CreateFourth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13>(ifFourth((T4)CoproductValue!));
+            case 5: return Coproduct13.CreateFifth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13>(ifFifth((T5)CoproductValue!));
+            case 6: return Coproduct13.CreateSixth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13>(ifSixth((T6)CoproductValue!));
+            case 7: return Coproduct13.CreateSeventh<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13>(ifSeventh((T7)CoproductValue!));
+            case 8: return Coproduct13.CreateEighth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13>(ifEighth((T8)CoproductValue!));
+            case 9: return Coproduct13.CreateNinth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13>(ifNinth((T9)CoproductValue!));
+            case 10: return Coproduct13.CreateTenth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13>(ifTenth((T10)CoproductValue!));
+            case 11: return Coproduct13.CreateEleventh<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13>(ifEleventh((T11)CoproductValue!));
+            case 12: return Coproduct13.CreateTwelfth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13>(ifTwelfth((T12)CoproductValue!));
+            case 13: return Coproduct13.CreateThirteenth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13>(ifThirteenth((T13)CoproductValue!));
             default: throw new InvalidOperationException();
         }
     }
@@ -3958,19 +3949,19 @@ public class Coproduct13<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13>
     {
         switch (CoproductDiscriminator)
         {
-            case 1: return ifFirst((T1)CoproductValue);
-            case 2: return ifSecond((T2)CoproductValue);
-            case 3: return ifThird((T3)CoproductValue);
-            case 4: return ifFourth((T4)CoproductValue);
-            case 5: return ifFifth((T5)CoproductValue);
-            case 6: return ifSixth((T6)CoproductValue);
-            case 7: return ifSeventh((T7)CoproductValue);
-            case 8: return ifEighth((T8)CoproductValue);
-            case 9: return ifNinth((T9)CoproductValue);
-            case 10: return ifTenth((T10)CoproductValue);
-            case 11: return ifEleventh((T11)CoproductValue);
-            case 12: return ifTwelfth((T12)CoproductValue);
-            case 13: return ifThirteenth((T13)CoproductValue);
+            case 1: return ifFirst((T1)CoproductValue!);
+            case 2: return ifSecond((T2)CoproductValue!);
+            case 3: return ifThird((T3)CoproductValue!);
+            case 4: return ifFourth((T4)CoproductValue!);
+            case 5: return ifFifth((T5)CoproductValue!);
+            case 6: return ifSixth((T6)CoproductValue!);
+            case 7: return ifSeventh((T7)CoproductValue!);
+            case 8: return ifEighth((T8)CoproductValue!);
+            case 9: return ifNinth((T9)CoproductValue!);
+            case 10: return ifTenth((T10)CoproductValue!);
+            case 11: return ifEleventh((T11)CoproductValue!);
+            case 12: return ifTwelfth((T12)CoproductValue!);
+            case 13: return ifThirteenth((T13)CoproductValue!);
             default: throw new InvalidOperationException();
         }
     }
@@ -3992,19 +3983,19 @@ public class Coproduct13<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13>
     {
         switch (CoproductDiscriminator)
         {
-            case 1: return await ifFirst((T1)CoproductValue);
-            case 2: return await ifSecond((T2)CoproductValue);
-            case 3: return await ifThird((T3)CoproductValue);
-            case 4: return await ifFourth((T4)CoproductValue);
-            case 5: return await ifFifth((T5)CoproductValue);
-            case 6: return await ifSixth((T6)CoproductValue);
-            case 7: return await ifSeventh((T7)CoproductValue);
-            case 8: return await ifEighth((T8)CoproductValue);
-            case 9: return await ifNinth((T9)CoproductValue);
-            case 10: return await ifTenth((T10)CoproductValue);
-            case 11: return await ifEleventh((T11)CoproductValue);
-            case 12: return await ifTwelfth((T12)CoproductValue);
-            case 13: return await ifThirteenth((T13)CoproductValue);
+            case 1: return await ifFirst((T1)CoproductValue!);
+            case 2: return await ifSecond((T2)CoproductValue!);
+            case 3: return await ifThird((T3)CoproductValue!);
+            case 4: return await ifFourth((T4)CoproductValue!);
+            case 5: return await ifFifth((T5)CoproductValue!);
+            case 6: return await ifSixth((T6)CoproductValue!);
+            case 7: return await ifSeventh((T7)CoproductValue!);
+            case 8: return await ifEighth((T8)CoproductValue!);
+            case 9: return await ifNinth((T9)CoproductValue!);
+            case 10: return await ifTenth((T10)CoproductValue!);
+            case 11: return await ifEleventh((T11)CoproductValue!);
+            case 12: return await ifTwelfth((T12)CoproductValue!);
+            case 13: return await ifThirteenth((T13)CoproductValue!);
             default: throw new InvalidOperationException();
         }
     }
@@ -4026,19 +4017,19 @@ public class Coproduct13<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13>
     {
         switch (CoproductDiscriminator)
         {
-            case 1: ifFirst?.Invoke((T1)CoproductValue); break;
-            case 2: ifSecond?.Invoke((T2)CoproductValue); break;
-            case 3: ifThird?.Invoke((T3)CoproductValue); break;
-            case 4: ifFourth?.Invoke((T4)CoproductValue); break;
-            case 5: ifFifth?.Invoke((T5)CoproductValue); break;
-            case 6: ifSixth?.Invoke((T6)CoproductValue); break;
-            case 7: ifSeventh?.Invoke((T7)CoproductValue); break;
-            case 8: ifEighth?.Invoke((T8)CoproductValue); break;
-            case 9: ifNinth?.Invoke((T9)CoproductValue); break;
-            case 10: ifTenth?.Invoke((T10)CoproductValue); break;
-            case 11: ifEleventh?.Invoke((T11)CoproductValue); break;
-            case 12: ifTwelfth?.Invoke((T12)CoproductValue); break;
-            case 13: ifThirteenth?.Invoke((T13)CoproductValue); break;
+            case 1: ifFirst?.Invoke((T1)CoproductValue!); break;
+            case 2: ifSecond?.Invoke((T2)CoproductValue!); break;
+            case 3: ifThird?.Invoke((T3)CoproductValue!); break;
+            case 4: ifFourth?.Invoke((T4)CoproductValue!); break;
+            case 5: ifFifth?.Invoke((T5)CoproductValue!); break;
+            case 6: ifSixth?.Invoke((T6)CoproductValue!); break;
+            case 7: ifSeventh?.Invoke((T7)CoproductValue!); break;
+            case 8: ifEighth?.Invoke((T8)CoproductValue!); break;
+            case 9: ifNinth?.Invoke((T9)CoproductValue!); break;
+            case 10: ifTenth?.Invoke((T10)CoproductValue!); break;
+            case 11: ifEleventh?.Invoke((T11)CoproductValue!); break;
+            case 12: ifTwelfth?.Invoke((T12)CoproductValue!); break;
+            case 13: ifThirteenth?.Invoke((T13)CoproductValue!); break;
         }
     }
 
@@ -4059,19 +4050,19 @@ public class Coproduct13<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13>
     {
         switch (CoproductDiscriminator)
         {
-            case 1: await (ifFirst?.Invoke((T1)CoproductValue) ?? Task.CompletedTask); break;
-            case 2: await (ifSecond?.Invoke((T2)CoproductValue) ?? Task.CompletedTask); break;
-            case 3: await (ifThird?.Invoke((T3)CoproductValue) ?? Task.CompletedTask); break;
-            case 4: await (ifFourth?.Invoke((T4)CoproductValue) ?? Task.CompletedTask); break;
-            case 5: await (ifFifth?.Invoke((T5)CoproductValue) ?? Task.CompletedTask); break;
-            case 6: await (ifSixth?.Invoke((T6)CoproductValue) ?? Task.CompletedTask); break;
-            case 7: await (ifSeventh?.Invoke((T7)CoproductValue) ?? Task.CompletedTask); break;
-            case 8: await (ifEighth?.Invoke((T8)CoproductValue) ?? Task.CompletedTask); break;
-            case 9: await (ifNinth?.Invoke((T9)CoproductValue) ?? Task.CompletedTask); break;
-            case 10: await (ifTenth?.Invoke((T10)CoproductValue) ?? Task.CompletedTask); break;
-            case 11: await (ifEleventh?.Invoke((T11)CoproductValue) ?? Task.CompletedTask); break;
-            case 12: await (ifTwelfth?.Invoke((T12)CoproductValue) ?? Task.CompletedTask); break;
-            case 13: await (ifThirteenth?.Invoke((T13)CoproductValue) ?? Task.CompletedTask); break;
+            case 1: await (ifFirst?.Invoke((T1)CoproductValue!) ?? Task.CompletedTask); break;
+            case 2: await (ifSecond?.Invoke((T2)CoproductValue!) ?? Task.CompletedTask); break;
+            case 3: await (ifThird?.Invoke((T3)CoproductValue!) ?? Task.CompletedTask); break;
+            case 4: await (ifFourth?.Invoke((T4)CoproductValue!) ?? Task.CompletedTask); break;
+            case 5: await (ifFifth?.Invoke((T5)CoproductValue!) ?? Task.CompletedTask); break;
+            case 6: await (ifSixth?.Invoke((T6)CoproductValue!) ?? Task.CompletedTask); break;
+            case 7: await (ifSeventh?.Invoke((T7)CoproductValue!) ?? Task.CompletedTask); break;
+            case 8: await (ifEighth?.Invoke((T8)CoproductValue!) ?? Task.CompletedTask); break;
+            case 9: await (ifNinth?.Invoke((T9)CoproductValue!) ?? Task.CompletedTask); break;
+            case 10: await (ifTenth?.Invoke((T10)CoproductValue!) ?? Task.CompletedTask); break;
+            case 11: await (ifEleventh?.Invoke((T11)CoproductValue!) ?? Task.CompletedTask); break;
+            case 12: await (ifTwelfth?.Invoke((T12)CoproductValue!) ?? Task.CompletedTask); break;
+            case 13: await (ifThirteenth?.Invoke((T13)CoproductValue!) ?? Task.CompletedTask); break;
         }
     }
 
@@ -4326,7 +4317,7 @@ public class Coproduct14<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13,
     /// </summary>
     /// <param name="discriminator">Discriminator of the value from interval [1, arity].</param>
     /// <param name="value">Value of the coproduct on the position defined by the discriminator.</param>
-    protected Coproduct14(int discriminator, object value)
+    protected Coproduct14(int discriminator, object? value)
         : base(14, discriminator, value)
     {
     }
@@ -4390,59 +4381,59 @@ public class Coproduct14<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13,
 
     public Option<T1> First
     {
-        get { return IsFirst ? Option.Valued((T1)CoproductValue) : Option.Empty<T1>(); }
+        get { return IsFirst ? Option.Valued((T1)CoproductValue!) : Option.Empty<T1>(); }
     }
     public Option<T2> Second
     {
-        get { return IsSecond ? Option.Valued((T2)CoproductValue) : Option.Empty<T2>(); }
+        get { return IsSecond ? Option.Valued((T2)CoproductValue!) : Option.Empty<T2>(); }
     }
     public Option<T3> Third
     {
-        get { return IsThird ? Option.Valued((T3)CoproductValue) : Option.Empty<T3>(); }
+        get { return IsThird ? Option.Valued((T3)CoproductValue!) : Option.Empty<T3>(); }
     }
     public Option<T4> Fourth
     {
-        get { return IsFourth ? Option.Valued((T4)CoproductValue) : Option.Empty<T4>(); }
+        get { return IsFourth ? Option.Valued((T4)CoproductValue!) : Option.Empty<T4>(); }
     }
     public Option<T5> Fifth
     {
-        get { return IsFifth ? Option.Valued((T5)CoproductValue) : Option.Empty<T5>(); }
+        get { return IsFifth ? Option.Valued((T5)CoproductValue!) : Option.Empty<T5>(); }
     }
     public Option<T6> Sixth
     {
-        get { return IsSixth ? Option.Valued((T6)CoproductValue) : Option.Empty<T6>(); }
+        get { return IsSixth ? Option.Valued((T6)CoproductValue!) : Option.Empty<T6>(); }
     }
     public Option<T7> Seventh
     {
-        get { return IsSeventh ? Option.Valued((T7)CoproductValue) : Option.Empty<T7>(); }
+        get { return IsSeventh ? Option.Valued((T7)CoproductValue!) : Option.Empty<T7>(); }
     }
     public Option<T8> Eighth
     {
-        get { return IsEighth ? Option.Valued((T8)CoproductValue) : Option.Empty<T8>(); }
+        get { return IsEighth ? Option.Valued((T8)CoproductValue!) : Option.Empty<T8>(); }
     }
     public Option<T9> Ninth
     {
-        get { return IsNinth ? Option.Valued((T9)CoproductValue) : Option.Empty<T9>(); }
+        get { return IsNinth ? Option.Valued((T9)CoproductValue!) : Option.Empty<T9>(); }
     }
     public Option<T10> Tenth
     {
-        get { return IsTenth ? Option.Valued((T10)CoproductValue) : Option.Empty<T10>(); }
+        get { return IsTenth ? Option.Valued((T10)CoproductValue!) : Option.Empty<T10>(); }
     }
     public Option<T11> Eleventh
     {
-        get { return IsEleventh ? Option.Valued((T11)CoproductValue) : Option.Empty<T11>(); }
+        get { return IsEleventh ? Option.Valued((T11)CoproductValue!) : Option.Empty<T11>(); }
     }
     public Option<T12> Twelfth
     {
-        get { return IsTwelfth ? Option.Valued((T12)CoproductValue) : Option.Empty<T12>(); }
+        get { return IsTwelfth ? Option.Valued((T12)CoproductValue!) : Option.Empty<T12>(); }
     }
     public Option<T13> Thirteenth
     {
-        get { return IsThirteenth ? Option.Valued((T13)CoproductValue) : Option.Empty<T13>(); }
+        get { return IsThirteenth ? Option.Valued((T13)CoproductValue!) : Option.Empty<T13>(); }
     }
     public Option<T14> Fourteenth
     {
-        get { return IsFourteenth ? Option.Valued((T14)CoproductValue) : Option.Empty<T14>(); }
+        get { return IsFourteenth ? Option.Valued((T14)CoproductValue!) : Option.Empty<T14>(); }
     }
 
     public Coproduct14<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14> Map<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14>(
@@ -4463,20 +4454,20 @@ public class Coproduct14<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13,
     {
         switch (CoproductDiscriminator)
         {
-            case 1: return Coproduct14.CreateFirst<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14>(ifFirst((T1)CoproductValue));
-            case 2: return Coproduct14.CreateSecond<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14>(ifSecond((T2)CoproductValue));
-            case 3: return Coproduct14.CreateThird<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14>(ifThird((T3)CoproductValue));
-            case 4: return Coproduct14.CreateFourth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14>(ifFourth((T4)CoproductValue));
-            case 5: return Coproduct14.CreateFifth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14>(ifFifth((T5)CoproductValue));
-            case 6: return Coproduct14.CreateSixth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14>(ifSixth((T6)CoproductValue));
-            case 7: return Coproduct14.CreateSeventh<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14>(ifSeventh((T7)CoproductValue));
-            case 8: return Coproduct14.CreateEighth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14>(ifEighth((T8)CoproductValue));
-            case 9: return Coproduct14.CreateNinth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14>(ifNinth((T9)CoproductValue));
-            case 10: return Coproduct14.CreateTenth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14>(ifTenth((T10)CoproductValue));
-            case 11: return Coproduct14.CreateEleventh<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14>(ifEleventh((T11)CoproductValue));
-            case 12: return Coproduct14.CreateTwelfth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14>(ifTwelfth((T12)CoproductValue));
-            case 13: return Coproduct14.CreateThirteenth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14>(ifThirteenth((T13)CoproductValue));
-            case 14: return Coproduct14.CreateFourteenth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14>(ifFourteenth((T14)CoproductValue));
+            case 1: return Coproduct14.CreateFirst<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14>(ifFirst((T1)CoproductValue!));
+            case 2: return Coproduct14.CreateSecond<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14>(ifSecond((T2)CoproductValue!));
+            case 3: return Coproduct14.CreateThird<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14>(ifThird((T3)CoproductValue!));
+            case 4: return Coproduct14.CreateFourth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14>(ifFourth((T4)CoproductValue!));
+            case 5: return Coproduct14.CreateFifth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14>(ifFifth((T5)CoproductValue!));
+            case 6: return Coproduct14.CreateSixth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14>(ifSixth((T6)CoproductValue!));
+            case 7: return Coproduct14.CreateSeventh<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14>(ifSeventh((T7)CoproductValue!));
+            case 8: return Coproduct14.CreateEighth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14>(ifEighth((T8)CoproductValue!));
+            case 9: return Coproduct14.CreateNinth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14>(ifNinth((T9)CoproductValue!));
+            case 10: return Coproduct14.CreateTenth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14>(ifTenth((T10)CoproductValue!));
+            case 11: return Coproduct14.CreateEleventh<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14>(ifEleventh((T11)CoproductValue!));
+            case 12: return Coproduct14.CreateTwelfth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14>(ifTwelfth((T12)CoproductValue!));
+            case 13: return Coproduct14.CreateThirteenth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14>(ifThirteenth((T13)CoproductValue!));
+            case 14: return Coproduct14.CreateFourteenth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14>(ifFourteenth((T14)CoproductValue!));
             default: throw new InvalidOperationException();
         }
     }
@@ -4499,20 +4490,20 @@ public class Coproduct14<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13,
     {
         switch (CoproductDiscriminator)
         {
-            case 1: return ifFirst((T1)CoproductValue);
-            case 2: return ifSecond((T2)CoproductValue);
-            case 3: return ifThird((T3)CoproductValue);
-            case 4: return ifFourth((T4)CoproductValue);
-            case 5: return ifFifth((T5)CoproductValue);
-            case 6: return ifSixth((T6)CoproductValue);
-            case 7: return ifSeventh((T7)CoproductValue);
-            case 8: return ifEighth((T8)CoproductValue);
-            case 9: return ifNinth((T9)CoproductValue);
-            case 10: return ifTenth((T10)CoproductValue);
-            case 11: return ifEleventh((T11)CoproductValue);
-            case 12: return ifTwelfth((T12)CoproductValue);
-            case 13: return ifThirteenth((T13)CoproductValue);
-            case 14: return ifFourteenth((T14)CoproductValue);
+            case 1: return ifFirst((T1)CoproductValue!);
+            case 2: return ifSecond((T2)CoproductValue!);
+            case 3: return ifThird((T3)CoproductValue!);
+            case 4: return ifFourth((T4)CoproductValue!);
+            case 5: return ifFifth((T5)CoproductValue!);
+            case 6: return ifSixth((T6)CoproductValue!);
+            case 7: return ifSeventh((T7)CoproductValue!);
+            case 8: return ifEighth((T8)CoproductValue!);
+            case 9: return ifNinth((T9)CoproductValue!);
+            case 10: return ifTenth((T10)CoproductValue!);
+            case 11: return ifEleventh((T11)CoproductValue!);
+            case 12: return ifTwelfth((T12)CoproductValue!);
+            case 13: return ifThirteenth((T13)CoproductValue!);
+            case 14: return ifFourteenth((T14)CoproductValue!);
             default: throw new InvalidOperationException();
         }
     }
@@ -4535,20 +4526,20 @@ public class Coproduct14<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13,
     {
         switch (CoproductDiscriminator)
         {
-            case 1: return await ifFirst((T1)CoproductValue);
-            case 2: return await ifSecond((T2)CoproductValue);
-            case 3: return await ifThird((T3)CoproductValue);
-            case 4: return await ifFourth((T4)CoproductValue);
-            case 5: return await ifFifth((T5)CoproductValue);
-            case 6: return await ifSixth((T6)CoproductValue);
-            case 7: return await ifSeventh((T7)CoproductValue);
-            case 8: return await ifEighth((T8)CoproductValue);
-            case 9: return await ifNinth((T9)CoproductValue);
-            case 10: return await ifTenth((T10)CoproductValue);
-            case 11: return await ifEleventh((T11)CoproductValue);
-            case 12: return await ifTwelfth((T12)CoproductValue);
-            case 13: return await ifThirteenth((T13)CoproductValue);
-            case 14: return await ifFourteenth((T14)CoproductValue);
+            case 1: return await ifFirst((T1)CoproductValue!);
+            case 2: return await ifSecond((T2)CoproductValue!);
+            case 3: return await ifThird((T3)CoproductValue!);
+            case 4: return await ifFourth((T4)CoproductValue!);
+            case 5: return await ifFifth((T5)CoproductValue!);
+            case 6: return await ifSixth((T6)CoproductValue!);
+            case 7: return await ifSeventh((T7)CoproductValue!);
+            case 8: return await ifEighth((T8)CoproductValue!);
+            case 9: return await ifNinth((T9)CoproductValue!);
+            case 10: return await ifTenth((T10)CoproductValue!);
+            case 11: return await ifEleventh((T11)CoproductValue!);
+            case 12: return await ifTwelfth((T12)CoproductValue!);
+            case 13: return await ifThirteenth((T13)CoproductValue!);
+            case 14: return await ifFourteenth((T14)CoproductValue!);
             default: throw new InvalidOperationException();
         }
     }
@@ -4571,20 +4562,20 @@ public class Coproduct14<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13,
     {
         switch (CoproductDiscriminator)
         {
-            case 1: ifFirst?.Invoke((T1)CoproductValue); break;
-            case 2: ifSecond?.Invoke((T2)CoproductValue); break;
-            case 3: ifThird?.Invoke((T3)CoproductValue); break;
-            case 4: ifFourth?.Invoke((T4)CoproductValue); break;
-            case 5: ifFifth?.Invoke((T5)CoproductValue); break;
-            case 6: ifSixth?.Invoke((T6)CoproductValue); break;
-            case 7: ifSeventh?.Invoke((T7)CoproductValue); break;
-            case 8: ifEighth?.Invoke((T8)CoproductValue); break;
-            case 9: ifNinth?.Invoke((T9)CoproductValue); break;
-            case 10: ifTenth?.Invoke((T10)CoproductValue); break;
-            case 11: ifEleventh?.Invoke((T11)CoproductValue); break;
-            case 12: ifTwelfth?.Invoke((T12)CoproductValue); break;
-            case 13: ifThirteenth?.Invoke((T13)CoproductValue); break;
-            case 14: ifFourteenth?.Invoke((T14)CoproductValue); break;
+            case 1: ifFirst?.Invoke((T1)CoproductValue!); break;
+            case 2: ifSecond?.Invoke((T2)CoproductValue!); break;
+            case 3: ifThird?.Invoke((T3)CoproductValue!); break;
+            case 4: ifFourth?.Invoke((T4)CoproductValue!); break;
+            case 5: ifFifth?.Invoke((T5)CoproductValue!); break;
+            case 6: ifSixth?.Invoke((T6)CoproductValue!); break;
+            case 7: ifSeventh?.Invoke((T7)CoproductValue!); break;
+            case 8: ifEighth?.Invoke((T8)CoproductValue!); break;
+            case 9: ifNinth?.Invoke((T9)CoproductValue!); break;
+            case 10: ifTenth?.Invoke((T10)CoproductValue!); break;
+            case 11: ifEleventh?.Invoke((T11)CoproductValue!); break;
+            case 12: ifTwelfth?.Invoke((T12)CoproductValue!); break;
+            case 13: ifThirteenth?.Invoke((T13)CoproductValue!); break;
+            case 14: ifFourteenth?.Invoke((T14)CoproductValue!); break;
         }
     }
 
@@ -4606,20 +4597,20 @@ public class Coproduct14<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13,
     {
         switch (CoproductDiscriminator)
         {
-            case 1: await (ifFirst?.Invoke((T1)CoproductValue) ?? Task.CompletedTask); break;
-            case 2: await (ifSecond?.Invoke((T2)CoproductValue) ?? Task.CompletedTask); break;
-            case 3: await (ifThird?.Invoke((T3)CoproductValue) ?? Task.CompletedTask); break;
-            case 4: await (ifFourth?.Invoke((T4)CoproductValue) ?? Task.CompletedTask); break;
-            case 5: await (ifFifth?.Invoke((T5)CoproductValue) ?? Task.CompletedTask); break;
-            case 6: await (ifSixth?.Invoke((T6)CoproductValue) ?? Task.CompletedTask); break;
-            case 7: await (ifSeventh?.Invoke((T7)CoproductValue) ?? Task.CompletedTask); break;
-            case 8: await (ifEighth?.Invoke((T8)CoproductValue) ?? Task.CompletedTask); break;
-            case 9: await (ifNinth?.Invoke((T9)CoproductValue) ?? Task.CompletedTask); break;
-            case 10: await (ifTenth?.Invoke((T10)CoproductValue) ?? Task.CompletedTask); break;
-            case 11: await (ifEleventh?.Invoke((T11)CoproductValue) ?? Task.CompletedTask); break;
-            case 12: await (ifTwelfth?.Invoke((T12)CoproductValue) ?? Task.CompletedTask); break;
-            case 13: await (ifThirteenth?.Invoke((T13)CoproductValue) ?? Task.CompletedTask); break;
-            case 14: await (ifFourteenth?.Invoke((T14)CoproductValue) ?? Task.CompletedTask); break;
+            case 1: await (ifFirst?.Invoke((T1)CoproductValue!) ?? Task.CompletedTask); break;
+            case 2: await (ifSecond?.Invoke((T2)CoproductValue!) ?? Task.CompletedTask); break;
+            case 3: await (ifThird?.Invoke((T3)CoproductValue!) ?? Task.CompletedTask); break;
+            case 4: await (ifFourth?.Invoke((T4)CoproductValue!) ?? Task.CompletedTask); break;
+            case 5: await (ifFifth?.Invoke((T5)CoproductValue!) ?? Task.CompletedTask); break;
+            case 6: await (ifSixth?.Invoke((T6)CoproductValue!) ?? Task.CompletedTask); break;
+            case 7: await (ifSeventh?.Invoke((T7)CoproductValue!) ?? Task.CompletedTask); break;
+            case 8: await (ifEighth?.Invoke((T8)CoproductValue!) ?? Task.CompletedTask); break;
+            case 9: await (ifNinth?.Invoke((T9)CoproductValue!) ?? Task.CompletedTask); break;
+            case 10: await (ifTenth?.Invoke((T10)CoproductValue!) ?? Task.CompletedTask); break;
+            case 11: await (ifEleventh?.Invoke((T11)CoproductValue!) ?? Task.CompletedTask); break;
+            case 12: await (ifTwelfth?.Invoke((T12)CoproductValue!) ?? Task.CompletedTask); break;
+            case 13: await (ifThirteenth?.Invoke((T13)CoproductValue!) ?? Task.CompletedTask); break;
+            case 14: await (ifFourteenth?.Invoke((T14)CoproductValue!) ?? Task.CompletedTask); break;
         }
     }
 
@@ -4890,7 +4881,7 @@ public class Coproduct15<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13,
     /// </summary>
     /// <param name="discriminator">Discriminator of the value from interval [1, arity].</param>
     /// <param name="value">Value of the coproduct on the position defined by the discriminator.</param>
-    protected Coproduct15(int discriminator, object value)
+    protected Coproduct15(int discriminator, object? value)
         : base(15, discriminator, value)
     {
     }
@@ -4958,63 +4949,63 @@ public class Coproduct15<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13,
 
     public Option<T1> First
     {
-        get { return IsFirst ? Option.Valued((T1)CoproductValue) : Option.Empty<T1>(); }
+        get { return IsFirst ? Option.Valued((T1)CoproductValue!) : Option.Empty<T1>(); }
     }
     public Option<T2> Second
     {
-        get { return IsSecond ? Option.Valued((T2)CoproductValue) : Option.Empty<T2>(); }
+        get { return IsSecond ? Option.Valued((T2)CoproductValue!) : Option.Empty<T2>(); }
     }
     public Option<T3> Third
     {
-        get { return IsThird ? Option.Valued((T3)CoproductValue) : Option.Empty<T3>(); }
+        get { return IsThird ? Option.Valued((T3)CoproductValue!) : Option.Empty<T3>(); }
     }
     public Option<T4> Fourth
     {
-        get { return IsFourth ? Option.Valued((T4)CoproductValue) : Option.Empty<T4>(); }
+        get { return IsFourth ? Option.Valued((T4)CoproductValue!) : Option.Empty<T4>(); }
     }
     public Option<T5> Fifth
     {
-        get { return IsFifth ? Option.Valued((T5)CoproductValue) : Option.Empty<T5>(); }
+        get { return IsFifth ? Option.Valued((T5)CoproductValue!) : Option.Empty<T5>(); }
     }
     public Option<T6> Sixth
     {
-        get { return IsSixth ? Option.Valued((T6)CoproductValue) : Option.Empty<T6>(); }
+        get { return IsSixth ? Option.Valued((T6)CoproductValue!) : Option.Empty<T6>(); }
     }
     public Option<T7> Seventh
     {
-        get { return IsSeventh ? Option.Valued((T7)CoproductValue) : Option.Empty<T7>(); }
+        get { return IsSeventh ? Option.Valued((T7)CoproductValue!) : Option.Empty<T7>(); }
     }
     public Option<T8> Eighth
     {
-        get { return IsEighth ? Option.Valued((T8)CoproductValue) : Option.Empty<T8>(); }
+        get { return IsEighth ? Option.Valued((T8)CoproductValue!) : Option.Empty<T8>(); }
     }
     public Option<T9> Ninth
     {
-        get { return IsNinth ? Option.Valued((T9)CoproductValue) : Option.Empty<T9>(); }
+        get { return IsNinth ? Option.Valued((T9)CoproductValue!) : Option.Empty<T9>(); }
     }
     public Option<T10> Tenth
     {
-        get { return IsTenth ? Option.Valued((T10)CoproductValue) : Option.Empty<T10>(); }
+        get { return IsTenth ? Option.Valued((T10)CoproductValue!) : Option.Empty<T10>(); }
     }
     public Option<T11> Eleventh
     {
-        get { return IsEleventh ? Option.Valued((T11)CoproductValue) : Option.Empty<T11>(); }
+        get { return IsEleventh ? Option.Valued((T11)CoproductValue!) : Option.Empty<T11>(); }
     }
     public Option<T12> Twelfth
     {
-        get { return IsTwelfth ? Option.Valued((T12)CoproductValue) : Option.Empty<T12>(); }
+        get { return IsTwelfth ? Option.Valued((T12)CoproductValue!) : Option.Empty<T12>(); }
     }
     public Option<T13> Thirteenth
     {
-        get { return IsThirteenth ? Option.Valued((T13)CoproductValue) : Option.Empty<T13>(); }
+        get { return IsThirteenth ? Option.Valued((T13)CoproductValue!) : Option.Empty<T13>(); }
     }
     public Option<T14> Fourteenth
     {
-        get { return IsFourteenth ? Option.Valued((T14)CoproductValue) : Option.Empty<T14>(); }
+        get { return IsFourteenth ? Option.Valued((T14)CoproductValue!) : Option.Empty<T14>(); }
     }
     public Option<T15> Fifteenth
     {
-        get { return IsFifteenth ? Option.Valued((T15)CoproductValue) : Option.Empty<T15>(); }
+        get { return IsFifteenth ? Option.Valued((T15)CoproductValue!) : Option.Empty<T15>(); }
     }
 
     public Coproduct15<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15> Map<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15>(
@@ -5036,21 +5027,21 @@ public class Coproduct15<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13,
     {
         switch (CoproductDiscriminator)
         {
-            case 1: return Coproduct15.CreateFirst<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15>(ifFirst((T1)CoproductValue));
-            case 2: return Coproduct15.CreateSecond<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15>(ifSecond((T2)CoproductValue));
-            case 3: return Coproduct15.CreateThird<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15>(ifThird((T3)CoproductValue));
-            case 4: return Coproduct15.CreateFourth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15>(ifFourth((T4)CoproductValue));
-            case 5: return Coproduct15.CreateFifth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15>(ifFifth((T5)CoproductValue));
-            case 6: return Coproduct15.CreateSixth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15>(ifSixth((T6)CoproductValue));
-            case 7: return Coproduct15.CreateSeventh<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15>(ifSeventh((T7)CoproductValue));
-            case 8: return Coproduct15.CreateEighth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15>(ifEighth((T8)CoproductValue));
-            case 9: return Coproduct15.CreateNinth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15>(ifNinth((T9)CoproductValue));
-            case 10: return Coproduct15.CreateTenth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15>(ifTenth((T10)CoproductValue));
-            case 11: return Coproduct15.CreateEleventh<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15>(ifEleventh((T11)CoproductValue));
-            case 12: return Coproduct15.CreateTwelfth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15>(ifTwelfth((T12)CoproductValue));
-            case 13: return Coproduct15.CreateThirteenth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15>(ifThirteenth((T13)CoproductValue));
-            case 14: return Coproduct15.CreateFourteenth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15>(ifFourteenth((T14)CoproductValue));
-            case 15: return Coproduct15.CreateFifteenth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15>(ifFifteenth((T15)CoproductValue));
+            case 1: return Coproduct15.CreateFirst<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15>(ifFirst((T1)CoproductValue!));
+            case 2: return Coproduct15.CreateSecond<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15>(ifSecond((T2)CoproductValue!));
+            case 3: return Coproduct15.CreateThird<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15>(ifThird((T3)CoproductValue!));
+            case 4: return Coproduct15.CreateFourth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15>(ifFourth((T4)CoproductValue!));
+            case 5: return Coproduct15.CreateFifth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15>(ifFifth((T5)CoproductValue!));
+            case 6: return Coproduct15.CreateSixth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15>(ifSixth((T6)CoproductValue!));
+            case 7: return Coproduct15.CreateSeventh<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15>(ifSeventh((T7)CoproductValue!));
+            case 8: return Coproduct15.CreateEighth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15>(ifEighth((T8)CoproductValue!));
+            case 9: return Coproduct15.CreateNinth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15>(ifNinth((T9)CoproductValue!));
+            case 10: return Coproduct15.CreateTenth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15>(ifTenth((T10)CoproductValue!));
+            case 11: return Coproduct15.CreateEleventh<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15>(ifEleventh((T11)CoproductValue!));
+            case 12: return Coproduct15.CreateTwelfth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15>(ifTwelfth((T12)CoproductValue!));
+            case 13: return Coproduct15.CreateThirteenth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15>(ifThirteenth((T13)CoproductValue!));
+            case 14: return Coproduct15.CreateFourteenth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15>(ifFourteenth((T14)CoproductValue!));
+            case 15: return Coproduct15.CreateFifteenth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15>(ifFifteenth((T15)CoproductValue!));
             default: throw new InvalidOperationException();
         }
     }
@@ -5074,21 +5065,21 @@ public class Coproduct15<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13,
     {
         switch (CoproductDiscriminator)
         {
-            case 1: return ifFirst((T1)CoproductValue);
-            case 2: return ifSecond((T2)CoproductValue);
-            case 3: return ifThird((T3)CoproductValue);
-            case 4: return ifFourth((T4)CoproductValue);
-            case 5: return ifFifth((T5)CoproductValue);
-            case 6: return ifSixth((T6)CoproductValue);
-            case 7: return ifSeventh((T7)CoproductValue);
-            case 8: return ifEighth((T8)CoproductValue);
-            case 9: return ifNinth((T9)CoproductValue);
-            case 10: return ifTenth((T10)CoproductValue);
-            case 11: return ifEleventh((T11)CoproductValue);
-            case 12: return ifTwelfth((T12)CoproductValue);
-            case 13: return ifThirteenth((T13)CoproductValue);
-            case 14: return ifFourteenth((T14)CoproductValue);
-            case 15: return ifFifteenth((T15)CoproductValue);
+            case 1: return ifFirst((T1)CoproductValue!);
+            case 2: return ifSecond((T2)CoproductValue!);
+            case 3: return ifThird((T3)CoproductValue!);
+            case 4: return ifFourth((T4)CoproductValue!);
+            case 5: return ifFifth((T5)CoproductValue!);
+            case 6: return ifSixth((T6)CoproductValue!);
+            case 7: return ifSeventh((T7)CoproductValue!);
+            case 8: return ifEighth((T8)CoproductValue!);
+            case 9: return ifNinth((T9)CoproductValue!);
+            case 10: return ifTenth((T10)CoproductValue!);
+            case 11: return ifEleventh((T11)CoproductValue!);
+            case 12: return ifTwelfth((T12)CoproductValue!);
+            case 13: return ifThirteenth((T13)CoproductValue!);
+            case 14: return ifFourteenth((T14)CoproductValue!);
+            case 15: return ifFifteenth((T15)CoproductValue!);
             default: throw new InvalidOperationException();
         }
     }
@@ -5112,21 +5103,21 @@ public class Coproduct15<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13,
     {
         switch (CoproductDiscriminator)
         {
-            case 1: return await ifFirst((T1)CoproductValue);
-            case 2: return await ifSecond((T2)CoproductValue);
-            case 3: return await ifThird((T3)CoproductValue);
-            case 4: return await ifFourth((T4)CoproductValue);
-            case 5: return await ifFifth((T5)CoproductValue);
-            case 6: return await ifSixth((T6)CoproductValue);
-            case 7: return await ifSeventh((T7)CoproductValue);
-            case 8: return await ifEighth((T8)CoproductValue);
-            case 9: return await ifNinth((T9)CoproductValue);
-            case 10: return await ifTenth((T10)CoproductValue);
-            case 11: return await ifEleventh((T11)CoproductValue);
-            case 12: return await ifTwelfth((T12)CoproductValue);
-            case 13: return await ifThirteenth((T13)CoproductValue);
-            case 14: return await ifFourteenth((T14)CoproductValue);
-            case 15: return await ifFifteenth((T15)CoproductValue);
+            case 1: return await ifFirst((T1)CoproductValue!);
+            case 2: return await ifSecond((T2)CoproductValue!);
+            case 3: return await ifThird((T3)CoproductValue!);
+            case 4: return await ifFourth((T4)CoproductValue!);
+            case 5: return await ifFifth((T5)CoproductValue!);
+            case 6: return await ifSixth((T6)CoproductValue!);
+            case 7: return await ifSeventh((T7)CoproductValue!);
+            case 8: return await ifEighth((T8)CoproductValue!);
+            case 9: return await ifNinth((T9)CoproductValue!);
+            case 10: return await ifTenth((T10)CoproductValue!);
+            case 11: return await ifEleventh((T11)CoproductValue!);
+            case 12: return await ifTwelfth((T12)CoproductValue!);
+            case 13: return await ifThirteenth((T13)CoproductValue!);
+            case 14: return await ifFourteenth((T14)CoproductValue!);
+            case 15: return await ifFifteenth((T15)CoproductValue!);
             default: throw new InvalidOperationException();
         }
     }
@@ -5150,21 +5141,21 @@ public class Coproduct15<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13,
     {
         switch (CoproductDiscriminator)
         {
-            case 1: ifFirst?.Invoke((T1)CoproductValue); break;
-            case 2: ifSecond?.Invoke((T2)CoproductValue); break;
-            case 3: ifThird?.Invoke((T3)CoproductValue); break;
-            case 4: ifFourth?.Invoke((T4)CoproductValue); break;
-            case 5: ifFifth?.Invoke((T5)CoproductValue); break;
-            case 6: ifSixth?.Invoke((T6)CoproductValue); break;
-            case 7: ifSeventh?.Invoke((T7)CoproductValue); break;
-            case 8: ifEighth?.Invoke((T8)CoproductValue); break;
-            case 9: ifNinth?.Invoke((T9)CoproductValue); break;
-            case 10: ifTenth?.Invoke((T10)CoproductValue); break;
-            case 11: ifEleventh?.Invoke((T11)CoproductValue); break;
-            case 12: ifTwelfth?.Invoke((T12)CoproductValue); break;
-            case 13: ifThirteenth?.Invoke((T13)CoproductValue); break;
-            case 14: ifFourteenth?.Invoke((T14)CoproductValue); break;
-            case 15: ifFifteenth?.Invoke((T15)CoproductValue); break;
+            case 1: ifFirst?.Invoke((T1)CoproductValue!); break;
+            case 2: ifSecond?.Invoke((T2)CoproductValue!); break;
+            case 3: ifThird?.Invoke((T3)CoproductValue!); break;
+            case 4: ifFourth?.Invoke((T4)CoproductValue!); break;
+            case 5: ifFifth?.Invoke((T5)CoproductValue!); break;
+            case 6: ifSixth?.Invoke((T6)CoproductValue!); break;
+            case 7: ifSeventh?.Invoke((T7)CoproductValue!); break;
+            case 8: ifEighth?.Invoke((T8)CoproductValue!); break;
+            case 9: ifNinth?.Invoke((T9)CoproductValue!); break;
+            case 10: ifTenth?.Invoke((T10)CoproductValue!); break;
+            case 11: ifEleventh?.Invoke((T11)CoproductValue!); break;
+            case 12: ifTwelfth?.Invoke((T12)CoproductValue!); break;
+            case 13: ifThirteenth?.Invoke((T13)CoproductValue!); break;
+            case 14: ifFourteenth?.Invoke((T14)CoproductValue!); break;
+            case 15: ifFifteenth?.Invoke((T15)CoproductValue!); break;
         }
     }
 
@@ -5187,21 +5178,21 @@ public class Coproduct15<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13,
     {
         switch (CoproductDiscriminator)
         {
-            case 1: await (ifFirst?.Invoke((T1)CoproductValue) ?? Task.CompletedTask); break;
-            case 2: await (ifSecond?.Invoke((T2)CoproductValue) ?? Task.CompletedTask); break;
-            case 3: await (ifThird?.Invoke((T3)CoproductValue) ?? Task.CompletedTask); break;
-            case 4: await (ifFourth?.Invoke((T4)CoproductValue) ?? Task.CompletedTask); break;
-            case 5: await (ifFifth?.Invoke((T5)CoproductValue) ?? Task.CompletedTask); break;
-            case 6: await (ifSixth?.Invoke((T6)CoproductValue) ?? Task.CompletedTask); break;
-            case 7: await (ifSeventh?.Invoke((T7)CoproductValue) ?? Task.CompletedTask); break;
-            case 8: await (ifEighth?.Invoke((T8)CoproductValue) ?? Task.CompletedTask); break;
-            case 9: await (ifNinth?.Invoke((T9)CoproductValue) ?? Task.CompletedTask); break;
-            case 10: await (ifTenth?.Invoke((T10)CoproductValue) ?? Task.CompletedTask); break;
-            case 11: await (ifEleventh?.Invoke((T11)CoproductValue) ?? Task.CompletedTask); break;
-            case 12: await (ifTwelfth?.Invoke((T12)CoproductValue) ?? Task.CompletedTask); break;
-            case 13: await (ifThirteenth?.Invoke((T13)CoproductValue) ?? Task.CompletedTask); break;
-            case 14: await (ifFourteenth?.Invoke((T14)CoproductValue) ?? Task.CompletedTask); break;
-            case 15: await (ifFifteenth?.Invoke((T15)CoproductValue) ?? Task.CompletedTask); break;
+            case 1: await (ifFirst?.Invoke((T1)CoproductValue!) ?? Task.CompletedTask); break;
+            case 2: await (ifSecond?.Invoke((T2)CoproductValue!) ?? Task.CompletedTask); break;
+            case 3: await (ifThird?.Invoke((T3)CoproductValue!) ?? Task.CompletedTask); break;
+            case 4: await (ifFourth?.Invoke((T4)CoproductValue!) ?? Task.CompletedTask); break;
+            case 5: await (ifFifth?.Invoke((T5)CoproductValue!) ?? Task.CompletedTask); break;
+            case 6: await (ifSixth?.Invoke((T6)CoproductValue!) ?? Task.CompletedTask); break;
+            case 7: await (ifSeventh?.Invoke((T7)CoproductValue!) ?? Task.CompletedTask); break;
+            case 8: await (ifEighth?.Invoke((T8)CoproductValue!) ?? Task.CompletedTask); break;
+            case 9: await (ifNinth?.Invoke((T9)CoproductValue!) ?? Task.CompletedTask); break;
+            case 10: await (ifTenth?.Invoke((T10)CoproductValue!) ?? Task.CompletedTask); break;
+            case 11: await (ifEleventh?.Invoke((T11)CoproductValue!) ?? Task.CompletedTask); break;
+            case 12: await (ifTwelfth?.Invoke((T12)CoproductValue!) ?? Task.CompletedTask); break;
+            case 13: await (ifThirteenth?.Invoke((T13)CoproductValue!) ?? Task.CompletedTask); break;
+            case 14: await (ifFourteenth?.Invoke((T14)CoproductValue!) ?? Task.CompletedTask); break;
+            case 15: await (ifFifteenth?.Invoke((T15)CoproductValue!) ?? Task.CompletedTask); break;
         }
     }
 
@@ -5488,7 +5479,7 @@ public class Coproduct16<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13,
     /// </summary>
     /// <param name="discriminator">Discriminator of the value from interval [1, arity].</param>
     /// <param name="value">Value of the coproduct on the position defined by the discriminator.</param>
-    protected Coproduct16(int discriminator, object value)
+    protected Coproduct16(int discriminator, object? value)
         : base(16, discriminator, value)
     {
     }
@@ -5560,67 +5551,67 @@ public class Coproduct16<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13,
 
     public Option<T1> First
     {
-        get { return IsFirst ? Option.Valued((T1)CoproductValue) : Option.Empty<T1>(); }
+        get { return IsFirst ? Option.Valued((T1)CoproductValue!) : Option.Empty<T1>(); }
     }
     public Option<T2> Second
     {
-        get { return IsSecond ? Option.Valued((T2)CoproductValue) : Option.Empty<T2>(); }
+        get { return IsSecond ? Option.Valued((T2)CoproductValue!) : Option.Empty<T2>(); }
     }
     public Option<T3> Third
     {
-        get { return IsThird ? Option.Valued((T3)CoproductValue) : Option.Empty<T3>(); }
+        get { return IsThird ? Option.Valued((T3)CoproductValue!) : Option.Empty<T3>(); }
     }
     public Option<T4> Fourth
     {
-        get { return IsFourth ? Option.Valued((T4)CoproductValue) : Option.Empty<T4>(); }
+        get { return IsFourth ? Option.Valued((T4)CoproductValue!) : Option.Empty<T4>(); }
     }
     public Option<T5> Fifth
     {
-        get { return IsFifth ? Option.Valued((T5)CoproductValue) : Option.Empty<T5>(); }
+        get { return IsFifth ? Option.Valued((T5)CoproductValue!) : Option.Empty<T5>(); }
     }
     public Option<T6> Sixth
     {
-        get { return IsSixth ? Option.Valued((T6)CoproductValue) : Option.Empty<T6>(); }
+        get { return IsSixth ? Option.Valued((T6)CoproductValue!) : Option.Empty<T6>(); }
     }
     public Option<T7> Seventh
     {
-        get { return IsSeventh ? Option.Valued((T7)CoproductValue) : Option.Empty<T7>(); }
+        get { return IsSeventh ? Option.Valued((T7)CoproductValue!) : Option.Empty<T7>(); }
     }
     public Option<T8> Eighth
     {
-        get { return IsEighth ? Option.Valued((T8)CoproductValue) : Option.Empty<T8>(); }
+        get { return IsEighth ? Option.Valued((T8)CoproductValue!) : Option.Empty<T8>(); }
     }
     public Option<T9> Ninth
     {
-        get { return IsNinth ? Option.Valued((T9)CoproductValue) : Option.Empty<T9>(); }
+        get { return IsNinth ? Option.Valued((T9)CoproductValue!) : Option.Empty<T9>(); }
     }
     public Option<T10> Tenth
     {
-        get { return IsTenth ? Option.Valued((T10)CoproductValue) : Option.Empty<T10>(); }
+        get { return IsTenth ? Option.Valued((T10)CoproductValue!) : Option.Empty<T10>(); }
     }
     public Option<T11> Eleventh
     {
-        get { return IsEleventh ? Option.Valued((T11)CoproductValue) : Option.Empty<T11>(); }
+        get { return IsEleventh ? Option.Valued((T11)CoproductValue!) : Option.Empty<T11>(); }
     }
     public Option<T12> Twelfth
     {
-        get { return IsTwelfth ? Option.Valued((T12)CoproductValue) : Option.Empty<T12>(); }
+        get { return IsTwelfth ? Option.Valued((T12)CoproductValue!) : Option.Empty<T12>(); }
     }
     public Option<T13> Thirteenth
     {
-        get { return IsThirteenth ? Option.Valued((T13)CoproductValue) : Option.Empty<T13>(); }
+        get { return IsThirteenth ? Option.Valued((T13)CoproductValue!) : Option.Empty<T13>(); }
     }
     public Option<T14> Fourteenth
     {
-        get { return IsFourteenth ? Option.Valued((T14)CoproductValue) : Option.Empty<T14>(); }
+        get { return IsFourteenth ? Option.Valued((T14)CoproductValue!) : Option.Empty<T14>(); }
     }
     public Option<T15> Fifteenth
     {
-        get { return IsFifteenth ? Option.Valued((T15)CoproductValue) : Option.Empty<T15>(); }
+        get { return IsFifteenth ? Option.Valued((T15)CoproductValue!) : Option.Empty<T15>(); }
     }
     public Option<T16> Sixteenth
     {
-        get { return IsSixteenth ? Option.Valued((T16)CoproductValue) : Option.Empty<T16>(); }
+        get { return IsSixteenth ? Option.Valued((T16)CoproductValue!) : Option.Empty<T16>(); }
     }
 
     public Coproduct16<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16> Map<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16>(
@@ -5643,22 +5634,22 @@ public class Coproduct16<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13,
     {
         switch (CoproductDiscriminator)
         {
-            case 1: return Coproduct16.CreateFirst<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16>(ifFirst((T1)CoproductValue));
-            case 2: return Coproduct16.CreateSecond<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16>(ifSecond((T2)CoproductValue));
-            case 3: return Coproduct16.CreateThird<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16>(ifThird((T3)CoproductValue));
-            case 4: return Coproduct16.CreateFourth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16>(ifFourth((T4)CoproductValue));
-            case 5: return Coproduct16.CreateFifth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16>(ifFifth((T5)CoproductValue));
-            case 6: return Coproduct16.CreateSixth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16>(ifSixth((T6)CoproductValue));
-            case 7: return Coproduct16.CreateSeventh<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16>(ifSeventh((T7)CoproductValue));
-            case 8: return Coproduct16.CreateEighth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16>(ifEighth((T8)CoproductValue));
-            case 9: return Coproduct16.CreateNinth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16>(ifNinth((T9)CoproductValue));
-            case 10: return Coproduct16.CreateTenth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16>(ifTenth((T10)CoproductValue));
-            case 11: return Coproduct16.CreateEleventh<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16>(ifEleventh((T11)CoproductValue));
-            case 12: return Coproduct16.CreateTwelfth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16>(ifTwelfth((T12)CoproductValue));
-            case 13: return Coproduct16.CreateThirteenth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16>(ifThirteenth((T13)CoproductValue));
-            case 14: return Coproduct16.CreateFourteenth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16>(ifFourteenth((T14)CoproductValue));
-            case 15: return Coproduct16.CreateFifteenth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16>(ifFifteenth((T15)CoproductValue));
-            case 16: return Coproduct16.CreateSixteenth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16>(ifSixteenth((T16)CoproductValue));
+            case 1: return Coproduct16.CreateFirst<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16>(ifFirst((T1)CoproductValue!));
+            case 2: return Coproduct16.CreateSecond<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16>(ifSecond((T2)CoproductValue!));
+            case 3: return Coproduct16.CreateThird<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16>(ifThird((T3)CoproductValue!));
+            case 4: return Coproduct16.CreateFourth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16>(ifFourth((T4)CoproductValue!));
+            case 5: return Coproduct16.CreateFifth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16>(ifFifth((T5)CoproductValue!));
+            case 6: return Coproduct16.CreateSixth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16>(ifSixth((T6)CoproductValue!));
+            case 7: return Coproduct16.CreateSeventh<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16>(ifSeventh((T7)CoproductValue!));
+            case 8: return Coproduct16.CreateEighth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16>(ifEighth((T8)CoproductValue!));
+            case 9: return Coproduct16.CreateNinth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16>(ifNinth((T9)CoproductValue!));
+            case 10: return Coproduct16.CreateTenth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16>(ifTenth((T10)CoproductValue!));
+            case 11: return Coproduct16.CreateEleventh<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16>(ifEleventh((T11)CoproductValue!));
+            case 12: return Coproduct16.CreateTwelfth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16>(ifTwelfth((T12)CoproductValue!));
+            case 13: return Coproduct16.CreateThirteenth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16>(ifThirteenth((T13)CoproductValue!));
+            case 14: return Coproduct16.CreateFourteenth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16>(ifFourteenth((T14)CoproductValue!));
+            case 15: return Coproduct16.CreateFifteenth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16>(ifFifteenth((T15)CoproductValue!));
+            case 16: return Coproduct16.CreateSixteenth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16>(ifSixteenth((T16)CoproductValue!));
             default: throw new InvalidOperationException();
         }
     }
@@ -5683,22 +5674,22 @@ public class Coproduct16<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13,
     {
         switch (CoproductDiscriminator)
         {
-            case 1: return ifFirst((T1)CoproductValue);
-            case 2: return ifSecond((T2)CoproductValue);
-            case 3: return ifThird((T3)CoproductValue);
-            case 4: return ifFourth((T4)CoproductValue);
-            case 5: return ifFifth((T5)CoproductValue);
-            case 6: return ifSixth((T6)CoproductValue);
-            case 7: return ifSeventh((T7)CoproductValue);
-            case 8: return ifEighth((T8)CoproductValue);
-            case 9: return ifNinth((T9)CoproductValue);
-            case 10: return ifTenth((T10)CoproductValue);
-            case 11: return ifEleventh((T11)CoproductValue);
-            case 12: return ifTwelfth((T12)CoproductValue);
-            case 13: return ifThirteenth((T13)CoproductValue);
-            case 14: return ifFourteenth((T14)CoproductValue);
-            case 15: return ifFifteenth((T15)CoproductValue);
-            case 16: return ifSixteenth((T16)CoproductValue);
+            case 1: return ifFirst((T1)CoproductValue!);
+            case 2: return ifSecond((T2)CoproductValue!);
+            case 3: return ifThird((T3)CoproductValue!);
+            case 4: return ifFourth((T4)CoproductValue!);
+            case 5: return ifFifth((T5)CoproductValue!);
+            case 6: return ifSixth((T6)CoproductValue!);
+            case 7: return ifSeventh((T7)CoproductValue!);
+            case 8: return ifEighth((T8)CoproductValue!);
+            case 9: return ifNinth((T9)CoproductValue!);
+            case 10: return ifTenth((T10)CoproductValue!);
+            case 11: return ifEleventh((T11)CoproductValue!);
+            case 12: return ifTwelfth((T12)CoproductValue!);
+            case 13: return ifThirteenth((T13)CoproductValue!);
+            case 14: return ifFourteenth((T14)CoproductValue!);
+            case 15: return ifFifteenth((T15)CoproductValue!);
+            case 16: return ifSixteenth((T16)CoproductValue!);
             default: throw new InvalidOperationException();
         }
     }
@@ -5723,22 +5714,22 @@ public class Coproduct16<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13,
     {
         switch (CoproductDiscriminator)
         {
-            case 1: return await ifFirst((T1)CoproductValue);
-            case 2: return await ifSecond((T2)CoproductValue);
-            case 3: return await ifThird((T3)CoproductValue);
-            case 4: return await ifFourth((T4)CoproductValue);
-            case 5: return await ifFifth((T5)CoproductValue);
-            case 6: return await ifSixth((T6)CoproductValue);
-            case 7: return await ifSeventh((T7)CoproductValue);
-            case 8: return await ifEighth((T8)CoproductValue);
-            case 9: return await ifNinth((T9)CoproductValue);
-            case 10: return await ifTenth((T10)CoproductValue);
-            case 11: return await ifEleventh((T11)CoproductValue);
-            case 12: return await ifTwelfth((T12)CoproductValue);
-            case 13: return await ifThirteenth((T13)CoproductValue);
-            case 14: return await ifFourteenth((T14)CoproductValue);
-            case 15: return await ifFifteenth((T15)CoproductValue);
-            case 16: return await ifSixteenth((T16)CoproductValue);
+            case 1: return await ifFirst((T1)CoproductValue!);
+            case 2: return await ifSecond((T2)CoproductValue!);
+            case 3: return await ifThird((T3)CoproductValue!);
+            case 4: return await ifFourth((T4)CoproductValue!);
+            case 5: return await ifFifth((T5)CoproductValue!);
+            case 6: return await ifSixth((T6)CoproductValue!);
+            case 7: return await ifSeventh((T7)CoproductValue!);
+            case 8: return await ifEighth((T8)CoproductValue!);
+            case 9: return await ifNinth((T9)CoproductValue!);
+            case 10: return await ifTenth((T10)CoproductValue!);
+            case 11: return await ifEleventh((T11)CoproductValue!);
+            case 12: return await ifTwelfth((T12)CoproductValue!);
+            case 13: return await ifThirteenth((T13)CoproductValue!);
+            case 14: return await ifFourteenth((T14)CoproductValue!);
+            case 15: return await ifFifteenth((T15)CoproductValue!);
+            case 16: return await ifSixteenth((T16)CoproductValue!);
             default: throw new InvalidOperationException();
         }
     }
@@ -5763,22 +5754,22 @@ public class Coproduct16<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13,
     {
         switch (CoproductDiscriminator)
         {
-            case 1: ifFirst?.Invoke((T1)CoproductValue); break;
-            case 2: ifSecond?.Invoke((T2)CoproductValue); break;
-            case 3: ifThird?.Invoke((T3)CoproductValue); break;
-            case 4: ifFourth?.Invoke((T4)CoproductValue); break;
-            case 5: ifFifth?.Invoke((T5)CoproductValue); break;
-            case 6: ifSixth?.Invoke((T6)CoproductValue); break;
-            case 7: ifSeventh?.Invoke((T7)CoproductValue); break;
-            case 8: ifEighth?.Invoke((T8)CoproductValue); break;
-            case 9: ifNinth?.Invoke((T9)CoproductValue); break;
-            case 10: ifTenth?.Invoke((T10)CoproductValue); break;
-            case 11: ifEleventh?.Invoke((T11)CoproductValue); break;
-            case 12: ifTwelfth?.Invoke((T12)CoproductValue); break;
-            case 13: ifThirteenth?.Invoke((T13)CoproductValue); break;
-            case 14: ifFourteenth?.Invoke((T14)CoproductValue); break;
-            case 15: ifFifteenth?.Invoke((T15)CoproductValue); break;
-            case 16: ifSixteenth?.Invoke((T16)CoproductValue); break;
+            case 1: ifFirst?.Invoke((T1)CoproductValue!); break;
+            case 2: ifSecond?.Invoke((T2)CoproductValue!); break;
+            case 3: ifThird?.Invoke((T3)CoproductValue!); break;
+            case 4: ifFourth?.Invoke((T4)CoproductValue!); break;
+            case 5: ifFifth?.Invoke((T5)CoproductValue!); break;
+            case 6: ifSixth?.Invoke((T6)CoproductValue!); break;
+            case 7: ifSeventh?.Invoke((T7)CoproductValue!); break;
+            case 8: ifEighth?.Invoke((T8)CoproductValue!); break;
+            case 9: ifNinth?.Invoke((T9)CoproductValue!); break;
+            case 10: ifTenth?.Invoke((T10)CoproductValue!); break;
+            case 11: ifEleventh?.Invoke((T11)CoproductValue!); break;
+            case 12: ifTwelfth?.Invoke((T12)CoproductValue!); break;
+            case 13: ifThirteenth?.Invoke((T13)CoproductValue!); break;
+            case 14: ifFourteenth?.Invoke((T14)CoproductValue!); break;
+            case 15: ifFifteenth?.Invoke((T15)CoproductValue!); break;
+            case 16: ifSixteenth?.Invoke((T16)CoproductValue!); break;
         }
     }
 
@@ -5802,22 +5793,22 @@ public class Coproduct16<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13,
     {
         switch (CoproductDiscriminator)
         {
-            case 1: await (ifFirst?.Invoke((T1)CoproductValue) ?? Task.CompletedTask); break;
-            case 2: await (ifSecond?.Invoke((T2)CoproductValue) ?? Task.CompletedTask); break;
-            case 3: await (ifThird?.Invoke((T3)CoproductValue) ?? Task.CompletedTask); break;
-            case 4: await (ifFourth?.Invoke((T4)CoproductValue) ?? Task.CompletedTask); break;
-            case 5: await (ifFifth?.Invoke((T5)CoproductValue) ?? Task.CompletedTask); break;
-            case 6: await (ifSixth?.Invoke((T6)CoproductValue) ?? Task.CompletedTask); break;
-            case 7: await (ifSeventh?.Invoke((T7)CoproductValue) ?? Task.CompletedTask); break;
-            case 8: await (ifEighth?.Invoke((T8)CoproductValue) ?? Task.CompletedTask); break;
-            case 9: await (ifNinth?.Invoke((T9)CoproductValue) ?? Task.CompletedTask); break;
-            case 10: await (ifTenth?.Invoke((T10)CoproductValue) ?? Task.CompletedTask); break;
-            case 11: await (ifEleventh?.Invoke((T11)CoproductValue) ?? Task.CompletedTask); break;
-            case 12: await (ifTwelfth?.Invoke((T12)CoproductValue) ?? Task.CompletedTask); break;
-            case 13: await (ifThirteenth?.Invoke((T13)CoproductValue) ?? Task.CompletedTask); break;
-            case 14: await (ifFourteenth?.Invoke((T14)CoproductValue) ?? Task.CompletedTask); break;
-            case 15: await (ifFifteenth?.Invoke((T15)CoproductValue) ?? Task.CompletedTask); break;
-            case 16: await (ifSixteenth?.Invoke((T16)CoproductValue) ?? Task.CompletedTask); break;
+            case 1: await (ifFirst?.Invoke((T1)CoproductValue!) ?? Task.CompletedTask); break;
+            case 2: await (ifSecond?.Invoke((T2)CoproductValue!) ?? Task.CompletedTask); break;
+            case 3: await (ifThird?.Invoke((T3)CoproductValue!) ?? Task.CompletedTask); break;
+            case 4: await (ifFourth?.Invoke((T4)CoproductValue!) ?? Task.CompletedTask); break;
+            case 5: await (ifFifth?.Invoke((T5)CoproductValue!) ?? Task.CompletedTask); break;
+            case 6: await (ifSixth?.Invoke((T6)CoproductValue!) ?? Task.CompletedTask); break;
+            case 7: await (ifSeventh?.Invoke((T7)CoproductValue!) ?? Task.CompletedTask); break;
+            case 8: await (ifEighth?.Invoke((T8)CoproductValue!) ?? Task.CompletedTask); break;
+            case 9: await (ifNinth?.Invoke((T9)CoproductValue!) ?? Task.CompletedTask); break;
+            case 10: await (ifTenth?.Invoke((T10)CoproductValue!) ?? Task.CompletedTask); break;
+            case 11: await (ifEleventh?.Invoke((T11)CoproductValue!) ?? Task.CompletedTask); break;
+            case 12: await (ifTwelfth?.Invoke((T12)CoproductValue!) ?? Task.CompletedTask); break;
+            case 13: await (ifThirteenth?.Invoke((T13)CoproductValue!) ?? Task.CompletedTask); break;
+            case 14: await (ifFourteenth?.Invoke((T14)CoproductValue!) ?? Task.CompletedTask); break;
+            case 15: await (ifFifteenth?.Invoke((T15)CoproductValue!) ?? Task.CompletedTask); break;
+            case 16: await (ifSixteenth?.Invoke((T16)CoproductValue!) ?? Task.CompletedTask); break;
         }
     }
 
@@ -6120,7 +6111,7 @@ public class Coproduct17<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13,
     /// </summary>
     /// <param name="discriminator">Discriminator of the value from interval [1, arity].</param>
     /// <param name="value">Value of the coproduct on the position defined by the discriminator.</param>
-    protected Coproduct17(int discriminator, object value)
+    protected Coproduct17(int discriminator, object? value)
         : base(17, discriminator, value)
     {
     }
@@ -6196,71 +6187,71 @@ public class Coproduct17<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13,
 
     public Option<T1> First
     {
-        get { return IsFirst ? Option.Valued((T1)CoproductValue) : Option.Empty<T1>(); }
+        get { return IsFirst ? Option.Valued((T1)CoproductValue!) : Option.Empty<T1>(); }
     }
     public Option<T2> Second
     {
-        get { return IsSecond ? Option.Valued((T2)CoproductValue) : Option.Empty<T2>(); }
+        get { return IsSecond ? Option.Valued((T2)CoproductValue!) : Option.Empty<T2>(); }
     }
     public Option<T3> Third
     {
-        get { return IsThird ? Option.Valued((T3)CoproductValue) : Option.Empty<T3>(); }
+        get { return IsThird ? Option.Valued((T3)CoproductValue!) : Option.Empty<T3>(); }
     }
     public Option<T4> Fourth
     {
-        get { return IsFourth ? Option.Valued((T4)CoproductValue) : Option.Empty<T4>(); }
+        get { return IsFourth ? Option.Valued((T4)CoproductValue!) : Option.Empty<T4>(); }
     }
     public Option<T5> Fifth
     {
-        get { return IsFifth ? Option.Valued((T5)CoproductValue) : Option.Empty<T5>(); }
+        get { return IsFifth ? Option.Valued((T5)CoproductValue!) : Option.Empty<T5>(); }
     }
     public Option<T6> Sixth
     {
-        get { return IsSixth ? Option.Valued((T6)CoproductValue) : Option.Empty<T6>(); }
+        get { return IsSixth ? Option.Valued((T6)CoproductValue!) : Option.Empty<T6>(); }
     }
     public Option<T7> Seventh
     {
-        get { return IsSeventh ? Option.Valued((T7)CoproductValue) : Option.Empty<T7>(); }
+        get { return IsSeventh ? Option.Valued((T7)CoproductValue!) : Option.Empty<T7>(); }
     }
     public Option<T8> Eighth
     {
-        get { return IsEighth ? Option.Valued((T8)CoproductValue) : Option.Empty<T8>(); }
+        get { return IsEighth ? Option.Valued((T8)CoproductValue!) : Option.Empty<T8>(); }
     }
     public Option<T9> Ninth
     {
-        get { return IsNinth ? Option.Valued((T9)CoproductValue) : Option.Empty<T9>(); }
+        get { return IsNinth ? Option.Valued((T9)CoproductValue!) : Option.Empty<T9>(); }
     }
     public Option<T10> Tenth
     {
-        get { return IsTenth ? Option.Valued((T10)CoproductValue) : Option.Empty<T10>(); }
+        get { return IsTenth ? Option.Valued((T10)CoproductValue!) : Option.Empty<T10>(); }
     }
     public Option<T11> Eleventh
     {
-        get { return IsEleventh ? Option.Valued((T11)CoproductValue) : Option.Empty<T11>(); }
+        get { return IsEleventh ? Option.Valued((T11)CoproductValue!) : Option.Empty<T11>(); }
     }
     public Option<T12> Twelfth
     {
-        get { return IsTwelfth ? Option.Valued((T12)CoproductValue) : Option.Empty<T12>(); }
+        get { return IsTwelfth ? Option.Valued((T12)CoproductValue!) : Option.Empty<T12>(); }
     }
     public Option<T13> Thirteenth
     {
-        get { return IsThirteenth ? Option.Valued((T13)CoproductValue) : Option.Empty<T13>(); }
+        get { return IsThirteenth ? Option.Valued((T13)CoproductValue!) : Option.Empty<T13>(); }
     }
     public Option<T14> Fourteenth
     {
-        get { return IsFourteenth ? Option.Valued((T14)CoproductValue) : Option.Empty<T14>(); }
+        get { return IsFourteenth ? Option.Valued((T14)CoproductValue!) : Option.Empty<T14>(); }
     }
     public Option<T15> Fifteenth
     {
-        get { return IsFifteenth ? Option.Valued((T15)CoproductValue) : Option.Empty<T15>(); }
+        get { return IsFifteenth ? Option.Valued((T15)CoproductValue!) : Option.Empty<T15>(); }
     }
     public Option<T16> Sixteenth
     {
-        get { return IsSixteenth ? Option.Valued((T16)CoproductValue) : Option.Empty<T16>(); }
+        get { return IsSixteenth ? Option.Valued((T16)CoproductValue!) : Option.Empty<T16>(); }
     }
     public Option<T17> Seventeenth
     {
-        get { return IsSeventeenth ? Option.Valued((T17)CoproductValue) : Option.Empty<T17>(); }
+        get { return IsSeventeenth ? Option.Valued((T17)CoproductValue!) : Option.Empty<T17>(); }
     }
 
     public Coproduct17<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17> Map<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17>(
@@ -6284,23 +6275,23 @@ public class Coproduct17<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13,
     {
         switch (CoproductDiscriminator)
         {
-            case 1: return Coproduct17.CreateFirst<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17>(ifFirst((T1)CoproductValue));
-            case 2: return Coproduct17.CreateSecond<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17>(ifSecond((T2)CoproductValue));
-            case 3: return Coproduct17.CreateThird<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17>(ifThird((T3)CoproductValue));
-            case 4: return Coproduct17.CreateFourth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17>(ifFourth((T4)CoproductValue));
-            case 5: return Coproduct17.CreateFifth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17>(ifFifth((T5)CoproductValue));
-            case 6: return Coproduct17.CreateSixth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17>(ifSixth((T6)CoproductValue));
-            case 7: return Coproduct17.CreateSeventh<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17>(ifSeventh((T7)CoproductValue));
-            case 8: return Coproduct17.CreateEighth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17>(ifEighth((T8)CoproductValue));
-            case 9: return Coproduct17.CreateNinth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17>(ifNinth((T9)CoproductValue));
-            case 10: return Coproduct17.CreateTenth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17>(ifTenth((T10)CoproductValue));
-            case 11: return Coproduct17.CreateEleventh<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17>(ifEleventh((T11)CoproductValue));
-            case 12: return Coproduct17.CreateTwelfth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17>(ifTwelfth((T12)CoproductValue));
-            case 13: return Coproduct17.CreateThirteenth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17>(ifThirteenth((T13)CoproductValue));
-            case 14: return Coproduct17.CreateFourteenth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17>(ifFourteenth((T14)CoproductValue));
-            case 15: return Coproduct17.CreateFifteenth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17>(ifFifteenth((T15)CoproductValue));
-            case 16: return Coproduct17.CreateSixteenth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17>(ifSixteenth((T16)CoproductValue));
-            case 17: return Coproduct17.CreateSeventeenth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17>(ifSeventeenth((T17)CoproductValue));
+            case 1: return Coproduct17.CreateFirst<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17>(ifFirst((T1)CoproductValue!));
+            case 2: return Coproduct17.CreateSecond<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17>(ifSecond((T2)CoproductValue!));
+            case 3: return Coproduct17.CreateThird<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17>(ifThird((T3)CoproductValue!));
+            case 4: return Coproduct17.CreateFourth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17>(ifFourth((T4)CoproductValue!));
+            case 5: return Coproduct17.CreateFifth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17>(ifFifth((T5)CoproductValue!));
+            case 6: return Coproduct17.CreateSixth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17>(ifSixth((T6)CoproductValue!));
+            case 7: return Coproduct17.CreateSeventh<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17>(ifSeventh((T7)CoproductValue!));
+            case 8: return Coproduct17.CreateEighth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17>(ifEighth((T8)CoproductValue!));
+            case 9: return Coproduct17.CreateNinth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17>(ifNinth((T9)CoproductValue!));
+            case 10: return Coproduct17.CreateTenth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17>(ifTenth((T10)CoproductValue!));
+            case 11: return Coproduct17.CreateEleventh<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17>(ifEleventh((T11)CoproductValue!));
+            case 12: return Coproduct17.CreateTwelfth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17>(ifTwelfth((T12)CoproductValue!));
+            case 13: return Coproduct17.CreateThirteenth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17>(ifThirteenth((T13)CoproductValue!));
+            case 14: return Coproduct17.CreateFourteenth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17>(ifFourteenth((T14)CoproductValue!));
+            case 15: return Coproduct17.CreateFifteenth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17>(ifFifteenth((T15)CoproductValue!));
+            case 16: return Coproduct17.CreateSixteenth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17>(ifSixteenth((T16)CoproductValue!));
+            case 17: return Coproduct17.CreateSeventeenth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17>(ifSeventeenth((T17)CoproductValue!));
             default: throw new InvalidOperationException();
         }
     }
@@ -6326,23 +6317,23 @@ public class Coproduct17<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13,
     {
         switch (CoproductDiscriminator)
         {
-            case 1: return ifFirst((T1)CoproductValue);
-            case 2: return ifSecond((T2)CoproductValue);
-            case 3: return ifThird((T3)CoproductValue);
-            case 4: return ifFourth((T4)CoproductValue);
-            case 5: return ifFifth((T5)CoproductValue);
-            case 6: return ifSixth((T6)CoproductValue);
-            case 7: return ifSeventh((T7)CoproductValue);
-            case 8: return ifEighth((T8)CoproductValue);
-            case 9: return ifNinth((T9)CoproductValue);
-            case 10: return ifTenth((T10)CoproductValue);
-            case 11: return ifEleventh((T11)CoproductValue);
-            case 12: return ifTwelfth((T12)CoproductValue);
-            case 13: return ifThirteenth((T13)CoproductValue);
-            case 14: return ifFourteenth((T14)CoproductValue);
-            case 15: return ifFifteenth((T15)CoproductValue);
-            case 16: return ifSixteenth((T16)CoproductValue);
-            case 17: return ifSeventeenth((T17)CoproductValue);
+            case 1: return ifFirst((T1)CoproductValue!);
+            case 2: return ifSecond((T2)CoproductValue!);
+            case 3: return ifThird((T3)CoproductValue!);
+            case 4: return ifFourth((T4)CoproductValue!);
+            case 5: return ifFifth((T5)CoproductValue!);
+            case 6: return ifSixth((T6)CoproductValue!);
+            case 7: return ifSeventh((T7)CoproductValue!);
+            case 8: return ifEighth((T8)CoproductValue!);
+            case 9: return ifNinth((T9)CoproductValue!);
+            case 10: return ifTenth((T10)CoproductValue!);
+            case 11: return ifEleventh((T11)CoproductValue!);
+            case 12: return ifTwelfth((T12)CoproductValue!);
+            case 13: return ifThirteenth((T13)CoproductValue!);
+            case 14: return ifFourteenth((T14)CoproductValue!);
+            case 15: return ifFifteenth((T15)CoproductValue!);
+            case 16: return ifSixteenth((T16)CoproductValue!);
+            case 17: return ifSeventeenth((T17)CoproductValue!);
             default: throw new InvalidOperationException();
         }
     }
@@ -6368,23 +6359,23 @@ public class Coproduct17<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13,
     {
         switch (CoproductDiscriminator)
         {
-            case 1: return await ifFirst((T1)CoproductValue);
-            case 2: return await ifSecond((T2)CoproductValue);
-            case 3: return await ifThird((T3)CoproductValue);
-            case 4: return await ifFourth((T4)CoproductValue);
-            case 5: return await ifFifth((T5)CoproductValue);
-            case 6: return await ifSixth((T6)CoproductValue);
-            case 7: return await ifSeventh((T7)CoproductValue);
-            case 8: return await ifEighth((T8)CoproductValue);
-            case 9: return await ifNinth((T9)CoproductValue);
-            case 10: return await ifTenth((T10)CoproductValue);
-            case 11: return await ifEleventh((T11)CoproductValue);
-            case 12: return await ifTwelfth((T12)CoproductValue);
-            case 13: return await ifThirteenth((T13)CoproductValue);
-            case 14: return await ifFourteenth((T14)CoproductValue);
-            case 15: return await ifFifteenth((T15)CoproductValue);
-            case 16: return await ifSixteenth((T16)CoproductValue);
-            case 17: return await ifSeventeenth((T17)CoproductValue);
+            case 1: return await ifFirst((T1)CoproductValue!);
+            case 2: return await ifSecond((T2)CoproductValue!);
+            case 3: return await ifThird((T3)CoproductValue!);
+            case 4: return await ifFourth((T4)CoproductValue!);
+            case 5: return await ifFifth((T5)CoproductValue!);
+            case 6: return await ifSixth((T6)CoproductValue!);
+            case 7: return await ifSeventh((T7)CoproductValue!);
+            case 8: return await ifEighth((T8)CoproductValue!);
+            case 9: return await ifNinth((T9)CoproductValue!);
+            case 10: return await ifTenth((T10)CoproductValue!);
+            case 11: return await ifEleventh((T11)CoproductValue!);
+            case 12: return await ifTwelfth((T12)CoproductValue!);
+            case 13: return await ifThirteenth((T13)CoproductValue!);
+            case 14: return await ifFourteenth((T14)CoproductValue!);
+            case 15: return await ifFifteenth((T15)CoproductValue!);
+            case 16: return await ifSixteenth((T16)CoproductValue!);
+            case 17: return await ifSeventeenth((T17)CoproductValue!);
             default: throw new InvalidOperationException();
         }
     }
@@ -6410,23 +6401,23 @@ public class Coproduct17<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13,
     {
         switch (CoproductDiscriminator)
         {
-            case 1: ifFirst?.Invoke((T1)CoproductValue); break;
-            case 2: ifSecond?.Invoke((T2)CoproductValue); break;
-            case 3: ifThird?.Invoke((T3)CoproductValue); break;
-            case 4: ifFourth?.Invoke((T4)CoproductValue); break;
-            case 5: ifFifth?.Invoke((T5)CoproductValue); break;
-            case 6: ifSixth?.Invoke((T6)CoproductValue); break;
-            case 7: ifSeventh?.Invoke((T7)CoproductValue); break;
-            case 8: ifEighth?.Invoke((T8)CoproductValue); break;
-            case 9: ifNinth?.Invoke((T9)CoproductValue); break;
-            case 10: ifTenth?.Invoke((T10)CoproductValue); break;
-            case 11: ifEleventh?.Invoke((T11)CoproductValue); break;
-            case 12: ifTwelfth?.Invoke((T12)CoproductValue); break;
-            case 13: ifThirteenth?.Invoke((T13)CoproductValue); break;
-            case 14: ifFourteenth?.Invoke((T14)CoproductValue); break;
-            case 15: ifFifteenth?.Invoke((T15)CoproductValue); break;
-            case 16: ifSixteenth?.Invoke((T16)CoproductValue); break;
-            case 17: ifSeventeenth?.Invoke((T17)CoproductValue); break;
+            case 1: ifFirst?.Invoke((T1)CoproductValue!); break;
+            case 2: ifSecond?.Invoke((T2)CoproductValue!); break;
+            case 3: ifThird?.Invoke((T3)CoproductValue!); break;
+            case 4: ifFourth?.Invoke((T4)CoproductValue!); break;
+            case 5: ifFifth?.Invoke((T5)CoproductValue!); break;
+            case 6: ifSixth?.Invoke((T6)CoproductValue!); break;
+            case 7: ifSeventh?.Invoke((T7)CoproductValue!); break;
+            case 8: ifEighth?.Invoke((T8)CoproductValue!); break;
+            case 9: ifNinth?.Invoke((T9)CoproductValue!); break;
+            case 10: ifTenth?.Invoke((T10)CoproductValue!); break;
+            case 11: ifEleventh?.Invoke((T11)CoproductValue!); break;
+            case 12: ifTwelfth?.Invoke((T12)CoproductValue!); break;
+            case 13: ifThirteenth?.Invoke((T13)CoproductValue!); break;
+            case 14: ifFourteenth?.Invoke((T14)CoproductValue!); break;
+            case 15: ifFifteenth?.Invoke((T15)CoproductValue!); break;
+            case 16: ifSixteenth?.Invoke((T16)CoproductValue!); break;
+            case 17: ifSeventeenth?.Invoke((T17)CoproductValue!); break;
         }
     }
 
@@ -6451,23 +6442,23 @@ public class Coproduct17<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13,
     {
         switch (CoproductDiscriminator)
         {
-            case 1: await (ifFirst?.Invoke((T1)CoproductValue) ?? Task.CompletedTask); break;
-            case 2: await (ifSecond?.Invoke((T2)CoproductValue) ?? Task.CompletedTask); break;
-            case 3: await (ifThird?.Invoke((T3)CoproductValue) ?? Task.CompletedTask); break;
-            case 4: await (ifFourth?.Invoke((T4)CoproductValue) ?? Task.CompletedTask); break;
-            case 5: await (ifFifth?.Invoke((T5)CoproductValue) ?? Task.CompletedTask); break;
-            case 6: await (ifSixth?.Invoke((T6)CoproductValue) ?? Task.CompletedTask); break;
-            case 7: await (ifSeventh?.Invoke((T7)CoproductValue) ?? Task.CompletedTask); break;
-            case 8: await (ifEighth?.Invoke((T8)CoproductValue) ?? Task.CompletedTask); break;
-            case 9: await (ifNinth?.Invoke((T9)CoproductValue) ?? Task.CompletedTask); break;
-            case 10: await (ifTenth?.Invoke((T10)CoproductValue) ?? Task.CompletedTask); break;
-            case 11: await (ifEleventh?.Invoke((T11)CoproductValue) ?? Task.CompletedTask); break;
-            case 12: await (ifTwelfth?.Invoke((T12)CoproductValue) ?? Task.CompletedTask); break;
-            case 13: await (ifThirteenth?.Invoke((T13)CoproductValue) ?? Task.CompletedTask); break;
-            case 14: await (ifFourteenth?.Invoke((T14)CoproductValue) ?? Task.CompletedTask); break;
-            case 15: await (ifFifteenth?.Invoke((T15)CoproductValue) ?? Task.CompletedTask); break;
-            case 16: await (ifSixteenth?.Invoke((T16)CoproductValue) ?? Task.CompletedTask); break;
-            case 17: await (ifSeventeenth?.Invoke((T17)CoproductValue) ?? Task.CompletedTask); break;
+            case 1: await (ifFirst?.Invoke((T1)CoproductValue!) ?? Task.CompletedTask); break;
+            case 2: await (ifSecond?.Invoke((T2)CoproductValue!) ?? Task.CompletedTask); break;
+            case 3: await (ifThird?.Invoke((T3)CoproductValue!) ?? Task.CompletedTask); break;
+            case 4: await (ifFourth?.Invoke((T4)CoproductValue!) ?? Task.CompletedTask); break;
+            case 5: await (ifFifth?.Invoke((T5)CoproductValue!) ?? Task.CompletedTask); break;
+            case 6: await (ifSixth?.Invoke((T6)CoproductValue!) ?? Task.CompletedTask); break;
+            case 7: await (ifSeventh?.Invoke((T7)CoproductValue!) ?? Task.CompletedTask); break;
+            case 8: await (ifEighth?.Invoke((T8)CoproductValue!) ?? Task.CompletedTask); break;
+            case 9: await (ifNinth?.Invoke((T9)CoproductValue!) ?? Task.CompletedTask); break;
+            case 10: await (ifTenth?.Invoke((T10)CoproductValue!) ?? Task.CompletedTask); break;
+            case 11: await (ifEleventh?.Invoke((T11)CoproductValue!) ?? Task.CompletedTask); break;
+            case 12: await (ifTwelfth?.Invoke((T12)CoproductValue!) ?? Task.CompletedTask); break;
+            case 13: await (ifThirteenth?.Invoke((T13)CoproductValue!) ?? Task.CompletedTask); break;
+            case 14: await (ifFourteenth?.Invoke((T14)CoproductValue!) ?? Task.CompletedTask); break;
+            case 15: await (ifFifteenth?.Invoke((T15)CoproductValue!) ?? Task.CompletedTask); break;
+            case 16: await (ifSixteenth?.Invoke((T16)CoproductValue!) ?? Task.CompletedTask); break;
+            case 17: await (ifSeventeenth?.Invoke((T17)CoproductValue!) ?? Task.CompletedTask); break;
         }
     }
 
@@ -6786,7 +6777,7 @@ public class Coproduct18<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13,
     /// </summary>
     /// <param name="discriminator">Discriminator of the value from interval [1, arity].</param>
     /// <param name="value">Value of the coproduct on the position defined by the discriminator.</param>
-    protected Coproduct18(int discriminator, object value)
+    protected Coproduct18(int discriminator, object? value)
         : base(18, discriminator, value)
     {
     }
@@ -6866,75 +6857,75 @@ public class Coproduct18<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13,
 
     public Option<T1> First
     {
-        get { return IsFirst ? Option.Valued((T1)CoproductValue) : Option.Empty<T1>(); }
+        get { return IsFirst ? Option.Valued((T1)CoproductValue!) : Option.Empty<T1>(); }
     }
     public Option<T2> Second
     {
-        get { return IsSecond ? Option.Valued((T2)CoproductValue) : Option.Empty<T2>(); }
+        get { return IsSecond ? Option.Valued((T2)CoproductValue!) : Option.Empty<T2>(); }
     }
     public Option<T3> Third
     {
-        get { return IsThird ? Option.Valued((T3)CoproductValue) : Option.Empty<T3>(); }
+        get { return IsThird ? Option.Valued((T3)CoproductValue!) : Option.Empty<T3>(); }
     }
     public Option<T4> Fourth
     {
-        get { return IsFourth ? Option.Valued((T4)CoproductValue) : Option.Empty<T4>(); }
+        get { return IsFourth ? Option.Valued((T4)CoproductValue!) : Option.Empty<T4>(); }
     }
     public Option<T5> Fifth
     {
-        get { return IsFifth ? Option.Valued((T5)CoproductValue) : Option.Empty<T5>(); }
+        get { return IsFifth ? Option.Valued((T5)CoproductValue!) : Option.Empty<T5>(); }
     }
     public Option<T6> Sixth
     {
-        get { return IsSixth ? Option.Valued((T6)CoproductValue) : Option.Empty<T6>(); }
+        get { return IsSixth ? Option.Valued((T6)CoproductValue!) : Option.Empty<T6>(); }
     }
     public Option<T7> Seventh
     {
-        get { return IsSeventh ? Option.Valued((T7)CoproductValue) : Option.Empty<T7>(); }
+        get { return IsSeventh ? Option.Valued((T7)CoproductValue!) : Option.Empty<T7>(); }
     }
     public Option<T8> Eighth
     {
-        get { return IsEighth ? Option.Valued((T8)CoproductValue) : Option.Empty<T8>(); }
+        get { return IsEighth ? Option.Valued((T8)CoproductValue!) : Option.Empty<T8>(); }
     }
     public Option<T9> Ninth
     {
-        get { return IsNinth ? Option.Valued((T9)CoproductValue) : Option.Empty<T9>(); }
+        get { return IsNinth ? Option.Valued((T9)CoproductValue!) : Option.Empty<T9>(); }
     }
     public Option<T10> Tenth
     {
-        get { return IsTenth ? Option.Valued((T10)CoproductValue) : Option.Empty<T10>(); }
+        get { return IsTenth ? Option.Valued((T10)CoproductValue!) : Option.Empty<T10>(); }
     }
     public Option<T11> Eleventh
     {
-        get { return IsEleventh ? Option.Valued((T11)CoproductValue) : Option.Empty<T11>(); }
+        get { return IsEleventh ? Option.Valued((T11)CoproductValue!) : Option.Empty<T11>(); }
     }
     public Option<T12> Twelfth
     {
-        get { return IsTwelfth ? Option.Valued((T12)CoproductValue) : Option.Empty<T12>(); }
+        get { return IsTwelfth ? Option.Valued((T12)CoproductValue!) : Option.Empty<T12>(); }
     }
     public Option<T13> Thirteenth
     {
-        get { return IsThirteenth ? Option.Valued((T13)CoproductValue) : Option.Empty<T13>(); }
+        get { return IsThirteenth ? Option.Valued((T13)CoproductValue!) : Option.Empty<T13>(); }
     }
     public Option<T14> Fourteenth
     {
-        get { return IsFourteenth ? Option.Valued((T14)CoproductValue) : Option.Empty<T14>(); }
+        get { return IsFourteenth ? Option.Valued((T14)CoproductValue!) : Option.Empty<T14>(); }
     }
     public Option<T15> Fifteenth
     {
-        get { return IsFifteenth ? Option.Valued((T15)CoproductValue) : Option.Empty<T15>(); }
+        get { return IsFifteenth ? Option.Valued((T15)CoproductValue!) : Option.Empty<T15>(); }
     }
     public Option<T16> Sixteenth
     {
-        get { return IsSixteenth ? Option.Valued((T16)CoproductValue) : Option.Empty<T16>(); }
+        get { return IsSixteenth ? Option.Valued((T16)CoproductValue!) : Option.Empty<T16>(); }
     }
     public Option<T17> Seventeenth
     {
-        get { return IsSeventeenth ? Option.Valued((T17)CoproductValue) : Option.Empty<T17>(); }
+        get { return IsSeventeenth ? Option.Valued((T17)CoproductValue!) : Option.Empty<T17>(); }
     }
     public Option<T18> Eighteenth
     {
-        get { return IsEighteenth ? Option.Valued((T18)CoproductValue) : Option.Empty<T18>(); }
+        get { return IsEighteenth ? Option.Valued((T18)CoproductValue!) : Option.Empty<T18>(); }
     }
 
     public Coproduct18<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18> Map<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18>(
@@ -6959,24 +6950,24 @@ public class Coproduct18<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13,
     {
         switch (CoproductDiscriminator)
         {
-            case 1: return Coproduct18.CreateFirst<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18>(ifFirst((T1)CoproductValue));
-            case 2: return Coproduct18.CreateSecond<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18>(ifSecond((T2)CoproductValue));
-            case 3: return Coproduct18.CreateThird<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18>(ifThird((T3)CoproductValue));
-            case 4: return Coproduct18.CreateFourth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18>(ifFourth((T4)CoproductValue));
-            case 5: return Coproduct18.CreateFifth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18>(ifFifth((T5)CoproductValue));
-            case 6: return Coproduct18.CreateSixth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18>(ifSixth((T6)CoproductValue));
-            case 7: return Coproduct18.CreateSeventh<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18>(ifSeventh((T7)CoproductValue));
-            case 8: return Coproduct18.CreateEighth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18>(ifEighth((T8)CoproductValue));
-            case 9: return Coproduct18.CreateNinth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18>(ifNinth((T9)CoproductValue));
-            case 10: return Coproduct18.CreateTenth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18>(ifTenth((T10)CoproductValue));
-            case 11: return Coproduct18.CreateEleventh<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18>(ifEleventh((T11)CoproductValue));
-            case 12: return Coproduct18.CreateTwelfth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18>(ifTwelfth((T12)CoproductValue));
-            case 13: return Coproduct18.CreateThirteenth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18>(ifThirteenth((T13)CoproductValue));
-            case 14: return Coproduct18.CreateFourteenth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18>(ifFourteenth((T14)CoproductValue));
-            case 15: return Coproduct18.CreateFifteenth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18>(ifFifteenth((T15)CoproductValue));
-            case 16: return Coproduct18.CreateSixteenth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18>(ifSixteenth((T16)CoproductValue));
-            case 17: return Coproduct18.CreateSeventeenth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18>(ifSeventeenth((T17)CoproductValue));
-            case 18: return Coproduct18.CreateEighteenth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18>(ifEighteenth((T18)CoproductValue));
+            case 1: return Coproduct18.CreateFirst<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18>(ifFirst((T1)CoproductValue!));
+            case 2: return Coproduct18.CreateSecond<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18>(ifSecond((T2)CoproductValue!));
+            case 3: return Coproduct18.CreateThird<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18>(ifThird((T3)CoproductValue!));
+            case 4: return Coproduct18.CreateFourth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18>(ifFourth((T4)CoproductValue!));
+            case 5: return Coproduct18.CreateFifth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18>(ifFifth((T5)CoproductValue!));
+            case 6: return Coproduct18.CreateSixth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18>(ifSixth((T6)CoproductValue!));
+            case 7: return Coproduct18.CreateSeventh<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18>(ifSeventh((T7)CoproductValue!));
+            case 8: return Coproduct18.CreateEighth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18>(ifEighth((T8)CoproductValue!));
+            case 9: return Coproduct18.CreateNinth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18>(ifNinth((T9)CoproductValue!));
+            case 10: return Coproduct18.CreateTenth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18>(ifTenth((T10)CoproductValue!));
+            case 11: return Coproduct18.CreateEleventh<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18>(ifEleventh((T11)CoproductValue!));
+            case 12: return Coproduct18.CreateTwelfth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18>(ifTwelfth((T12)CoproductValue!));
+            case 13: return Coproduct18.CreateThirteenth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18>(ifThirteenth((T13)CoproductValue!));
+            case 14: return Coproduct18.CreateFourteenth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18>(ifFourteenth((T14)CoproductValue!));
+            case 15: return Coproduct18.CreateFifteenth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18>(ifFifteenth((T15)CoproductValue!));
+            case 16: return Coproduct18.CreateSixteenth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18>(ifSixteenth((T16)CoproductValue!));
+            case 17: return Coproduct18.CreateSeventeenth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18>(ifSeventeenth((T17)CoproductValue!));
+            case 18: return Coproduct18.CreateEighteenth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18>(ifEighteenth((T18)CoproductValue!));
             default: throw new InvalidOperationException();
         }
     }
@@ -7003,24 +6994,24 @@ public class Coproduct18<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13,
     {
         switch (CoproductDiscriminator)
         {
-            case 1: return ifFirst((T1)CoproductValue);
-            case 2: return ifSecond((T2)CoproductValue);
-            case 3: return ifThird((T3)CoproductValue);
-            case 4: return ifFourth((T4)CoproductValue);
-            case 5: return ifFifth((T5)CoproductValue);
-            case 6: return ifSixth((T6)CoproductValue);
-            case 7: return ifSeventh((T7)CoproductValue);
-            case 8: return ifEighth((T8)CoproductValue);
-            case 9: return ifNinth((T9)CoproductValue);
-            case 10: return ifTenth((T10)CoproductValue);
-            case 11: return ifEleventh((T11)CoproductValue);
-            case 12: return ifTwelfth((T12)CoproductValue);
-            case 13: return ifThirteenth((T13)CoproductValue);
-            case 14: return ifFourteenth((T14)CoproductValue);
-            case 15: return ifFifteenth((T15)CoproductValue);
-            case 16: return ifSixteenth((T16)CoproductValue);
-            case 17: return ifSeventeenth((T17)CoproductValue);
-            case 18: return ifEighteenth((T18)CoproductValue);
+            case 1: return ifFirst((T1)CoproductValue!);
+            case 2: return ifSecond((T2)CoproductValue!);
+            case 3: return ifThird((T3)CoproductValue!);
+            case 4: return ifFourth((T4)CoproductValue!);
+            case 5: return ifFifth((T5)CoproductValue!);
+            case 6: return ifSixth((T6)CoproductValue!);
+            case 7: return ifSeventh((T7)CoproductValue!);
+            case 8: return ifEighth((T8)CoproductValue!);
+            case 9: return ifNinth((T9)CoproductValue!);
+            case 10: return ifTenth((T10)CoproductValue!);
+            case 11: return ifEleventh((T11)CoproductValue!);
+            case 12: return ifTwelfth((T12)CoproductValue!);
+            case 13: return ifThirteenth((T13)CoproductValue!);
+            case 14: return ifFourteenth((T14)CoproductValue!);
+            case 15: return ifFifteenth((T15)CoproductValue!);
+            case 16: return ifSixteenth((T16)CoproductValue!);
+            case 17: return ifSeventeenth((T17)CoproductValue!);
+            case 18: return ifEighteenth((T18)CoproductValue!);
             default: throw new InvalidOperationException();
         }
     }
@@ -7047,24 +7038,24 @@ public class Coproduct18<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13,
     {
         switch (CoproductDiscriminator)
         {
-            case 1: return await ifFirst((T1)CoproductValue);
-            case 2: return await ifSecond((T2)CoproductValue);
-            case 3: return await ifThird((T3)CoproductValue);
-            case 4: return await ifFourth((T4)CoproductValue);
-            case 5: return await ifFifth((T5)CoproductValue);
-            case 6: return await ifSixth((T6)CoproductValue);
-            case 7: return await ifSeventh((T7)CoproductValue);
-            case 8: return await ifEighth((T8)CoproductValue);
-            case 9: return await ifNinth((T9)CoproductValue);
-            case 10: return await ifTenth((T10)CoproductValue);
-            case 11: return await ifEleventh((T11)CoproductValue);
-            case 12: return await ifTwelfth((T12)CoproductValue);
-            case 13: return await ifThirteenth((T13)CoproductValue);
-            case 14: return await ifFourteenth((T14)CoproductValue);
-            case 15: return await ifFifteenth((T15)CoproductValue);
-            case 16: return await ifSixteenth((T16)CoproductValue);
-            case 17: return await ifSeventeenth((T17)CoproductValue);
-            case 18: return await ifEighteenth((T18)CoproductValue);
+            case 1: return await ifFirst((T1)CoproductValue!);
+            case 2: return await ifSecond((T2)CoproductValue!);
+            case 3: return await ifThird((T3)CoproductValue!);
+            case 4: return await ifFourth((T4)CoproductValue!);
+            case 5: return await ifFifth((T5)CoproductValue!);
+            case 6: return await ifSixth((T6)CoproductValue!);
+            case 7: return await ifSeventh((T7)CoproductValue!);
+            case 8: return await ifEighth((T8)CoproductValue!);
+            case 9: return await ifNinth((T9)CoproductValue!);
+            case 10: return await ifTenth((T10)CoproductValue!);
+            case 11: return await ifEleventh((T11)CoproductValue!);
+            case 12: return await ifTwelfth((T12)CoproductValue!);
+            case 13: return await ifThirteenth((T13)CoproductValue!);
+            case 14: return await ifFourteenth((T14)CoproductValue!);
+            case 15: return await ifFifteenth((T15)CoproductValue!);
+            case 16: return await ifSixteenth((T16)CoproductValue!);
+            case 17: return await ifSeventeenth((T17)CoproductValue!);
+            case 18: return await ifEighteenth((T18)CoproductValue!);
             default: throw new InvalidOperationException();
         }
     }
@@ -7091,24 +7082,24 @@ public class Coproduct18<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13,
     {
         switch (CoproductDiscriminator)
         {
-            case 1: ifFirst?.Invoke((T1)CoproductValue); break;
-            case 2: ifSecond?.Invoke((T2)CoproductValue); break;
-            case 3: ifThird?.Invoke((T3)CoproductValue); break;
-            case 4: ifFourth?.Invoke((T4)CoproductValue); break;
-            case 5: ifFifth?.Invoke((T5)CoproductValue); break;
-            case 6: ifSixth?.Invoke((T6)CoproductValue); break;
-            case 7: ifSeventh?.Invoke((T7)CoproductValue); break;
-            case 8: ifEighth?.Invoke((T8)CoproductValue); break;
-            case 9: ifNinth?.Invoke((T9)CoproductValue); break;
-            case 10: ifTenth?.Invoke((T10)CoproductValue); break;
-            case 11: ifEleventh?.Invoke((T11)CoproductValue); break;
-            case 12: ifTwelfth?.Invoke((T12)CoproductValue); break;
-            case 13: ifThirteenth?.Invoke((T13)CoproductValue); break;
-            case 14: ifFourteenth?.Invoke((T14)CoproductValue); break;
-            case 15: ifFifteenth?.Invoke((T15)CoproductValue); break;
-            case 16: ifSixteenth?.Invoke((T16)CoproductValue); break;
-            case 17: ifSeventeenth?.Invoke((T17)CoproductValue); break;
-            case 18: ifEighteenth?.Invoke((T18)CoproductValue); break;
+            case 1: ifFirst?.Invoke((T1)CoproductValue!); break;
+            case 2: ifSecond?.Invoke((T2)CoproductValue!); break;
+            case 3: ifThird?.Invoke((T3)CoproductValue!); break;
+            case 4: ifFourth?.Invoke((T4)CoproductValue!); break;
+            case 5: ifFifth?.Invoke((T5)CoproductValue!); break;
+            case 6: ifSixth?.Invoke((T6)CoproductValue!); break;
+            case 7: ifSeventh?.Invoke((T7)CoproductValue!); break;
+            case 8: ifEighth?.Invoke((T8)CoproductValue!); break;
+            case 9: ifNinth?.Invoke((T9)CoproductValue!); break;
+            case 10: ifTenth?.Invoke((T10)CoproductValue!); break;
+            case 11: ifEleventh?.Invoke((T11)CoproductValue!); break;
+            case 12: ifTwelfth?.Invoke((T12)CoproductValue!); break;
+            case 13: ifThirteenth?.Invoke((T13)CoproductValue!); break;
+            case 14: ifFourteenth?.Invoke((T14)CoproductValue!); break;
+            case 15: ifFifteenth?.Invoke((T15)CoproductValue!); break;
+            case 16: ifSixteenth?.Invoke((T16)CoproductValue!); break;
+            case 17: ifSeventeenth?.Invoke((T17)CoproductValue!); break;
+            case 18: ifEighteenth?.Invoke((T18)CoproductValue!); break;
         }
     }
 
@@ -7134,24 +7125,24 @@ public class Coproduct18<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13,
     {
         switch (CoproductDiscriminator)
         {
-            case 1: await (ifFirst?.Invoke((T1)CoproductValue) ?? Task.CompletedTask); break;
-            case 2: await (ifSecond?.Invoke((T2)CoproductValue) ?? Task.CompletedTask); break;
-            case 3: await (ifThird?.Invoke((T3)CoproductValue) ?? Task.CompletedTask); break;
-            case 4: await (ifFourth?.Invoke((T4)CoproductValue) ?? Task.CompletedTask); break;
-            case 5: await (ifFifth?.Invoke((T5)CoproductValue) ?? Task.CompletedTask); break;
-            case 6: await (ifSixth?.Invoke((T6)CoproductValue) ?? Task.CompletedTask); break;
-            case 7: await (ifSeventh?.Invoke((T7)CoproductValue) ?? Task.CompletedTask); break;
-            case 8: await (ifEighth?.Invoke((T8)CoproductValue) ?? Task.CompletedTask); break;
-            case 9: await (ifNinth?.Invoke((T9)CoproductValue) ?? Task.CompletedTask); break;
-            case 10: await (ifTenth?.Invoke((T10)CoproductValue) ?? Task.CompletedTask); break;
-            case 11: await (ifEleventh?.Invoke((T11)CoproductValue) ?? Task.CompletedTask); break;
-            case 12: await (ifTwelfth?.Invoke((T12)CoproductValue) ?? Task.CompletedTask); break;
-            case 13: await (ifThirteenth?.Invoke((T13)CoproductValue) ?? Task.CompletedTask); break;
-            case 14: await (ifFourteenth?.Invoke((T14)CoproductValue) ?? Task.CompletedTask); break;
-            case 15: await (ifFifteenth?.Invoke((T15)CoproductValue) ?? Task.CompletedTask); break;
-            case 16: await (ifSixteenth?.Invoke((T16)CoproductValue) ?? Task.CompletedTask); break;
-            case 17: await (ifSeventeenth?.Invoke((T17)CoproductValue) ?? Task.CompletedTask); break;
-            case 18: await (ifEighteenth?.Invoke((T18)CoproductValue) ?? Task.CompletedTask); break;
+            case 1: await (ifFirst?.Invoke((T1)CoproductValue!) ?? Task.CompletedTask); break;
+            case 2: await (ifSecond?.Invoke((T2)CoproductValue!) ?? Task.CompletedTask); break;
+            case 3: await (ifThird?.Invoke((T3)CoproductValue!) ?? Task.CompletedTask); break;
+            case 4: await (ifFourth?.Invoke((T4)CoproductValue!) ?? Task.CompletedTask); break;
+            case 5: await (ifFifth?.Invoke((T5)CoproductValue!) ?? Task.CompletedTask); break;
+            case 6: await (ifSixth?.Invoke((T6)CoproductValue!) ?? Task.CompletedTask); break;
+            case 7: await (ifSeventh?.Invoke((T7)CoproductValue!) ?? Task.CompletedTask); break;
+            case 8: await (ifEighth?.Invoke((T8)CoproductValue!) ?? Task.CompletedTask); break;
+            case 9: await (ifNinth?.Invoke((T9)CoproductValue!) ?? Task.CompletedTask); break;
+            case 10: await (ifTenth?.Invoke((T10)CoproductValue!) ?? Task.CompletedTask); break;
+            case 11: await (ifEleventh?.Invoke((T11)CoproductValue!) ?? Task.CompletedTask); break;
+            case 12: await (ifTwelfth?.Invoke((T12)CoproductValue!) ?? Task.CompletedTask); break;
+            case 13: await (ifThirteenth?.Invoke((T13)CoproductValue!) ?? Task.CompletedTask); break;
+            case 14: await (ifFourteenth?.Invoke((T14)CoproductValue!) ?? Task.CompletedTask); break;
+            case 15: await (ifFifteenth?.Invoke((T15)CoproductValue!) ?? Task.CompletedTask); break;
+            case 16: await (ifSixteenth?.Invoke((T16)CoproductValue!) ?? Task.CompletedTask); break;
+            case 17: await (ifSeventeenth?.Invoke((T17)CoproductValue!) ?? Task.CompletedTask); break;
+            case 18: await (ifEighteenth?.Invoke((T18)CoproductValue!) ?? Task.CompletedTask); break;
         }
     }
 
@@ -7486,7 +7477,7 @@ public class Coproduct19<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13,
     /// </summary>
     /// <param name="discriminator">Discriminator of the value from interval [1, arity].</param>
     /// <param name="value">Value of the coproduct on the position defined by the discriminator.</param>
-    protected Coproduct19(int discriminator, object value)
+    protected Coproduct19(int discriminator, object? value)
         : base(19, discriminator, value)
     {
     }
@@ -7570,79 +7561,79 @@ public class Coproduct19<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13,
 
     public Option<T1> First
     {
-        get { return IsFirst ? Option.Valued((T1)CoproductValue) : Option.Empty<T1>(); }
+        get { return IsFirst ? Option.Valued((T1)CoproductValue!) : Option.Empty<T1>(); }
     }
     public Option<T2> Second
     {
-        get { return IsSecond ? Option.Valued((T2)CoproductValue) : Option.Empty<T2>(); }
+        get { return IsSecond ? Option.Valued((T2)CoproductValue!) : Option.Empty<T2>(); }
     }
     public Option<T3> Third
     {
-        get { return IsThird ? Option.Valued((T3)CoproductValue) : Option.Empty<T3>(); }
+        get { return IsThird ? Option.Valued((T3)CoproductValue!) : Option.Empty<T3>(); }
     }
     public Option<T4> Fourth
     {
-        get { return IsFourth ? Option.Valued((T4)CoproductValue) : Option.Empty<T4>(); }
+        get { return IsFourth ? Option.Valued((T4)CoproductValue!) : Option.Empty<T4>(); }
     }
     public Option<T5> Fifth
     {
-        get { return IsFifth ? Option.Valued((T5)CoproductValue) : Option.Empty<T5>(); }
+        get { return IsFifth ? Option.Valued((T5)CoproductValue!) : Option.Empty<T5>(); }
     }
     public Option<T6> Sixth
     {
-        get { return IsSixth ? Option.Valued((T6)CoproductValue) : Option.Empty<T6>(); }
+        get { return IsSixth ? Option.Valued((T6)CoproductValue!) : Option.Empty<T6>(); }
     }
     public Option<T7> Seventh
     {
-        get { return IsSeventh ? Option.Valued((T7)CoproductValue) : Option.Empty<T7>(); }
+        get { return IsSeventh ? Option.Valued((T7)CoproductValue!) : Option.Empty<T7>(); }
     }
     public Option<T8> Eighth
     {
-        get { return IsEighth ? Option.Valued((T8)CoproductValue) : Option.Empty<T8>(); }
+        get { return IsEighth ? Option.Valued((T8)CoproductValue!) : Option.Empty<T8>(); }
     }
     public Option<T9> Ninth
     {
-        get { return IsNinth ? Option.Valued((T9)CoproductValue) : Option.Empty<T9>(); }
+        get { return IsNinth ? Option.Valued((T9)CoproductValue!) : Option.Empty<T9>(); }
     }
     public Option<T10> Tenth
     {
-        get { return IsTenth ? Option.Valued((T10)CoproductValue) : Option.Empty<T10>(); }
+        get { return IsTenth ? Option.Valued((T10)CoproductValue!) : Option.Empty<T10>(); }
     }
     public Option<T11> Eleventh
     {
-        get { return IsEleventh ? Option.Valued((T11)CoproductValue) : Option.Empty<T11>(); }
+        get { return IsEleventh ? Option.Valued((T11)CoproductValue!) : Option.Empty<T11>(); }
     }
     public Option<T12> Twelfth
     {
-        get { return IsTwelfth ? Option.Valued((T12)CoproductValue) : Option.Empty<T12>(); }
+        get { return IsTwelfth ? Option.Valued((T12)CoproductValue!) : Option.Empty<T12>(); }
     }
     public Option<T13> Thirteenth
     {
-        get { return IsThirteenth ? Option.Valued((T13)CoproductValue) : Option.Empty<T13>(); }
+        get { return IsThirteenth ? Option.Valued((T13)CoproductValue!) : Option.Empty<T13>(); }
     }
     public Option<T14> Fourteenth
     {
-        get { return IsFourteenth ? Option.Valued((T14)CoproductValue) : Option.Empty<T14>(); }
+        get { return IsFourteenth ? Option.Valued((T14)CoproductValue!) : Option.Empty<T14>(); }
     }
     public Option<T15> Fifteenth
     {
-        get { return IsFifteenth ? Option.Valued((T15)CoproductValue) : Option.Empty<T15>(); }
+        get { return IsFifteenth ? Option.Valued((T15)CoproductValue!) : Option.Empty<T15>(); }
     }
     public Option<T16> Sixteenth
     {
-        get { return IsSixteenth ? Option.Valued((T16)CoproductValue) : Option.Empty<T16>(); }
+        get { return IsSixteenth ? Option.Valued((T16)CoproductValue!) : Option.Empty<T16>(); }
     }
     public Option<T17> Seventeenth
     {
-        get { return IsSeventeenth ? Option.Valued((T17)CoproductValue) : Option.Empty<T17>(); }
+        get { return IsSeventeenth ? Option.Valued((T17)CoproductValue!) : Option.Empty<T17>(); }
     }
     public Option<T18> Eighteenth
     {
-        get { return IsEighteenth ? Option.Valued((T18)CoproductValue) : Option.Empty<T18>(); }
+        get { return IsEighteenth ? Option.Valued((T18)CoproductValue!) : Option.Empty<T18>(); }
     }
     public Option<T19> Nineteenth
     {
-        get { return IsNineteenth ? Option.Valued((T19)CoproductValue) : Option.Empty<T19>(); }
+        get { return IsNineteenth ? Option.Valued((T19)CoproductValue!) : Option.Empty<T19>(); }
     }
 
     public Coproduct19<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19> Map<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19>(
@@ -7668,25 +7659,25 @@ public class Coproduct19<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13,
     {
         switch (CoproductDiscriminator)
         {
-            case 1: return Coproduct19.CreateFirst<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19>(ifFirst((T1)CoproductValue));
-            case 2: return Coproduct19.CreateSecond<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19>(ifSecond((T2)CoproductValue));
-            case 3: return Coproduct19.CreateThird<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19>(ifThird((T3)CoproductValue));
-            case 4: return Coproduct19.CreateFourth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19>(ifFourth((T4)CoproductValue));
-            case 5: return Coproduct19.CreateFifth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19>(ifFifth((T5)CoproductValue));
-            case 6: return Coproduct19.CreateSixth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19>(ifSixth((T6)CoproductValue));
-            case 7: return Coproduct19.CreateSeventh<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19>(ifSeventh((T7)CoproductValue));
-            case 8: return Coproduct19.CreateEighth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19>(ifEighth((T8)CoproductValue));
-            case 9: return Coproduct19.CreateNinth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19>(ifNinth((T9)CoproductValue));
-            case 10: return Coproduct19.CreateTenth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19>(ifTenth((T10)CoproductValue));
-            case 11: return Coproduct19.CreateEleventh<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19>(ifEleventh((T11)CoproductValue));
-            case 12: return Coproduct19.CreateTwelfth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19>(ifTwelfth((T12)CoproductValue));
-            case 13: return Coproduct19.CreateThirteenth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19>(ifThirteenth((T13)CoproductValue));
-            case 14: return Coproduct19.CreateFourteenth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19>(ifFourteenth((T14)CoproductValue));
-            case 15: return Coproduct19.CreateFifteenth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19>(ifFifteenth((T15)CoproductValue));
-            case 16: return Coproduct19.CreateSixteenth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19>(ifSixteenth((T16)CoproductValue));
-            case 17: return Coproduct19.CreateSeventeenth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19>(ifSeventeenth((T17)CoproductValue));
-            case 18: return Coproduct19.CreateEighteenth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19>(ifEighteenth((T18)CoproductValue));
-            case 19: return Coproduct19.CreateNineteenth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19>(ifNineteenth((T19)CoproductValue));
+            case 1: return Coproduct19.CreateFirst<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19>(ifFirst((T1)CoproductValue!));
+            case 2: return Coproduct19.CreateSecond<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19>(ifSecond((T2)CoproductValue!));
+            case 3: return Coproduct19.CreateThird<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19>(ifThird((T3)CoproductValue!));
+            case 4: return Coproduct19.CreateFourth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19>(ifFourth((T4)CoproductValue!));
+            case 5: return Coproduct19.CreateFifth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19>(ifFifth((T5)CoproductValue!));
+            case 6: return Coproduct19.CreateSixth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19>(ifSixth((T6)CoproductValue!));
+            case 7: return Coproduct19.CreateSeventh<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19>(ifSeventh((T7)CoproductValue!));
+            case 8: return Coproduct19.CreateEighth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19>(ifEighth((T8)CoproductValue!));
+            case 9: return Coproduct19.CreateNinth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19>(ifNinth((T9)CoproductValue!));
+            case 10: return Coproduct19.CreateTenth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19>(ifTenth((T10)CoproductValue!));
+            case 11: return Coproduct19.CreateEleventh<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19>(ifEleventh((T11)CoproductValue!));
+            case 12: return Coproduct19.CreateTwelfth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19>(ifTwelfth((T12)CoproductValue!));
+            case 13: return Coproduct19.CreateThirteenth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19>(ifThirteenth((T13)CoproductValue!));
+            case 14: return Coproduct19.CreateFourteenth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19>(ifFourteenth((T14)CoproductValue!));
+            case 15: return Coproduct19.CreateFifteenth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19>(ifFifteenth((T15)CoproductValue!));
+            case 16: return Coproduct19.CreateSixteenth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19>(ifSixteenth((T16)CoproductValue!));
+            case 17: return Coproduct19.CreateSeventeenth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19>(ifSeventeenth((T17)CoproductValue!));
+            case 18: return Coproduct19.CreateEighteenth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19>(ifEighteenth((T18)CoproductValue!));
+            case 19: return Coproduct19.CreateNineteenth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19>(ifNineteenth((T19)CoproductValue!));
             default: throw new InvalidOperationException();
         }
     }
@@ -7714,25 +7705,25 @@ public class Coproduct19<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13,
     {
         switch (CoproductDiscriminator)
         {
-            case 1: return ifFirst((T1)CoproductValue);
-            case 2: return ifSecond((T2)CoproductValue);
-            case 3: return ifThird((T3)CoproductValue);
-            case 4: return ifFourth((T4)CoproductValue);
-            case 5: return ifFifth((T5)CoproductValue);
-            case 6: return ifSixth((T6)CoproductValue);
-            case 7: return ifSeventh((T7)CoproductValue);
-            case 8: return ifEighth((T8)CoproductValue);
-            case 9: return ifNinth((T9)CoproductValue);
-            case 10: return ifTenth((T10)CoproductValue);
-            case 11: return ifEleventh((T11)CoproductValue);
-            case 12: return ifTwelfth((T12)CoproductValue);
-            case 13: return ifThirteenth((T13)CoproductValue);
-            case 14: return ifFourteenth((T14)CoproductValue);
-            case 15: return ifFifteenth((T15)CoproductValue);
-            case 16: return ifSixteenth((T16)CoproductValue);
-            case 17: return ifSeventeenth((T17)CoproductValue);
-            case 18: return ifEighteenth((T18)CoproductValue);
-            case 19: return ifNineteenth((T19)CoproductValue);
+            case 1: return ifFirst((T1)CoproductValue!);
+            case 2: return ifSecond((T2)CoproductValue!);
+            case 3: return ifThird((T3)CoproductValue!);
+            case 4: return ifFourth((T4)CoproductValue!);
+            case 5: return ifFifth((T5)CoproductValue!);
+            case 6: return ifSixth((T6)CoproductValue!);
+            case 7: return ifSeventh((T7)CoproductValue!);
+            case 8: return ifEighth((T8)CoproductValue!);
+            case 9: return ifNinth((T9)CoproductValue!);
+            case 10: return ifTenth((T10)CoproductValue!);
+            case 11: return ifEleventh((T11)CoproductValue!);
+            case 12: return ifTwelfth((T12)CoproductValue!);
+            case 13: return ifThirteenth((T13)CoproductValue!);
+            case 14: return ifFourteenth((T14)CoproductValue!);
+            case 15: return ifFifteenth((T15)CoproductValue!);
+            case 16: return ifSixteenth((T16)CoproductValue!);
+            case 17: return ifSeventeenth((T17)CoproductValue!);
+            case 18: return ifEighteenth((T18)CoproductValue!);
+            case 19: return ifNineteenth((T19)CoproductValue!);
             default: throw new InvalidOperationException();
         }
     }
@@ -7760,25 +7751,25 @@ public class Coproduct19<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13,
     {
         switch (CoproductDiscriminator)
         {
-            case 1: return await ifFirst((T1)CoproductValue);
-            case 2: return await ifSecond((T2)CoproductValue);
-            case 3: return await ifThird((T3)CoproductValue);
-            case 4: return await ifFourth((T4)CoproductValue);
-            case 5: return await ifFifth((T5)CoproductValue);
-            case 6: return await ifSixth((T6)CoproductValue);
-            case 7: return await ifSeventh((T7)CoproductValue);
-            case 8: return await ifEighth((T8)CoproductValue);
-            case 9: return await ifNinth((T9)CoproductValue);
-            case 10: return await ifTenth((T10)CoproductValue);
-            case 11: return await ifEleventh((T11)CoproductValue);
-            case 12: return await ifTwelfth((T12)CoproductValue);
-            case 13: return await ifThirteenth((T13)CoproductValue);
-            case 14: return await ifFourteenth((T14)CoproductValue);
-            case 15: return await ifFifteenth((T15)CoproductValue);
-            case 16: return await ifSixteenth((T16)CoproductValue);
-            case 17: return await ifSeventeenth((T17)CoproductValue);
-            case 18: return await ifEighteenth((T18)CoproductValue);
-            case 19: return await ifNineteenth((T19)CoproductValue);
+            case 1: return await ifFirst((T1)CoproductValue!);
+            case 2: return await ifSecond((T2)CoproductValue!);
+            case 3: return await ifThird((T3)CoproductValue!);
+            case 4: return await ifFourth((T4)CoproductValue!);
+            case 5: return await ifFifth((T5)CoproductValue!);
+            case 6: return await ifSixth((T6)CoproductValue!);
+            case 7: return await ifSeventh((T7)CoproductValue!);
+            case 8: return await ifEighth((T8)CoproductValue!);
+            case 9: return await ifNinth((T9)CoproductValue!);
+            case 10: return await ifTenth((T10)CoproductValue!);
+            case 11: return await ifEleventh((T11)CoproductValue!);
+            case 12: return await ifTwelfth((T12)CoproductValue!);
+            case 13: return await ifThirteenth((T13)CoproductValue!);
+            case 14: return await ifFourteenth((T14)CoproductValue!);
+            case 15: return await ifFifteenth((T15)CoproductValue!);
+            case 16: return await ifSixteenth((T16)CoproductValue!);
+            case 17: return await ifSeventeenth((T17)CoproductValue!);
+            case 18: return await ifEighteenth((T18)CoproductValue!);
+            case 19: return await ifNineteenth((T19)CoproductValue!);
             default: throw new InvalidOperationException();
         }
     }
@@ -7806,25 +7797,25 @@ public class Coproduct19<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13,
     {
         switch (CoproductDiscriminator)
         {
-            case 1: ifFirst?.Invoke((T1)CoproductValue); break;
-            case 2: ifSecond?.Invoke((T2)CoproductValue); break;
-            case 3: ifThird?.Invoke((T3)CoproductValue); break;
-            case 4: ifFourth?.Invoke((T4)CoproductValue); break;
-            case 5: ifFifth?.Invoke((T5)CoproductValue); break;
-            case 6: ifSixth?.Invoke((T6)CoproductValue); break;
-            case 7: ifSeventh?.Invoke((T7)CoproductValue); break;
-            case 8: ifEighth?.Invoke((T8)CoproductValue); break;
-            case 9: ifNinth?.Invoke((T9)CoproductValue); break;
-            case 10: ifTenth?.Invoke((T10)CoproductValue); break;
-            case 11: ifEleventh?.Invoke((T11)CoproductValue); break;
-            case 12: ifTwelfth?.Invoke((T12)CoproductValue); break;
-            case 13: ifThirteenth?.Invoke((T13)CoproductValue); break;
-            case 14: ifFourteenth?.Invoke((T14)CoproductValue); break;
-            case 15: ifFifteenth?.Invoke((T15)CoproductValue); break;
-            case 16: ifSixteenth?.Invoke((T16)CoproductValue); break;
-            case 17: ifSeventeenth?.Invoke((T17)CoproductValue); break;
-            case 18: ifEighteenth?.Invoke((T18)CoproductValue); break;
-            case 19: ifNineteenth?.Invoke((T19)CoproductValue); break;
+            case 1: ifFirst?.Invoke((T1)CoproductValue!); break;
+            case 2: ifSecond?.Invoke((T2)CoproductValue!); break;
+            case 3: ifThird?.Invoke((T3)CoproductValue!); break;
+            case 4: ifFourth?.Invoke((T4)CoproductValue!); break;
+            case 5: ifFifth?.Invoke((T5)CoproductValue!); break;
+            case 6: ifSixth?.Invoke((T6)CoproductValue!); break;
+            case 7: ifSeventh?.Invoke((T7)CoproductValue!); break;
+            case 8: ifEighth?.Invoke((T8)CoproductValue!); break;
+            case 9: ifNinth?.Invoke((T9)CoproductValue!); break;
+            case 10: ifTenth?.Invoke((T10)CoproductValue!); break;
+            case 11: ifEleventh?.Invoke((T11)CoproductValue!); break;
+            case 12: ifTwelfth?.Invoke((T12)CoproductValue!); break;
+            case 13: ifThirteenth?.Invoke((T13)CoproductValue!); break;
+            case 14: ifFourteenth?.Invoke((T14)CoproductValue!); break;
+            case 15: ifFifteenth?.Invoke((T15)CoproductValue!); break;
+            case 16: ifSixteenth?.Invoke((T16)CoproductValue!); break;
+            case 17: ifSeventeenth?.Invoke((T17)CoproductValue!); break;
+            case 18: ifEighteenth?.Invoke((T18)CoproductValue!); break;
+            case 19: ifNineteenth?.Invoke((T19)CoproductValue!); break;
         }
     }
 
@@ -7851,25 +7842,25 @@ public class Coproduct19<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13,
     {
         switch (CoproductDiscriminator)
         {
-            case 1: await (ifFirst?.Invoke((T1)CoproductValue) ?? Task.CompletedTask); break;
-            case 2: await (ifSecond?.Invoke((T2)CoproductValue) ?? Task.CompletedTask); break;
-            case 3: await (ifThird?.Invoke((T3)CoproductValue) ?? Task.CompletedTask); break;
-            case 4: await (ifFourth?.Invoke((T4)CoproductValue) ?? Task.CompletedTask); break;
-            case 5: await (ifFifth?.Invoke((T5)CoproductValue) ?? Task.CompletedTask); break;
-            case 6: await (ifSixth?.Invoke((T6)CoproductValue) ?? Task.CompletedTask); break;
-            case 7: await (ifSeventh?.Invoke((T7)CoproductValue) ?? Task.CompletedTask); break;
-            case 8: await (ifEighth?.Invoke((T8)CoproductValue) ?? Task.CompletedTask); break;
-            case 9: await (ifNinth?.Invoke((T9)CoproductValue) ?? Task.CompletedTask); break;
-            case 10: await (ifTenth?.Invoke((T10)CoproductValue) ?? Task.CompletedTask); break;
-            case 11: await (ifEleventh?.Invoke((T11)CoproductValue) ?? Task.CompletedTask); break;
-            case 12: await (ifTwelfth?.Invoke((T12)CoproductValue) ?? Task.CompletedTask); break;
-            case 13: await (ifThirteenth?.Invoke((T13)CoproductValue) ?? Task.CompletedTask); break;
-            case 14: await (ifFourteenth?.Invoke((T14)CoproductValue) ?? Task.CompletedTask); break;
-            case 15: await (ifFifteenth?.Invoke((T15)CoproductValue) ?? Task.CompletedTask); break;
-            case 16: await (ifSixteenth?.Invoke((T16)CoproductValue) ?? Task.CompletedTask); break;
-            case 17: await (ifSeventeenth?.Invoke((T17)CoproductValue) ?? Task.CompletedTask); break;
-            case 18: await (ifEighteenth?.Invoke((T18)CoproductValue) ?? Task.CompletedTask); break;
-            case 19: await (ifNineteenth?.Invoke((T19)CoproductValue) ?? Task.CompletedTask); break;
+            case 1: await (ifFirst?.Invoke((T1)CoproductValue!) ?? Task.CompletedTask); break;
+            case 2: await (ifSecond?.Invoke((T2)CoproductValue!) ?? Task.CompletedTask); break;
+            case 3: await (ifThird?.Invoke((T3)CoproductValue!) ?? Task.CompletedTask); break;
+            case 4: await (ifFourth?.Invoke((T4)CoproductValue!) ?? Task.CompletedTask); break;
+            case 5: await (ifFifth?.Invoke((T5)CoproductValue!) ?? Task.CompletedTask); break;
+            case 6: await (ifSixth?.Invoke((T6)CoproductValue!) ?? Task.CompletedTask); break;
+            case 7: await (ifSeventh?.Invoke((T7)CoproductValue!) ?? Task.CompletedTask); break;
+            case 8: await (ifEighth?.Invoke((T8)CoproductValue!) ?? Task.CompletedTask); break;
+            case 9: await (ifNinth?.Invoke((T9)CoproductValue!) ?? Task.CompletedTask); break;
+            case 10: await (ifTenth?.Invoke((T10)CoproductValue!) ?? Task.CompletedTask); break;
+            case 11: await (ifEleventh?.Invoke((T11)CoproductValue!) ?? Task.CompletedTask); break;
+            case 12: await (ifTwelfth?.Invoke((T12)CoproductValue!) ?? Task.CompletedTask); break;
+            case 13: await (ifThirteenth?.Invoke((T13)CoproductValue!) ?? Task.CompletedTask); break;
+            case 14: await (ifFourteenth?.Invoke((T14)CoproductValue!) ?? Task.CompletedTask); break;
+            case 15: await (ifFifteenth?.Invoke((T15)CoproductValue!) ?? Task.CompletedTask); break;
+            case 16: await (ifSixteenth?.Invoke((T16)CoproductValue!) ?? Task.CompletedTask); break;
+            case 17: await (ifSeventeenth?.Invoke((T17)CoproductValue!) ?? Task.CompletedTask); break;
+            case 18: await (ifEighteenth?.Invoke((T18)CoproductValue!) ?? Task.CompletedTask); break;
+            case 19: await (ifNineteenth?.Invoke((T19)CoproductValue!) ?? Task.CompletedTask); break;
         }
     }
 
@@ -8220,7 +8211,7 @@ public class Coproduct20<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13,
     /// </summary>
     /// <param name="discriminator">Discriminator of the value from interval [1, arity].</param>
     /// <param name="value">Value of the coproduct on the position defined by the discriminator.</param>
-    protected Coproduct20(int discriminator, object value)
+    protected Coproduct20(int discriminator, object? value)
         : base(20, discriminator, value)
     {
     }
@@ -8308,83 +8299,83 @@ public class Coproduct20<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13,
 
     public Option<T1> First
     {
-        get { return IsFirst ? Option.Valued((T1)CoproductValue) : Option.Empty<T1>(); }
+        get { return IsFirst ? Option.Valued((T1)CoproductValue!) : Option.Empty<T1>(); }
     }
     public Option<T2> Second
     {
-        get { return IsSecond ? Option.Valued((T2)CoproductValue) : Option.Empty<T2>(); }
+        get { return IsSecond ? Option.Valued((T2)CoproductValue!) : Option.Empty<T2>(); }
     }
     public Option<T3> Third
     {
-        get { return IsThird ? Option.Valued((T3)CoproductValue) : Option.Empty<T3>(); }
+        get { return IsThird ? Option.Valued((T3)CoproductValue!) : Option.Empty<T3>(); }
     }
     public Option<T4> Fourth
     {
-        get { return IsFourth ? Option.Valued((T4)CoproductValue) : Option.Empty<T4>(); }
+        get { return IsFourth ? Option.Valued((T4)CoproductValue!) : Option.Empty<T4>(); }
     }
     public Option<T5> Fifth
     {
-        get { return IsFifth ? Option.Valued((T5)CoproductValue) : Option.Empty<T5>(); }
+        get { return IsFifth ? Option.Valued((T5)CoproductValue!) : Option.Empty<T5>(); }
     }
     public Option<T6> Sixth
     {
-        get { return IsSixth ? Option.Valued((T6)CoproductValue) : Option.Empty<T6>(); }
+        get { return IsSixth ? Option.Valued((T6)CoproductValue!) : Option.Empty<T6>(); }
     }
     public Option<T7> Seventh
     {
-        get { return IsSeventh ? Option.Valued((T7)CoproductValue) : Option.Empty<T7>(); }
+        get { return IsSeventh ? Option.Valued((T7)CoproductValue!) : Option.Empty<T7>(); }
     }
     public Option<T8> Eighth
     {
-        get { return IsEighth ? Option.Valued((T8)CoproductValue) : Option.Empty<T8>(); }
+        get { return IsEighth ? Option.Valued((T8)CoproductValue!) : Option.Empty<T8>(); }
     }
     public Option<T9> Ninth
     {
-        get { return IsNinth ? Option.Valued((T9)CoproductValue) : Option.Empty<T9>(); }
+        get { return IsNinth ? Option.Valued((T9)CoproductValue!) : Option.Empty<T9>(); }
     }
     public Option<T10> Tenth
     {
-        get { return IsTenth ? Option.Valued((T10)CoproductValue) : Option.Empty<T10>(); }
+        get { return IsTenth ? Option.Valued((T10)CoproductValue!) : Option.Empty<T10>(); }
     }
     public Option<T11> Eleventh
     {
-        get { return IsEleventh ? Option.Valued((T11)CoproductValue) : Option.Empty<T11>(); }
+        get { return IsEleventh ? Option.Valued((T11)CoproductValue!) : Option.Empty<T11>(); }
     }
     public Option<T12> Twelfth
     {
-        get { return IsTwelfth ? Option.Valued((T12)CoproductValue) : Option.Empty<T12>(); }
+        get { return IsTwelfth ? Option.Valued((T12)CoproductValue!) : Option.Empty<T12>(); }
     }
     public Option<T13> Thirteenth
     {
-        get { return IsThirteenth ? Option.Valued((T13)CoproductValue) : Option.Empty<T13>(); }
+        get { return IsThirteenth ? Option.Valued((T13)CoproductValue!) : Option.Empty<T13>(); }
     }
     public Option<T14> Fourteenth
     {
-        get { return IsFourteenth ? Option.Valued((T14)CoproductValue) : Option.Empty<T14>(); }
+        get { return IsFourteenth ? Option.Valued((T14)CoproductValue!) : Option.Empty<T14>(); }
     }
     public Option<T15> Fifteenth
     {
-        get { return IsFifteenth ? Option.Valued((T15)CoproductValue) : Option.Empty<T15>(); }
+        get { return IsFifteenth ? Option.Valued((T15)CoproductValue!) : Option.Empty<T15>(); }
     }
     public Option<T16> Sixteenth
     {
-        get { return IsSixteenth ? Option.Valued((T16)CoproductValue) : Option.Empty<T16>(); }
+        get { return IsSixteenth ? Option.Valued((T16)CoproductValue!) : Option.Empty<T16>(); }
     }
     public Option<T17> Seventeenth
     {
-        get { return IsSeventeenth ? Option.Valued((T17)CoproductValue) : Option.Empty<T17>(); }
+        get { return IsSeventeenth ? Option.Valued((T17)CoproductValue!) : Option.Empty<T17>(); }
     }
     public Option<T18> Eighteenth
     {
-        get { return IsEighteenth ? Option.Valued((T18)CoproductValue) : Option.Empty<T18>(); }
+        get { return IsEighteenth ? Option.Valued((T18)CoproductValue!) : Option.Empty<T18>(); }
     }
     public Option<T19> Nineteenth
     {
-        get { return IsNineteenth ? Option.Valued((T19)CoproductValue) : Option.Empty<T19>(); }
+        get { return IsNineteenth ? Option.Valued((T19)CoproductValue!) : Option.Empty<T19>(); }
     }
     public Option<T20> Twentieth
     {
-        get { return IsTwentieth ? Option.Valued((T20)CoproductValue) : Option.Empty<T20>(); }
+        get { return IsTwentieth ? Option.Valued((T20)CoproductValue!) : Option.Empty<T20>(); }
     }
 
     public Coproduct20<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19, R20> Map<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19, R20>(
@@ -8411,26 +8402,26 @@ public class Coproduct20<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13,
     {
         switch (CoproductDiscriminator)
         {
-            case 1: return Coproduct20.CreateFirst<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19, R20>(ifFirst((T1)CoproductValue));
-            case 2: return Coproduct20.CreateSecond<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19, R20>(ifSecond((T2)CoproductValue));
-            case 3: return Coproduct20.CreateThird<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19, R20>(ifThird((T3)CoproductValue));
-            case 4: return Coproduct20.CreateFourth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19, R20>(ifFourth((T4)CoproductValue));
-            case 5: return Coproduct20.CreateFifth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19, R20>(ifFifth((T5)CoproductValue));
-            case 6: return Coproduct20.CreateSixth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19, R20>(ifSixth((T6)CoproductValue));
-            case 7: return Coproduct20.CreateSeventh<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19, R20>(ifSeventh((T7)CoproductValue));
-            case 8: return Coproduct20.CreateEighth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19, R20>(ifEighth((T8)CoproductValue));
-            case 9: return Coproduct20.CreateNinth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19, R20>(ifNinth((T9)CoproductValue));
-            case 10: return Coproduct20.CreateTenth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19, R20>(ifTenth((T10)CoproductValue));
-            case 11: return Coproduct20.CreateEleventh<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19, R20>(ifEleventh((T11)CoproductValue));
-            case 12: return Coproduct20.CreateTwelfth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19, R20>(ifTwelfth((T12)CoproductValue));
-            case 13: return Coproduct20.CreateThirteenth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19, R20>(ifThirteenth((T13)CoproductValue));
-            case 14: return Coproduct20.CreateFourteenth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19, R20>(ifFourteenth((T14)CoproductValue));
-            case 15: return Coproduct20.CreateFifteenth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19, R20>(ifFifteenth((T15)CoproductValue));
-            case 16: return Coproduct20.CreateSixteenth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19, R20>(ifSixteenth((T16)CoproductValue));
-            case 17: return Coproduct20.CreateSeventeenth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19, R20>(ifSeventeenth((T17)CoproductValue));
-            case 18: return Coproduct20.CreateEighteenth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19, R20>(ifEighteenth((T18)CoproductValue));
-            case 19: return Coproduct20.CreateNineteenth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19, R20>(ifNineteenth((T19)CoproductValue));
-            case 20: return Coproduct20.CreateTwentieth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19, R20>(ifTwentieth((T20)CoproductValue));
+            case 1: return Coproduct20.CreateFirst<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19, R20>(ifFirst((T1)CoproductValue!));
+            case 2: return Coproduct20.CreateSecond<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19, R20>(ifSecond((T2)CoproductValue!));
+            case 3: return Coproduct20.CreateThird<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19, R20>(ifThird((T3)CoproductValue!));
+            case 4: return Coproduct20.CreateFourth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19, R20>(ifFourth((T4)CoproductValue!));
+            case 5: return Coproduct20.CreateFifth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19, R20>(ifFifth((T5)CoproductValue!));
+            case 6: return Coproduct20.CreateSixth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19, R20>(ifSixth((T6)CoproductValue!));
+            case 7: return Coproduct20.CreateSeventh<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19, R20>(ifSeventh((T7)CoproductValue!));
+            case 8: return Coproduct20.CreateEighth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19, R20>(ifEighth((T8)CoproductValue!));
+            case 9: return Coproduct20.CreateNinth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19, R20>(ifNinth((T9)CoproductValue!));
+            case 10: return Coproduct20.CreateTenth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19, R20>(ifTenth((T10)CoproductValue!));
+            case 11: return Coproduct20.CreateEleventh<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19, R20>(ifEleventh((T11)CoproductValue!));
+            case 12: return Coproduct20.CreateTwelfth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19, R20>(ifTwelfth((T12)CoproductValue!));
+            case 13: return Coproduct20.CreateThirteenth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19, R20>(ifThirteenth((T13)CoproductValue!));
+            case 14: return Coproduct20.CreateFourteenth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19, R20>(ifFourteenth((T14)CoproductValue!));
+            case 15: return Coproduct20.CreateFifteenth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19, R20>(ifFifteenth((T15)CoproductValue!));
+            case 16: return Coproduct20.CreateSixteenth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19, R20>(ifSixteenth((T16)CoproductValue!));
+            case 17: return Coproduct20.CreateSeventeenth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19, R20>(ifSeventeenth((T17)CoproductValue!));
+            case 18: return Coproduct20.CreateEighteenth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19, R20>(ifEighteenth((T18)CoproductValue!));
+            case 19: return Coproduct20.CreateNineteenth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19, R20>(ifNineteenth((T19)CoproductValue!));
+            case 20: return Coproduct20.CreateTwentieth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19, R20>(ifTwentieth((T20)CoproductValue!));
             default: throw new InvalidOperationException();
         }
     }
@@ -8459,26 +8450,26 @@ public class Coproduct20<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13,
     {
         switch (CoproductDiscriminator)
         {
-            case 1: return ifFirst((T1)CoproductValue);
-            case 2: return ifSecond((T2)CoproductValue);
-            case 3: return ifThird((T3)CoproductValue);
-            case 4: return ifFourth((T4)CoproductValue);
-            case 5: return ifFifth((T5)CoproductValue);
-            case 6: return ifSixth((T6)CoproductValue);
-            case 7: return ifSeventh((T7)CoproductValue);
-            case 8: return ifEighth((T8)CoproductValue);
-            case 9: return ifNinth((T9)CoproductValue);
-            case 10: return ifTenth((T10)CoproductValue);
-            case 11: return ifEleventh((T11)CoproductValue);
-            case 12: return ifTwelfth((T12)CoproductValue);
-            case 13: return ifThirteenth((T13)CoproductValue);
-            case 14: return ifFourteenth((T14)CoproductValue);
-            case 15: return ifFifteenth((T15)CoproductValue);
-            case 16: return ifSixteenth((T16)CoproductValue);
-            case 17: return ifSeventeenth((T17)CoproductValue);
-            case 18: return ifEighteenth((T18)CoproductValue);
-            case 19: return ifNineteenth((T19)CoproductValue);
-            case 20: return ifTwentieth((T20)CoproductValue);
+            case 1: return ifFirst((T1)CoproductValue!);
+            case 2: return ifSecond((T2)CoproductValue!);
+            case 3: return ifThird((T3)CoproductValue!);
+            case 4: return ifFourth((T4)CoproductValue!);
+            case 5: return ifFifth((T5)CoproductValue!);
+            case 6: return ifSixth((T6)CoproductValue!);
+            case 7: return ifSeventh((T7)CoproductValue!);
+            case 8: return ifEighth((T8)CoproductValue!);
+            case 9: return ifNinth((T9)CoproductValue!);
+            case 10: return ifTenth((T10)CoproductValue!);
+            case 11: return ifEleventh((T11)CoproductValue!);
+            case 12: return ifTwelfth((T12)CoproductValue!);
+            case 13: return ifThirteenth((T13)CoproductValue!);
+            case 14: return ifFourteenth((T14)CoproductValue!);
+            case 15: return ifFifteenth((T15)CoproductValue!);
+            case 16: return ifSixteenth((T16)CoproductValue!);
+            case 17: return ifSeventeenth((T17)CoproductValue!);
+            case 18: return ifEighteenth((T18)CoproductValue!);
+            case 19: return ifNineteenth((T19)CoproductValue!);
+            case 20: return ifTwentieth((T20)CoproductValue!);
             default: throw new InvalidOperationException();
         }
     }
@@ -8507,26 +8498,26 @@ public class Coproduct20<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13,
     {
         switch (CoproductDiscriminator)
         {
-            case 1: return await ifFirst((T1)CoproductValue);
-            case 2: return await ifSecond((T2)CoproductValue);
-            case 3: return await ifThird((T3)CoproductValue);
-            case 4: return await ifFourth((T4)CoproductValue);
-            case 5: return await ifFifth((T5)CoproductValue);
-            case 6: return await ifSixth((T6)CoproductValue);
-            case 7: return await ifSeventh((T7)CoproductValue);
-            case 8: return await ifEighth((T8)CoproductValue);
-            case 9: return await ifNinth((T9)CoproductValue);
-            case 10: return await ifTenth((T10)CoproductValue);
-            case 11: return await ifEleventh((T11)CoproductValue);
-            case 12: return await ifTwelfth((T12)CoproductValue);
-            case 13: return await ifThirteenth((T13)CoproductValue);
-            case 14: return await ifFourteenth((T14)CoproductValue);
-            case 15: return await ifFifteenth((T15)CoproductValue);
-            case 16: return await ifSixteenth((T16)CoproductValue);
-            case 17: return await ifSeventeenth((T17)CoproductValue);
-            case 18: return await ifEighteenth((T18)CoproductValue);
-            case 19: return await ifNineteenth((T19)CoproductValue);
-            case 20: return await ifTwentieth((T20)CoproductValue);
+            case 1: return await ifFirst((T1)CoproductValue!);
+            case 2: return await ifSecond((T2)CoproductValue!);
+            case 3: return await ifThird((T3)CoproductValue!);
+            case 4: return await ifFourth((T4)CoproductValue!);
+            case 5: return await ifFifth((T5)CoproductValue!);
+            case 6: return await ifSixth((T6)CoproductValue!);
+            case 7: return await ifSeventh((T7)CoproductValue!);
+            case 8: return await ifEighth((T8)CoproductValue!);
+            case 9: return await ifNinth((T9)CoproductValue!);
+            case 10: return await ifTenth((T10)CoproductValue!);
+            case 11: return await ifEleventh((T11)CoproductValue!);
+            case 12: return await ifTwelfth((T12)CoproductValue!);
+            case 13: return await ifThirteenth((T13)CoproductValue!);
+            case 14: return await ifFourteenth((T14)CoproductValue!);
+            case 15: return await ifFifteenth((T15)CoproductValue!);
+            case 16: return await ifSixteenth((T16)CoproductValue!);
+            case 17: return await ifSeventeenth((T17)CoproductValue!);
+            case 18: return await ifEighteenth((T18)CoproductValue!);
+            case 19: return await ifNineteenth((T19)CoproductValue!);
+            case 20: return await ifTwentieth((T20)CoproductValue!);
             default: throw new InvalidOperationException();
         }
     }
@@ -8555,26 +8546,26 @@ public class Coproduct20<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13,
     {
         switch (CoproductDiscriminator)
         {
-            case 1: ifFirst?.Invoke((T1)CoproductValue); break;
-            case 2: ifSecond?.Invoke((T2)CoproductValue); break;
-            case 3: ifThird?.Invoke((T3)CoproductValue); break;
-            case 4: ifFourth?.Invoke((T4)CoproductValue); break;
-            case 5: ifFifth?.Invoke((T5)CoproductValue); break;
-            case 6: ifSixth?.Invoke((T6)CoproductValue); break;
-            case 7: ifSeventh?.Invoke((T7)CoproductValue); break;
-            case 8: ifEighth?.Invoke((T8)CoproductValue); break;
-            case 9: ifNinth?.Invoke((T9)CoproductValue); break;
-            case 10: ifTenth?.Invoke((T10)CoproductValue); break;
-            case 11: ifEleventh?.Invoke((T11)CoproductValue); break;
-            case 12: ifTwelfth?.Invoke((T12)CoproductValue); break;
-            case 13: ifThirteenth?.Invoke((T13)CoproductValue); break;
-            case 14: ifFourteenth?.Invoke((T14)CoproductValue); break;
-            case 15: ifFifteenth?.Invoke((T15)CoproductValue); break;
-            case 16: ifSixteenth?.Invoke((T16)CoproductValue); break;
-            case 17: ifSeventeenth?.Invoke((T17)CoproductValue); break;
-            case 18: ifEighteenth?.Invoke((T18)CoproductValue); break;
-            case 19: ifNineteenth?.Invoke((T19)CoproductValue); break;
-            case 20: ifTwentieth?.Invoke((T20)CoproductValue); break;
+            case 1: ifFirst?.Invoke((T1)CoproductValue!); break;
+            case 2: ifSecond?.Invoke((T2)CoproductValue!); break;
+            case 3: ifThird?.Invoke((T3)CoproductValue!); break;
+            case 4: ifFourth?.Invoke((T4)CoproductValue!); break;
+            case 5: ifFifth?.Invoke((T5)CoproductValue!); break;
+            case 6: ifSixth?.Invoke((T6)CoproductValue!); break;
+            case 7: ifSeventh?.Invoke((T7)CoproductValue!); break;
+            case 8: ifEighth?.Invoke((T8)CoproductValue!); break;
+            case 9: ifNinth?.Invoke((T9)CoproductValue!); break;
+            case 10: ifTenth?.Invoke((T10)CoproductValue!); break;
+            case 11: ifEleventh?.Invoke((T11)CoproductValue!); break;
+            case 12: ifTwelfth?.Invoke((T12)CoproductValue!); break;
+            case 13: ifThirteenth?.Invoke((T13)CoproductValue!); break;
+            case 14: ifFourteenth?.Invoke((T14)CoproductValue!); break;
+            case 15: ifFifteenth?.Invoke((T15)CoproductValue!); break;
+            case 16: ifSixteenth?.Invoke((T16)CoproductValue!); break;
+            case 17: ifSeventeenth?.Invoke((T17)CoproductValue!); break;
+            case 18: ifEighteenth?.Invoke((T18)CoproductValue!); break;
+            case 19: ifNineteenth?.Invoke((T19)CoproductValue!); break;
+            case 20: ifTwentieth?.Invoke((T20)CoproductValue!); break;
         }
     }
 
@@ -8602,26 +8593,26 @@ public class Coproduct20<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13,
     {
         switch (CoproductDiscriminator)
         {
-            case 1: await (ifFirst?.Invoke((T1)CoproductValue) ?? Task.CompletedTask); break;
-            case 2: await (ifSecond?.Invoke((T2)CoproductValue) ?? Task.CompletedTask); break;
-            case 3: await (ifThird?.Invoke((T3)CoproductValue) ?? Task.CompletedTask); break;
-            case 4: await (ifFourth?.Invoke((T4)CoproductValue) ?? Task.CompletedTask); break;
-            case 5: await (ifFifth?.Invoke((T5)CoproductValue) ?? Task.CompletedTask); break;
-            case 6: await (ifSixth?.Invoke((T6)CoproductValue) ?? Task.CompletedTask); break;
-            case 7: await (ifSeventh?.Invoke((T7)CoproductValue) ?? Task.CompletedTask); break;
-            case 8: await (ifEighth?.Invoke((T8)CoproductValue) ?? Task.CompletedTask); break;
-            case 9: await (ifNinth?.Invoke((T9)CoproductValue) ?? Task.CompletedTask); break;
-            case 10: await (ifTenth?.Invoke((T10)CoproductValue) ?? Task.CompletedTask); break;
-            case 11: await (ifEleventh?.Invoke((T11)CoproductValue) ?? Task.CompletedTask); break;
-            case 12: await (ifTwelfth?.Invoke((T12)CoproductValue) ?? Task.CompletedTask); break;
-            case 13: await (ifThirteenth?.Invoke((T13)CoproductValue) ?? Task.CompletedTask); break;
-            case 14: await (ifFourteenth?.Invoke((T14)CoproductValue) ?? Task.CompletedTask); break;
-            case 15: await (ifFifteenth?.Invoke((T15)CoproductValue) ?? Task.CompletedTask); break;
-            case 16: await (ifSixteenth?.Invoke((T16)CoproductValue) ?? Task.CompletedTask); break;
-            case 17: await (ifSeventeenth?.Invoke((T17)CoproductValue) ?? Task.CompletedTask); break;
-            case 18: await (ifEighteenth?.Invoke((T18)CoproductValue) ?? Task.CompletedTask); break;
-            case 19: await (ifNineteenth?.Invoke((T19)CoproductValue) ?? Task.CompletedTask); break;
-            case 20: await (ifTwentieth?.Invoke((T20)CoproductValue) ?? Task.CompletedTask); break;
+            case 1: await (ifFirst?.Invoke((T1)CoproductValue!) ?? Task.CompletedTask); break;
+            case 2: await (ifSecond?.Invoke((T2)CoproductValue!) ?? Task.CompletedTask); break;
+            case 3: await (ifThird?.Invoke((T3)CoproductValue!) ?? Task.CompletedTask); break;
+            case 4: await (ifFourth?.Invoke((T4)CoproductValue!) ?? Task.CompletedTask); break;
+            case 5: await (ifFifth?.Invoke((T5)CoproductValue!) ?? Task.CompletedTask); break;
+            case 6: await (ifSixth?.Invoke((T6)CoproductValue!) ?? Task.CompletedTask); break;
+            case 7: await (ifSeventh?.Invoke((T7)CoproductValue!) ?? Task.CompletedTask); break;
+            case 8: await (ifEighth?.Invoke((T8)CoproductValue!) ?? Task.CompletedTask); break;
+            case 9: await (ifNinth?.Invoke((T9)CoproductValue!) ?? Task.CompletedTask); break;
+            case 10: await (ifTenth?.Invoke((T10)CoproductValue!) ?? Task.CompletedTask); break;
+            case 11: await (ifEleventh?.Invoke((T11)CoproductValue!) ?? Task.CompletedTask); break;
+            case 12: await (ifTwelfth?.Invoke((T12)CoproductValue!) ?? Task.CompletedTask); break;
+            case 13: await (ifThirteenth?.Invoke((T13)CoproductValue!) ?? Task.CompletedTask); break;
+            case 14: await (ifFourteenth?.Invoke((T14)CoproductValue!) ?? Task.CompletedTask); break;
+            case 15: await (ifFifteenth?.Invoke((T15)CoproductValue!) ?? Task.CompletedTask); break;
+            case 16: await (ifSixteenth?.Invoke((T16)CoproductValue!) ?? Task.CompletedTask); break;
+            case 17: await (ifSeventeenth?.Invoke((T17)CoproductValue!) ?? Task.CompletedTask); break;
+            case 18: await (ifEighteenth?.Invoke((T18)CoproductValue!) ?? Task.CompletedTask); break;
+            case 19: await (ifNineteenth?.Invoke((T19)CoproductValue!) ?? Task.CompletedTask); break;
+            case 20: await (ifTwentieth?.Invoke((T20)CoproductValue!) ?? Task.CompletedTask); break;
         }
     }
 
@@ -8988,7 +8979,7 @@ public class Coproduct21<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13,
     /// </summary>
     /// <param name="discriminator">Discriminator of the value from interval [1, arity].</param>
     /// <param name="value">Value of the coproduct on the position defined by the discriminator.</param>
-    protected Coproduct21(int discriminator, object value)
+    protected Coproduct21(int discriminator, object? value)
         : base(21, discriminator, value)
     {
     }
@@ -9080,87 +9071,87 @@ public class Coproduct21<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13,
 
     public Option<T1> First
     {
-        get { return IsFirst ? Option.Valued((T1)CoproductValue) : Option.Empty<T1>(); }
+        get { return IsFirst ? Option.Valued((T1)CoproductValue!) : Option.Empty<T1>(); }
     }
     public Option<T2> Second
     {
-        get { return IsSecond ? Option.Valued((T2)CoproductValue) : Option.Empty<T2>(); }
+        get { return IsSecond ? Option.Valued((T2)CoproductValue!) : Option.Empty<T2>(); }
     }
     public Option<T3> Third
     {
-        get { return IsThird ? Option.Valued((T3)CoproductValue) : Option.Empty<T3>(); }
+        get { return IsThird ? Option.Valued((T3)CoproductValue!) : Option.Empty<T3>(); }
     }
     public Option<T4> Fourth
     {
-        get { return IsFourth ? Option.Valued((T4)CoproductValue) : Option.Empty<T4>(); }
+        get { return IsFourth ? Option.Valued((T4)CoproductValue!) : Option.Empty<T4>(); }
     }
     public Option<T5> Fifth
     {
-        get { return IsFifth ? Option.Valued((T5)CoproductValue) : Option.Empty<T5>(); }
+        get { return IsFifth ? Option.Valued((T5)CoproductValue!) : Option.Empty<T5>(); }
     }
     public Option<T6> Sixth
     {
-        get { return IsSixth ? Option.Valued((T6)CoproductValue) : Option.Empty<T6>(); }
+        get { return IsSixth ? Option.Valued((T6)CoproductValue!) : Option.Empty<T6>(); }
     }
     public Option<T7> Seventh
     {
-        get { return IsSeventh ? Option.Valued((T7)CoproductValue) : Option.Empty<T7>(); }
+        get { return IsSeventh ? Option.Valued((T7)CoproductValue!) : Option.Empty<T7>(); }
     }
     public Option<T8> Eighth
     {
-        get { return IsEighth ? Option.Valued((T8)CoproductValue) : Option.Empty<T8>(); }
+        get { return IsEighth ? Option.Valued((T8)CoproductValue!) : Option.Empty<T8>(); }
     }
     public Option<T9> Ninth
     {
-        get { return IsNinth ? Option.Valued((T9)CoproductValue) : Option.Empty<T9>(); }
+        get { return IsNinth ? Option.Valued((T9)CoproductValue!) : Option.Empty<T9>(); }
     }
     public Option<T10> Tenth
     {
-        get { return IsTenth ? Option.Valued((T10)CoproductValue) : Option.Empty<T10>(); }
+        get { return IsTenth ? Option.Valued((T10)CoproductValue!) : Option.Empty<T10>(); }
     }
     public Option<T11> Eleventh
     {
-        get { return IsEleventh ? Option.Valued((T11)CoproductValue) : Option.Empty<T11>(); }
+        get { return IsEleventh ? Option.Valued((T11)CoproductValue!) : Option.Empty<T11>(); }
     }
     public Option<T12> Twelfth
     {
-        get { return IsTwelfth ? Option.Valued((T12)CoproductValue) : Option.Empty<T12>(); }
+        get { return IsTwelfth ? Option.Valued((T12)CoproductValue!) : Option.Empty<T12>(); }
     }
     public Option<T13> Thirteenth
     {
-        get { return IsThirteenth ? Option.Valued((T13)CoproductValue) : Option.Empty<T13>(); }
+        get { return IsThirteenth ? Option.Valued((T13)CoproductValue!) : Option.Empty<T13>(); }
     }
     public Option<T14> Fourteenth
     {
-        get { return IsFourteenth ? Option.Valued((T14)CoproductValue) : Option.Empty<T14>(); }
+        get { return IsFourteenth ? Option.Valued((T14)CoproductValue!) : Option.Empty<T14>(); }
     }
     public Option<T15> Fifteenth
     {
-        get { return IsFifteenth ? Option.Valued((T15)CoproductValue) : Option.Empty<T15>(); }
+        get { return IsFifteenth ? Option.Valued((T15)CoproductValue!) : Option.Empty<T15>(); }
     }
     public Option<T16> Sixteenth
     {
-        get { return IsSixteenth ? Option.Valued((T16)CoproductValue) : Option.Empty<T16>(); }
+        get { return IsSixteenth ? Option.Valued((T16)CoproductValue!) : Option.Empty<T16>(); }
     }
     public Option<T17> Seventeenth
     {
-        get { return IsSeventeenth ? Option.Valued((T17)CoproductValue) : Option.Empty<T17>(); }
+        get { return IsSeventeenth ? Option.Valued((T17)CoproductValue!) : Option.Empty<T17>(); }
     }
     public Option<T18> Eighteenth
     {
-        get { return IsEighteenth ? Option.Valued((T18)CoproductValue) : Option.Empty<T18>(); }
+        get { return IsEighteenth ? Option.Valued((T18)CoproductValue!) : Option.Empty<T18>(); }
     }
     public Option<T19> Nineteenth
     {
-        get { return IsNineteenth ? Option.Valued((T19)CoproductValue) : Option.Empty<T19>(); }
+        get { return IsNineteenth ? Option.Valued((T19)CoproductValue!) : Option.Empty<T19>(); }
     }
     public Option<T20> Twentieth
     {
-        get { return IsTwentieth ? Option.Valued((T20)CoproductValue) : Option.Empty<T20>(); }
+        get { return IsTwentieth ? Option.Valued((T20)CoproductValue!) : Option.Empty<T20>(); }
     }
     public Option<T21> TwentyFirst
     {
-        get { return IsTwentyFirst ? Option.Valued((T21)CoproductValue) : Option.Empty<T21>(); }
+        get { return IsTwentyFirst ? Option.Valued((T21)CoproductValue!) : Option.Empty<T21>(); }
     }
 
     public Coproduct21<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19, R20, R21> Map<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19, R20, R21>(
@@ -9188,27 +9179,27 @@ public class Coproduct21<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13,
     {
         switch (CoproductDiscriminator)
         {
-            case 1: return Coproduct21.CreateFirst<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19, R20, R21>(ifFirst((T1)CoproductValue));
-            case 2: return Coproduct21.CreateSecond<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19, R20, R21>(ifSecond((T2)CoproductValue));
-            case 3: return Coproduct21.CreateThird<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19, R20, R21>(ifThird((T3)CoproductValue));
-            case 4: return Coproduct21.CreateFourth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19, R20, R21>(ifFourth((T4)CoproductValue));
-            case 5: return Coproduct21.CreateFifth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19, R20, R21>(ifFifth((T5)CoproductValue));
-            case 6: return Coproduct21.CreateSixth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19, R20, R21>(ifSixth((T6)CoproductValue));
-            case 7: return Coproduct21.CreateSeventh<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19, R20, R21>(ifSeventh((T7)CoproductValue));
-            case 8: return Coproduct21.CreateEighth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19, R20, R21>(ifEighth((T8)CoproductValue));
-            case 9: return Coproduct21.CreateNinth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19, R20, R21>(ifNinth((T9)CoproductValue));
-            case 10: return Coproduct21.CreateTenth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19, R20, R21>(ifTenth((T10)CoproductValue));
-            case 11: return Coproduct21.CreateEleventh<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19, R20, R21>(ifEleventh((T11)CoproductValue));
-            case 12: return Coproduct21.CreateTwelfth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19, R20, R21>(ifTwelfth((T12)CoproductValue));
-            case 13: return Coproduct21.CreateThirteenth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19, R20, R21>(ifThirteenth((T13)CoproductValue));
-            case 14: return Coproduct21.CreateFourteenth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19, R20, R21>(ifFourteenth((T14)CoproductValue));
-            case 15: return Coproduct21.CreateFifteenth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19, R20, R21>(ifFifteenth((T15)CoproductValue));
-            case 16: return Coproduct21.CreateSixteenth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19, R20, R21>(ifSixteenth((T16)CoproductValue));
-            case 17: return Coproduct21.CreateSeventeenth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19, R20, R21>(ifSeventeenth((T17)CoproductValue));
-            case 18: return Coproduct21.CreateEighteenth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19, R20, R21>(ifEighteenth((T18)CoproductValue));
-            case 19: return Coproduct21.CreateNineteenth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19, R20, R21>(ifNineteenth((T19)CoproductValue));
-            case 20: return Coproduct21.CreateTwentieth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19, R20, R21>(ifTwentieth((T20)CoproductValue));
-            case 21: return Coproduct21.CreateTwentyFirst<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19, R20, R21>(ifTwentyFirst((T21)CoproductValue));
+            case 1: return Coproduct21.CreateFirst<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19, R20, R21>(ifFirst((T1)CoproductValue!));
+            case 2: return Coproduct21.CreateSecond<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19, R20, R21>(ifSecond((T2)CoproductValue!));
+            case 3: return Coproduct21.CreateThird<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19, R20, R21>(ifThird((T3)CoproductValue!));
+            case 4: return Coproduct21.CreateFourth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19, R20, R21>(ifFourth((T4)CoproductValue!));
+            case 5: return Coproduct21.CreateFifth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19, R20, R21>(ifFifth((T5)CoproductValue!));
+            case 6: return Coproduct21.CreateSixth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19, R20, R21>(ifSixth((T6)CoproductValue!));
+            case 7: return Coproduct21.CreateSeventh<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19, R20, R21>(ifSeventh((T7)CoproductValue!));
+            case 8: return Coproduct21.CreateEighth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19, R20, R21>(ifEighth((T8)CoproductValue!));
+            case 9: return Coproduct21.CreateNinth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19, R20, R21>(ifNinth((T9)CoproductValue!));
+            case 10: return Coproduct21.CreateTenth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19, R20, R21>(ifTenth((T10)CoproductValue!));
+            case 11: return Coproduct21.CreateEleventh<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19, R20, R21>(ifEleventh((T11)CoproductValue!));
+            case 12: return Coproduct21.CreateTwelfth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19, R20, R21>(ifTwelfth((T12)CoproductValue!));
+            case 13: return Coproduct21.CreateThirteenth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19, R20, R21>(ifThirteenth((T13)CoproductValue!));
+            case 14: return Coproduct21.CreateFourteenth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19, R20, R21>(ifFourteenth((T14)CoproductValue!));
+            case 15: return Coproduct21.CreateFifteenth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19, R20, R21>(ifFifteenth((T15)CoproductValue!));
+            case 16: return Coproduct21.CreateSixteenth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19, R20, R21>(ifSixteenth((T16)CoproductValue!));
+            case 17: return Coproduct21.CreateSeventeenth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19, R20, R21>(ifSeventeenth((T17)CoproductValue!));
+            case 18: return Coproduct21.CreateEighteenth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19, R20, R21>(ifEighteenth((T18)CoproductValue!));
+            case 19: return Coproduct21.CreateNineteenth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19, R20, R21>(ifNineteenth((T19)CoproductValue!));
+            case 20: return Coproduct21.CreateTwentieth<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19, R20, R21>(ifTwentieth((T20)CoproductValue!));
+            case 21: return Coproduct21.CreateTwentyFirst<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19, R20, R21>(ifTwentyFirst((T21)CoproductValue!));
             default: throw new InvalidOperationException();
         }
     }
@@ -9238,27 +9229,27 @@ public class Coproduct21<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13,
     {
         switch (CoproductDiscriminator)
         {
-            case 1: return ifFirst((T1)CoproductValue);
-            case 2: return ifSecond((T2)CoproductValue);
-            case 3: return ifThird((T3)CoproductValue);
-            case 4: return ifFourth((T4)CoproductValue);
-            case 5: return ifFifth((T5)CoproductValue);
-            case 6: return ifSixth((T6)CoproductValue);
-            case 7: return ifSeventh((T7)CoproductValue);
-            case 8: return ifEighth((T8)CoproductValue);
-            case 9: return ifNinth((T9)CoproductValue);
-            case 10: return ifTenth((T10)CoproductValue);
-            case 11: return ifEleventh((T11)CoproductValue);
-            case 12: return ifTwelfth((T12)CoproductValue);
-            case 13: return ifThirteenth((T13)CoproductValue);
-            case 14: return ifFourteenth((T14)CoproductValue);
-            case 15: return ifFifteenth((T15)CoproductValue);
-            case 16: return ifSixteenth((T16)CoproductValue);
-            case 17: return ifSeventeenth((T17)CoproductValue);
-            case 18: return ifEighteenth((T18)CoproductValue);
-            case 19: return ifNineteenth((T19)CoproductValue);
-            case 20: return ifTwentieth((T20)CoproductValue);
-            case 21: return ifTwentyFirst((T21)CoproductValue);
+            case 1: return ifFirst((T1)CoproductValue!);
+            case 2: return ifSecond((T2)CoproductValue!);
+            case 3: return ifThird((T3)CoproductValue!);
+            case 4: return ifFourth((T4)CoproductValue!);
+            case 5: return ifFifth((T5)CoproductValue!);
+            case 6: return ifSixth((T6)CoproductValue!);
+            case 7: return ifSeventh((T7)CoproductValue!);
+            case 8: return ifEighth((T8)CoproductValue!);
+            case 9: return ifNinth((T9)CoproductValue!);
+            case 10: return ifTenth((T10)CoproductValue!);
+            case 11: return ifEleventh((T11)CoproductValue!);
+            case 12: return ifTwelfth((T12)CoproductValue!);
+            case 13: return ifThirteenth((T13)CoproductValue!);
+            case 14: return ifFourteenth((T14)CoproductValue!);
+            case 15: return ifFifteenth((T15)CoproductValue!);
+            case 16: return ifSixteenth((T16)CoproductValue!);
+            case 17: return ifSeventeenth((T17)CoproductValue!);
+            case 18: return ifEighteenth((T18)CoproductValue!);
+            case 19: return ifNineteenth((T19)CoproductValue!);
+            case 20: return ifTwentieth((T20)CoproductValue!);
+            case 21: return ifTwentyFirst((T21)CoproductValue!);
             default: throw new InvalidOperationException();
         }
     }
@@ -9288,27 +9279,27 @@ public class Coproduct21<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13,
     {
         switch (CoproductDiscriminator)
         {
-            case 1: return await ifFirst((T1)CoproductValue);
-            case 2: return await ifSecond((T2)CoproductValue);
-            case 3: return await ifThird((T3)CoproductValue);
-            case 4: return await ifFourth((T4)CoproductValue);
-            case 5: return await ifFifth((T5)CoproductValue);
-            case 6: return await ifSixth((T6)CoproductValue);
-            case 7: return await ifSeventh((T7)CoproductValue);
-            case 8: return await ifEighth((T8)CoproductValue);
-            case 9: return await ifNinth((T9)CoproductValue);
-            case 10: return await ifTenth((T10)CoproductValue);
-            case 11: return await ifEleventh((T11)CoproductValue);
-            case 12: return await ifTwelfth((T12)CoproductValue);
-            case 13: return await ifThirteenth((T13)CoproductValue);
-            case 14: return await ifFourteenth((T14)CoproductValue);
-            case 15: return await ifFifteenth((T15)CoproductValue);
-            case 16: return await ifSixteenth((T16)CoproductValue);
-            case 17: return await ifSeventeenth((T17)CoproductValue);
-            case 18: return await ifEighteenth((T18)CoproductValue);
-            case 19: return await ifNineteenth((T19)CoproductValue);
-            case 20: return await ifTwentieth((T20)CoproductValue);
-            case 21: return await ifTwentyFirst((T21)CoproductValue);
+            case 1: return await ifFirst((T1)CoproductValue!);
+            case 2: return await ifSecond((T2)CoproductValue!);
+            case 3: return await ifThird((T3)CoproductValue!);
+            case 4: return await ifFourth((T4)CoproductValue!);
+            case 5: return await ifFifth((T5)CoproductValue!);
+            case 6: return await ifSixth((T6)CoproductValue!);
+            case 7: return await ifSeventh((T7)CoproductValue!);
+            case 8: return await ifEighth((T8)CoproductValue!);
+            case 9: return await ifNinth((T9)CoproductValue!);
+            case 10: return await ifTenth((T10)CoproductValue!);
+            case 11: return await ifEleventh((T11)CoproductValue!);
+            case 12: return await ifTwelfth((T12)CoproductValue!);
+            case 13: return await ifThirteenth((T13)CoproductValue!);
+            case 14: return await ifFourteenth((T14)CoproductValue!);
+            case 15: return await ifFifteenth((T15)CoproductValue!);
+            case 16: return await ifSixteenth((T16)CoproductValue!);
+            case 17: return await ifSeventeenth((T17)CoproductValue!);
+            case 18: return await ifEighteenth((T18)CoproductValue!);
+            case 19: return await ifNineteenth((T19)CoproductValue!);
+            case 20: return await ifTwentieth((T20)CoproductValue!);
+            case 21: return await ifTwentyFirst((T21)CoproductValue!);
             default: throw new InvalidOperationException();
         }
     }
@@ -9338,27 +9329,27 @@ public class Coproduct21<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13,
     {
         switch (CoproductDiscriminator)
         {
-            case 1: ifFirst?.Invoke((T1)CoproductValue); break;
-            case 2: ifSecond?.Invoke((T2)CoproductValue); break;
-            case 3: ifThird?.Invoke((T3)CoproductValue); break;
-            case 4: ifFourth?.Invoke((T4)CoproductValue); break;
-            case 5: ifFifth?.Invoke((T5)CoproductValue); break;
-            case 6: ifSixth?.Invoke((T6)CoproductValue); break;
-            case 7: ifSeventh?.Invoke((T7)CoproductValue); break;
-            case 8: ifEighth?.Invoke((T8)CoproductValue); break;
-            case 9: ifNinth?.Invoke((T9)CoproductValue); break;
-            case 10: ifTenth?.Invoke((T10)CoproductValue); break;
-            case 11: ifEleventh?.Invoke((T11)CoproductValue); break;
-            case 12: ifTwelfth?.Invoke((T12)CoproductValue); break;
-            case 13: ifThirteenth?.Invoke((T13)CoproductValue); break;
-            case 14: ifFourteenth?.Invoke((T14)CoproductValue); break;
-            case 15: ifFifteenth?.Invoke((T15)CoproductValue); break;
-            case 16: ifSixteenth?.Invoke((T16)CoproductValue); break;
-            case 17: ifSeventeenth?.Invoke((T17)CoproductValue); break;
-            case 18: ifEighteenth?.Invoke((T18)CoproductValue); break;
-            case 19: ifNineteenth?.Invoke((T19)CoproductValue); break;
-            case 20: ifTwentieth?.Invoke((T20)CoproductValue); break;
-            case 21: ifTwentyFirst?.Invoke((T21)CoproductValue); break;
+            case 1: ifFirst?.Invoke((T1)CoproductValue!); break;
+            case 2: ifSecond?.Invoke((T2)CoproductValue!); break;
+            case 3: ifThird?.Invoke((T3)CoproductValue!); break;
+            case 4: ifFourth?.Invoke((T4)CoproductValue!); break;
+            case 5: ifFifth?.Invoke((T5)CoproductValue!); break;
+            case 6: ifSixth?.Invoke((T6)CoproductValue!); break;
+            case 7: ifSeventh?.Invoke((T7)CoproductValue!); break;
+            case 8: ifEighth?.Invoke((T8)CoproductValue!); break;
+            case 9: ifNinth?.Invoke((T9)CoproductValue!); break;
+            case 10: ifTenth?.Invoke((T10)CoproductValue!); break;
+            case 11: ifEleventh?.Invoke((T11)CoproductValue!); break;
+            case 12: ifTwelfth?.Invoke((T12)CoproductValue!); break;
+            case 13: ifThirteenth?.Invoke((T13)CoproductValue!); break;
+            case 14: ifFourteenth?.Invoke((T14)CoproductValue!); break;
+            case 15: ifFifteenth?.Invoke((T15)CoproductValue!); break;
+            case 16: ifSixteenth?.Invoke((T16)CoproductValue!); break;
+            case 17: ifSeventeenth?.Invoke((T17)CoproductValue!); break;
+            case 18: ifEighteenth?.Invoke((T18)CoproductValue!); break;
+            case 19: ifNineteenth?.Invoke((T19)CoproductValue!); break;
+            case 20: ifTwentieth?.Invoke((T20)CoproductValue!); break;
+            case 21: ifTwentyFirst?.Invoke((T21)CoproductValue!); break;
         }
     }
 
@@ -9387,27 +9378,27 @@ public class Coproduct21<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13,
     {
         switch (CoproductDiscriminator)
         {
-            case 1: await (ifFirst?.Invoke((T1)CoproductValue) ?? Task.CompletedTask); break;
-            case 2: await (ifSecond?.Invoke((T2)CoproductValue) ?? Task.CompletedTask); break;
-            case 3: await (ifThird?.Invoke((T3)CoproductValue) ?? Task.CompletedTask); break;
-            case 4: await (ifFourth?.Invoke((T4)CoproductValue) ?? Task.CompletedTask); break;
-            case 5: await (ifFifth?.Invoke((T5)CoproductValue) ?? Task.CompletedTask); break;
-            case 6: await (ifSixth?.Invoke((T6)CoproductValue) ?? Task.CompletedTask); break;
-            case 7: await (ifSeventh?.Invoke((T7)CoproductValue) ?? Task.CompletedTask); break;
-            case 8: await (ifEighth?.Invoke((T8)CoproductValue) ?? Task.CompletedTask); break;
-            case 9: await (ifNinth?.Invoke((T9)CoproductValue) ?? Task.CompletedTask); break;
-            case 10: await (ifTenth?.Invoke((T10)CoproductValue) ?? Task.CompletedTask); break;
-            case 11: await (ifEleventh?.Invoke((T11)CoproductValue) ?? Task.CompletedTask); break;
-            case 12: await (ifTwelfth?.Invoke((T12)CoproductValue) ?? Task.CompletedTask); break;
-            case 13: await (ifThirteenth?.Invoke((T13)CoproductValue) ?? Task.CompletedTask); break;
-            case 14: await (ifFourteenth?.Invoke((T14)CoproductValue) ?? Task.CompletedTask); break;
-            case 15: await (ifFifteenth?.Invoke((T15)CoproductValue) ?? Task.CompletedTask); break;
-            case 16: await (ifSixteenth?.Invoke((T16)CoproductValue) ?? Task.CompletedTask); break;
-            case 17: await (ifSeventeenth?.Invoke((T17)CoproductValue) ?? Task.CompletedTask); break;
-            case 18: await (ifEighteenth?.Invoke((T18)CoproductValue) ?? Task.CompletedTask); break;
-            case 19: await (ifNineteenth?.Invoke((T19)CoproductValue) ?? Task.CompletedTask); break;
-            case 20: await (ifTwentieth?.Invoke((T20)CoproductValue) ?? Task.CompletedTask); break;
-            case 21: await (ifTwentyFirst?.Invoke((T21)CoproductValue) ?? Task.CompletedTask); break;
+            case 1: await (ifFirst?.Invoke((T1)CoproductValue!) ?? Task.CompletedTask); break;
+            case 2: await (ifSecond?.Invoke((T2)CoproductValue!) ?? Task.CompletedTask); break;
+            case 3: await (ifThird?.Invoke((T3)CoproductValue!) ?? Task.CompletedTask); break;
+            case 4: await (ifFourth?.Invoke((T4)CoproductValue!) ?? Task.CompletedTask); break;
+            case 5: await (ifFifth?.Invoke((T5)CoproductValue!) ?? Task.CompletedTask); break;
+            case 6: await (ifSixth?.Invoke((T6)CoproductValue!) ?? Task.CompletedTask); break;
+            case 7: await (ifSeventh?.Invoke((T7)CoproductValue!) ?? Task.CompletedTask); break;
+            case 8: await (ifEighth?.Invoke((T8)CoproductValue!) ?? Task.CompletedTask); break;
+            case 9: await (ifNinth?.Invoke((T9)CoproductValue!) ?? Task.CompletedTask); break;
+            case 10: await (ifTenth?.Invoke((T10)CoproductValue!) ?? Task.CompletedTask); break;
+            case 11: await (ifEleventh?.Invoke((T11)CoproductValue!) ?? Task.CompletedTask); break;
+            case 12: await (ifTwelfth?.Invoke((T12)CoproductValue!) ?? Task.CompletedTask); break;
+            case 13: await (ifThirteenth?.Invoke((T13)CoproductValue!) ?? Task.CompletedTask); break;
+            case 14: await (ifFourteenth?.Invoke((T14)CoproductValue!) ?? Task.CompletedTask); break;
+            case 15: await (ifFifteenth?.Invoke((T15)CoproductValue!) ?? Task.CompletedTask); break;
+            case 16: await (ifSixteenth?.Invoke((T16)CoproductValue!) ?? Task.CompletedTask); break;
+            case 17: await (ifSeventeenth?.Invoke((T17)CoproductValue!) ?? Task.CompletedTask); break;
+            case 18: await (ifEighteenth?.Invoke((T18)CoproductValue!) ?? Task.CompletedTask); break;
+            case 19: await (ifNineteenth?.Invoke((T19)CoproductValue!) ?? Task.CompletedTask); break;
+            case 20: await (ifTwentieth?.Invoke((T20)CoproductValue!) ?? Task.CompletedTask); break;
+            case 21: await (ifTwentyFirst?.Invoke((T21)CoproductValue!) ?? Task.CompletedTask); break;
         }
     }
 

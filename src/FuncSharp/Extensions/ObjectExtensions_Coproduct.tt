@@ -20,7 +20,7 @@ public static partial class ObjectExtensions
     /// function. In case when the fallback is null, throws an exception (optionally created by the otherwise function).
     /// </summary>
     [Pure]
-    public static <#= CoproductImplType(i) #> AsCoproduct<#= TypeBracket(i) #>(this object value, Func<object, <#= CoproductImplType(i) #>> fallback = null, Func<Unit, Exception> otherwise = null)
+    public static <#= CoproductImplType(i) #> AsCoproduct<#= TypeBracket(i) #>(this object value, Func<object, <#= CoproductImplType(i) #>>? fallback = null, Func<Unit, Exception>? otherwise = null)
     {
         switch (value) {
 <#= Lines(i, j => Indent(16) + "case " + Type(j) + " " + Value(j) + ": return Coproduct" + i + ".Create" + GetOrdinal(j) + TypeBracket(i) + "(" + Value(j) + ");") #>
@@ -34,7 +34,7 @@ public static partial class ObjectExtensions
         {
             throw otherwise(Unit.Value);
         }
-        throw new ArgumentException("The value " + value.SafeToString() + " does not match any of the <#= i #> specified types.");
+        throw new ArgumentException("The value " + value.ToString() + " does not match any of the <#= i #> specified types.");
     }
 
     /// <summary>
@@ -44,7 +44,7 @@ public static partial class ObjectExtensions
     /// the otherwise function).
     /// </summary>
     [Pure]
-    public static <#= CoproductImplType(i) #> AsCoproduct<#= TypeBracket(i) #>(this object value, <#= Parameters(i) #>, Func<object, <#= CoproductImplType(i) #>> fallback = null, Func<Unit, Exception> otherwise = null)
+    public static <#= CoproductImplType(i) #> AsCoproduct<#= TypeBracket(i) #>(this object value, <#= Parameters(i) #>, Func<object, <#= CoproductImplType(i) #>>? fallback = null, Func<Unit, Exception>? otherwise = null)
     {
 <#     for (var j = 1; j <= i; j++) { #>
         if (Equals(value, <#= Value(j) #>))
@@ -60,7 +60,7 @@ public static partial class ObjectExtensions
         {
             throw otherwise(Unit.Value);
         }
-        throw new ArgumentException("The value " + value.SafeToString() + " does not match any of the <#= i #> specified values.");
+        throw new ArgumentException("The value " + value.ToString() + " does not match any of the <#= i #> specified values.");
     }
 
 <#     if (i + 1 < MaxArity()) { #>

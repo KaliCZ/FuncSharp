@@ -27,7 +27,7 @@ public static class Option
     /// </summary>
     [Pure]
     public static Option<A> Create<A>(A? value)
-        where A : notnull
+        where A : class
     {
         if (value is not null)
         {
@@ -55,7 +55,6 @@ public static class Option
     /// </summary>
     [Pure]
     public static Option<A> Valued<A>(A value)
-        where A : notnull
     {
         return new Option<A>(value);
     }
@@ -65,14 +64,12 @@ public static class Option
     /// </summary>
     [Pure]
     public static Option<A> Empty<A>()
-        where A : notnull
     {
         return Option<A>.Empty;
     }
 }
 
 public readonly struct Option<T> : IEquatable<Option<T>>
-    where T : notnull
 {
     public Option(T value)
     {
@@ -150,7 +147,6 @@ public readonly struct Option<T> : IEquatable<Option<T>>
 
     [Pure]
     public Option<B> Map<B>(Func<T, B> f)
-        where B : notnull
     {
         if (NonEmpty)
         {
@@ -161,7 +157,6 @@ public readonly struct Option<T> : IEquatable<Option<T>>
 
     [Pure]
     public Option<B> MapEmpty<B>(Func<Unit, B> f)
-        where B : notnull
     {
         if (NonEmpty)
         {
@@ -172,7 +167,6 @@ public readonly struct Option<T> : IEquatable<Option<T>>
 
     [Pure]
     public Option<B> FlatMapEmpty<B>(Func<Unit, Option<B>> f)
-        where B : notnull
     {
         if (NonEmpty)
         {
@@ -183,7 +177,6 @@ public readonly struct Option<T> : IEquatable<Option<T>>
 
     [Pure]
     public Option<B> FlatMap<B>(Func<T, Option<B>> f)
-        where B : notnull
     {
         if (NonEmpty)
         {
@@ -240,7 +233,6 @@ public readonly struct Option<T> : IEquatable<Option<T>>
     /// </summary>
     [Pure]
     public Option<B> Select<B>(Func<T, B> f)
-        where B : notnull
     {
         return Map(f);
     }
@@ -251,7 +243,6 @@ public readonly struct Option<T> : IEquatable<Option<T>>
     /// </summary>
     [Pure]
     public Option<B> SelectMany<B>(Func<T, Option<B>> f)
-        where B : notnull
     {
         return FlatMap(f);
     }
@@ -261,7 +252,6 @@ public readonly struct Option<T> : IEquatable<Option<T>>
     /// </summary>
     [Pure]
     public Option<B> SelectMany<X, B>(Func<T, Option<X>> f, Func<T, X, B> compose)
-        where B : notnull where X : notnull
     {
         return FlatMap(a => f(a).Map(x => compose(a, x)));
     }
@@ -308,7 +298,6 @@ public readonly struct Option<T> : IEquatable<Option<T>>
     /// </summary>
     [Pure]
     public async Task<Option<B>> MapAsync<B>(Func<T, Task<B>> f)
-        where B : notnull
     {
         if (NonEmpty)
         {
@@ -326,7 +315,6 @@ public readonly struct Option<T> : IEquatable<Option<T>>
     /// </summary>
     [Pure]
     public async Task<Option<B>> FlatMapAsync<B>(Func<T, Task<Option<B>>> f)
-        where B : notnull
     {
         if (NonEmpty)
         {
@@ -342,7 +330,6 @@ public readonly struct Option<T> : IEquatable<Option<T>>
     /// </summary>
     [Pure]
     public async Task<Option<B>> FlatMapAsync<B>(Func<T, Task<B?>> f)
-        where B : notnull
     {
         if (NonEmpty)
         {

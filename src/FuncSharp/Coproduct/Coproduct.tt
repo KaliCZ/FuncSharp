@@ -14,7 +14,7 @@ namespace FuncSharp;
 /// </summary>
 public abstract class CoproductBase : ICoproduct
 {
-    public CoproductBase(int arity, int discriminator, object value)
+    public CoproductBase(int arity, int discriminator, object? value)
     {
         CoproductArity = arity;
         CoproductDiscriminator = discriminator;
@@ -25,7 +25,7 @@ public abstract class CoproductBase : ICoproduct
 
     public int CoproductDiscriminator { get; }
 
-    public object CoproductValue { get; }
+    public object? CoproductValue { get; }
 
     public override int GetHashCode()
     {
@@ -40,15 +40,6 @@ public abstract class CoproductBase : ICoproduct
     public override string ToString()
     {
         return this.CoproductToString();
-    }
-
-	protected T GetCoproductValue<T>()
-    {
-        if (CoproductValue is T)
-        {
-            return (T)CoproductValue;
-        }
-        return default(T);
     }
 }
 
@@ -99,7 +90,7 @@ public class <#= CoproductImplType(i) #> : CoproductBase, <#= CoproductType(i) #
     /// </summary>
     /// <param name="discriminator">Discriminator of the value from interval [1, arity].</param>
     /// <param name="value">Value of the coproduct on the position defined by the discriminator.</param>
-    protected Coproduct<#= i #>(int discriminator, object value)
+    protected Coproduct<#= i #>(int discriminator, object? value)
         : base(<#= i #>, discriminator, value)
     {
     }
@@ -114,7 +105,7 @@ public class <#= CoproductImplType(i) #> : CoproductBase, <#= CoproductType(i) #
 <#    for (var j = 1; j <= i; j++) { #>
     public Option<<#= Type(j) #>> <#= GetOrdinal(j) #>
     {
-        get { return Is<#= GetOrdinal(j) #> ? Option.Valued((<#= Type(j) #>)CoproductValue) : Option.Empty<<#= Type(j) #>>(); }
+        get { return Is<#= GetOrdinal(j) #> ? Option.Valued((<#= Type(j) #>)CoproductValue!) : Option.Empty<<#= Type(j) #>>(); }
     }
 <#    } #>
 
@@ -123,7 +114,7 @@ public class <#= CoproductImplType(i) #> : CoproductBase, <#= CoproductType(i) #
     {
         switch (CoproductDiscriminator)
         {
-<#= Lines(i, x => Indent(12) + "case " + x + ": return Coproduct" + i + ".Create" + GetOrdinal(x) + TypeBracket(i, "R") + "(" + IfIth(x) + "((" + Type(x) + ")CoproductValue));") #>
+<#= Lines(i, x => Indent(12) + "case " + x + ": return Coproduct" + i + ".Create" + GetOrdinal(x) + TypeBracket(i, "R") + "(" + IfIth(x) + "((" + Type(x) + ")CoproductValue!));") #>
             default: throw new InvalidOperationException();
         }
     }
@@ -133,7 +124,7 @@ public class <#= CoproductImplType(i) #> : CoproductBase, <#= CoproductType(i) #
     {
         switch (CoproductDiscriminator)
         {
-<#= Lines(i, x => Indent(12) + "case " + x + ": return " + IfIth(x) + "((" + Type(x) + ")CoproductValue);") #>
+<#= Lines(i, x => Indent(12) + "case " + x + ": return " + IfIth(x) + "((" + Type(x) + ")CoproductValue!);") #>
             default: throw new InvalidOperationException();
         }
     }
@@ -143,7 +134,7 @@ public class <#= CoproductImplType(i) #> : CoproductBase, <#= CoproductType(i) #
     {
         switch (CoproductDiscriminator)
         {
-<#= Lines(i, x => Indent(12) + "case " + x + ": return await " + IfIth(x) + "((" + Type(x) + ")CoproductValue);") #>
+<#= Lines(i, x => Indent(12) + "case " + x + ": return await " + IfIth(x) + "((" + Type(x) + ")CoproductValue!);") #>
             default: throw new InvalidOperationException();
         }
     }
@@ -153,7 +144,7 @@ public class <#= CoproductImplType(i) #> : CoproductBase, <#= CoproductType(i) #
     {
         switch (CoproductDiscriminator)
         {
-<#= Lines(i, x => Indent(12) + "case " + x + ": " + IfIth(x) + "?.Invoke((" + Type(x) + ")CoproductValue); break;") #>
+<#= Lines(i, x => Indent(12) + "case " + x + ": " + IfIth(x) + "?.Invoke((" + Type(x) + ")CoproductValue!); break;") #>
         }
     }
 
@@ -162,7 +153,7 @@ public class <#= CoproductImplType(i) #> : CoproductBase, <#= CoproductType(i) #
     {
         switch (CoproductDiscriminator)
         {
-<#= Lines(i, x => Indent(12) + "case " + x + ": await (" + IfIth(x) + "?.Invoke((" + Type(x) + ")CoproductValue) ?? Task.CompletedTask); break;") #>
+<#= Lines(i, x => Indent(12) + "case " + x + ": await (" + IfIth(x) + "?.Invoke((" + Type(x) + ")CoproductValue!) ?? Task.CompletedTask); break;") #>
         }
     }
 

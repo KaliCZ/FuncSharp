@@ -18,7 +18,7 @@ namespace FuncSharp
         /// </summary>
         [Pure]
         public static Option<T> ToOption<T>(this T? value)
-            where T : notnull
+            where T : class
         {
             return Option.Create(value);
         }
