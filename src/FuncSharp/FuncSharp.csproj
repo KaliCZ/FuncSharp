@@ -32,14 +32,6 @@
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>IEnumerableExtensions_Coproducts.cs</LastGenOutput>
     </None>
-    <None Update="Collections\IEnumerableExtensions_DataCubes.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>IEnumerableExtensions_DataCubes.cs</LastGenOutput>
-    </None>
-    <None Update="Extensions\ObjectExtensions_ValueMatch.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>ObjectExtensions_ValueMatch.cs</LastGenOutput>
-    </None>
     <None Update="Extensions\ObjectExtensions_Coproduct.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>ObjectExtensions_Coproduct.cs</LastGenOutput>
@@ -155,16 +147,6 @@
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>IEnumerableExtensions_Coproducts.tt</DependentUpon>
-    </Compile>
-    <Compile Update="Collections\IEnumerableExtensions_DataCubes.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>IEnumerableExtensions_DataCubes.tt</DependentUpon>
-    </Compile>
-    <Compile Update="Extensions\ObjectExtensions_ValueMatch.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>ObjectExtensions_ValueMatch.tt</DependentUpon>
     </Compile>
     <Compile Update="Extensions\ObjectExtensions_Coproduct.cs">
       <DesignTime>True</DesignTime>

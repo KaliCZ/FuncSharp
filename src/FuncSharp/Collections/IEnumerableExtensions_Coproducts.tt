@@ -19,6 +19,7 @@ public static partial class IEnumerableExtensions
     public static void PartitionMatch<#= TypeBracket(i) #>(
         this IEnumerable<<#= CoproductType(i) #>> source,
 <#= Lines(i, x => Indent(8) + "Action<IReadOnlyList<" + Type(x) + ">> f" + x, separator: ",") #>)
+<#= Lines(i, x => Indent(12) + TypeConstraint(x)) #>
     {
 <#= Lines(i, x => Indent(8) + "var list" + x + " = new List<T" + x + ">();") #>
 
@@ -38,6 +39,7 @@ public static partial class IEnumerableExtensions
     public static IReadOnlyList<TResult> PartitionMatch<<#= FuncTypes(i) #>>(
         this IEnumerable<<#= CoproductType(i) #>> source,
 <#= Lines(i, x => Indent(8) + "Func<IReadOnlyList<" + Type(x) + ">, IEnumerable<TResult>> f" + x, separator: ",") #>)
+<#= Lines(i, x => Indent(12) + TypeConstraint(x)) #>
     {
         var result = new List<TResult>();
 
@@ -53,6 +55,7 @@ public static partial class IEnumerableExtensions
     /// Takes a collection of coproducts, partitions them into collections and returns those collections.
     /// </summary>
     public static (<#= List(i, x => $"IReadOnlyList<T{x}>") #>) Partition<<#= Types(i, name: "T") #>>(this IEnumerable<<#= CoproductType(i) #>> source)
+<#= Lines(i, x => Indent(8) + TypeConstraint(x)) #>
     {
 <#= Lines(i, x => $"{Indent(8)}var list{x} = new List<T{x}>();") #>
 

@@ -188,4 +188,18 @@
     {
         return "if" + GetOrdinal(i);
     }
+
+    public string TypeConstraints(int i, string name = "T", string constraint = "notnull")
+    {
+        return List(i, x => TypeConstraint(x, name, constraint), separator: " ");
+    }
+
+    public string TypeConstraint(int i, string name = "T", string constraint = "notnull")
+    {
+        if (i == 0)
+        {
+            return "";
+        }
+        return "where " + Type(i, name) + " : " + constraint;
+    }
 #>

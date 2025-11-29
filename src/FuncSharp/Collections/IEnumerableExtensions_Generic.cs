@@ -92,13 +92,21 @@ public static partial class IEnumerableExtensions
     public static IEnumerable<T> ExceptNulls<T>(this IEnumerable<T?> e)
         where T : struct
     {
-        return e.Where(item => item.HasValue).Select(item => item.Value);
+        foreach (var item in e)
+        {
+            if (item is {} i)
+                yield return i;
+        }
     }
 
-    public static IEnumerable<T> ExceptNulls<T>(this IEnumerable<T> e)
+    public static IEnumerable<T> ExceptNulls<T>(this IEnumerable<T?> e)
         where T : class
     {
-        return e.Where(v => v is not null);
+        foreach (var item in e)
+        {
+            if (item is {} i)
+                yield return i;
+        }
     }
 
     public static bool IsMultiple<T>(this IEnumerable<T> e)
@@ -129,39 +137,10 @@ public static partial class IEnumerableExtensions
         }
     }
 
-    public static T Second<T>(this IEnumerable<T> e)
-    {
-        return e.ElementAt(1);
-    }
-
-    public static T Third<T>(this IEnumerable<T> e)
-    {
-        return e.ElementAt(2);
-    }
-
-    public static T Fourth<T>(this IEnumerable<T> e)
-    {
-        return e.ElementAt(3);
-    }
-
-    public static T Fifth<T>(this IEnumerable<T> e)
-    {
-        return e.ElementAt(4);
-    }
-
-    /// <summary>
-    /// Orders the values using the specified less function in the specified order.
-    /// </summary>
-    public static IEnumerable<T> Order<T>(this IEnumerable<T> values, Func<T, T, bool> less, Ordering ordering = Ordering.Ascending)
-    {
-        var comparer = new Comparer<T>(less, ordering);
-        return values.OrderBy(v => v, comparer);
-    }
-
     /// <summary>
     /// Aggregates the exceptions into an AggregateException. If there is a single exception, returns it directly.
     /// </summary>
-    public static Option<Exception> Aggregate(this IEnumerable<Exception> source)
+    public static Exception? Aggregate(this IEnumerable<Exception> source)
     {
         return Aggregate(source.AsReadOnlyList());
     }
@@ -170,13 +149,13 @@ public static partial class IEnumerableExtensions
     /// Aggregates the exceptions into an AggregateException. If there is a single exception, returns it directly.
     /// </summary>
     [Pure]
-    public static Option<Exception> Aggregate(this IReadOnlyList<Exception> source)
+    public static Exception? Aggregate(this IReadOnlyList<Exception> source)
     {
         return source.Count switch
         {
-            0 => Option<Exception>.Empty,
-            1 => Option.Valued(source[0]),
-            _ => Option.Valued<Exception>(new AggregateException(source))
+            0 => null,
+            1 => source[0],
+            _ => new AggregateException(source)
         };
     }
 
