@@ -76,7 +76,7 @@ public static class ICoproductExtensions
         return
             c.GetType().SimpleName() + "(" +
                 GetOrdinal(c.CoproductDiscriminator) + "(" +
-                    c.CoproductValue.SafeToString() +
+                    c.CoproductValue.ToString() +
                 ")" +
             ")";
     }
