@@ -5,47 +5,14 @@ namespace FuncSharp;
 public static class Option
 {
     /// <summary>
-    /// True value as an option.
-    /// </summary>
-    [Pure]
-    public static Option<bool> True { get; } = true.ToOption();
-
-    /// <summary>
-    /// False value as an option.
-    /// </summary>
-    [Pure]
-    public static Option<bool> False { get; } = false.ToOption();
-
-    /// <summary>
-    /// Unit value as an option.
-    /// </summary>
-    [Pure]
-    public static Option<Unit> Unit { get; } = FuncSharp.Unit.Value.ToOption();
-
-    /// <summary>
     /// Creates a new option based on the specified value. Returns option with the value if is is non-null, empty otherwise.
     /// </summary>
     [Pure]
     public static Option<A> Create<A>(A? value)
-        where A : class
     {
         if (value is not null)
         {
             return new Option<A>(value);
-        }
-        return Option<A>.Empty;
-    }
-
-    /// <summary>
-    /// Creates a new option based on the specified value. Returns option with the value if is is non-null, empty otherwise.
-    /// </summary>
-    [Pure]
-    public static Option<A> Create<A>(A? value)
-        where A : struct
-    {
-        if (value.HasValue)
-        {
-            return new Option<A>(value.Value);
         }
         return Option<A>.Empty;
     }

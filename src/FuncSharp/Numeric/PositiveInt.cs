@@ -34,17 +34,12 @@ public struct PositiveInt : IEquatable<PositiveInt>
         return a.Multiply(b);
     }
 
-    public static Option<PositiveInt> Create(int value)
+    public static PositiveInt Create(int value)
     {
-        return CreateNullable(value).ToOption();
+        return TryCreate(value) ?? throw new ArgumentException($"'{value}' is not a positive integer.");
     }
 
-    public static PositiveInt CreateUnsafe(int value)
-    {
-        return CreateNullable(value) ?? throw new ArgumentException($"'{value}' is not a positive integer.");
-    }
-
-    public static PositiveInt? CreateNullable(int value)
+    public static PositiveInt? TryCreate(int value)
     {
         return value > 0 ? new PositiveInt(value) : null;
     }

@@ -16,18 +16,7 @@ namespace FuncSharp
         /// <summary>
         /// Turns the specified value into an option.
         /// </summary>
-        [Pure]
         public static Option<T> ToOption<T>(this T? value)
-            where T : class
-        {
-            return Option.Create(value);
-        }
-
-        /// <summary>
-        /// Turns the specified value into an option.
-        /// </summary>
-        public static Option<T> ToOption<T>(this T? value)
-            where T : struct
         {
             return Option.Create(value);
         }

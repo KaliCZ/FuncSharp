@@ -22,10 +22,10 @@ public static class TryExtensions
     /// </summary>
     public static Try<A, E> Where<A, E>(this Try<A, E> t, Func<A, bool> predicate, Func<Unit, E> otherwise)
     {
-        return t.FlatMap(a => predicate(a).Match(
-            _ => t,
-            _ => Try.Error<A, E>(otherwise(Unit.Value))
-        ));
+        return t.FlatMap(a => predicate(a)
+            ? t
+            : Try.Error<A, E>(otherwise(Unit.Value))
+        );
     }
 
     /// <summary>
@@ -33,18 +33,18 @@ public static class TryExtensions
     /// </summary>
     public static Try<A, IEnumerable<E>> Where<A, E>(this Try<A, IEnumerable<E>> t, Func<A, bool> predicate, Func<Unit, E> otherwise)
     {
-        return t.FlatMap(a => predicate(a).Match(
-            _ => t,
-            _ => Try.Error<A, IEnumerable<E>>(new[] { otherwise(Unit.Value) })
-        ));
+        return t.FlatMap(a => predicate(a)
+            ? t
+            : Try.Error<A, IEnumerable<E>>(new[] { otherwise(Unit.Value) })
+        );
     }
 
     public static Try<A, Exception> Where<A>(this Try<A, Exception> t, Func<A, bool> predicate, Func<Unit, Exception> error)
     {
-        return t.FlatMap(a => predicate(a).Match(
-            _ => t,
-            _ => Try.Error<A, Exception>(error(Unit.Value))
-        ));
+        return t.FlatMap(a => predicate(a)
+            ? t
+            : Try.Error<A, Exception>(error(Unit.Value))
+        );
     }
 
     /// <summary>
@@ -114,9 +114,9 @@ public static class TryExtensions
         where E : Exception
     {
         if (value.IsSuccess)
-            return value.Success.Value;
+            return value.Success.Get();
 
-        var exceptions = value.Error.Value;
+        var exceptions = value.Error.Get();
         if (exceptions.Count == 1)
         {
             ExceptionDispatchInfo.Capture(exceptions[0]).Throw();

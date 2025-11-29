@@ -718,8 +718,8 @@ public struct Try<TSuccess, TError> : IEquatable<Try<TSuccess, TError>>
     public Try<TSuccessTarget, TError> Map<TSuccessTarget>(Func<TSuccess, TSuccessTarget> f)
     {
         return IsSuccess
-            ? new Try<TSuccessTarget, TError>(f(Success.Value))
-            : new Try<TSuccessTarget, TError>(Error.Value);
+            ? new Try<TSuccessTarget, TError>(f(Success.Get()))
+            : new Try<TSuccessTarget, TError>(Error.Get());
     }
 
     /// <summary>
@@ -729,8 +729,8 @@ public struct Try<TSuccess, TError> : IEquatable<Try<TSuccess, TError>>
     public Try<TSuccessTarget, TErrorTarget> Map<TSuccessTarget, TErrorTarget>(Func<TSuccess, TSuccessTarget> success, Func<TError, TErrorTarget> error)
     {
         return IsSuccess
-            ? new Try<TSuccessTarget, TErrorTarget>(success(Success.Value))
-            : new Try<TSuccessTarget, TErrorTarget>(error(Error.Value));
+            ? new Try<TSuccessTarget, TErrorTarget>(success(Success.Get()))
+            : new Try<TSuccessTarget, TErrorTarget>(error(Error.Get()));
     }
 
     /// <summary>
@@ -740,8 +740,8 @@ public struct Try<TSuccess, TError> : IEquatable<Try<TSuccess, TError>>
     public Try<TSuccess, TErrorTarget> MapError<TErrorTarget>(Func<TError, TErrorTarget> f)
     {
         return IsSuccess
-            ? new Try<TSuccess, TErrorTarget>(Success.Value)
-            : new Try<TSuccess, TErrorTarget>(f(Error.Value));
+            ? new Try<TSuccess, TErrorTarget>(Success.Get())
+            : new Try<TSuccess, TErrorTarget>(f(Error.Get()));
     }
 
     /// <summary>
@@ -751,8 +751,8 @@ public struct Try<TSuccess, TError> : IEquatable<Try<TSuccess, TError>>
     public TResult Match<TResult>(Func<TSuccess, TResult> ifSuccess, Func<TError, TResult> ifError)
     {
         return IsSuccess
-            ? ifSuccess(Success.Value)
-            : ifError(Error.Value);
+            ? ifSuccess(Success.Get())
+            : ifError(Error.Get());
     }
 
     /// <summary>
@@ -762,9 +762,9 @@ public struct Try<TSuccess, TError> : IEquatable<Try<TSuccess, TError>>
     public void Match(Action<TSuccess>? ifSuccess = null, Action<TError>? ifError = null)
     {
         if (IsSuccess)
-            ifSuccess?.Invoke(Success.Value);
+            ifSuccess?.Invoke(Success.Get());
         else
-            ifError?.Invoke(Error.Value);
+            ifError?.Invoke(Error.Get());
     }
 
     [Pure]
