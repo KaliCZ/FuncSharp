@@ -64,7 +64,7 @@ public static partial class ObjectExtensions
     }
 
 <#     if (i + 1 < MaxArity()) { #>
-<#         var safeTypeBracket = "<" + Types(i, appendSeparator: true) + "object>"; #>
+<#         var safeTypeBracket = "<" + Types(i, appendSeparator: true) + "object?>"; #>
     /// <summary>
     /// Creates a new <#= i + 1 #>-dimensional coproduct as a result of type match. The specified value will be on the first place
     /// whose type matches type of the value. If none of the types matches type of the value, then the value will be placed in
@@ -74,17 +74,6 @@ public static partial class ObjectExtensions
     public static <#= "Coproduct" + (i + 1) + safeTypeBracket #> AsSafeCoproduct<#= TypeBracket(i) #>(this object value)
     {
         return value.AsCoproduct(v => Coproduct<#= i + 1 #>.Create<#= GetOrdinal(i + 1) #><#= safeTypeBracket #>(v));
-    }
-
-    /// <summary>
-    /// Creates a new <#= i + 1 #>-dimensional coproduct as a result of value match against the parameters. The specified value will
-    /// be on the first place whose corresponding parameter equals the value. If none of the parameters equals the value, then
-    /// the value will be placed in the last place.
-    /// </summary>
-    [Pure]
-    public static <#= "Coproduct" + (i + 1) + safeTypeBracket #> AsSafeCoproduct<#= TypeBracket(i) #>(this object value, <#= Parameters(i) #>)
-    {
-        return value.AsCoproduct(<#= Values(i) #>, null, v => Coproduct<#= i + 1 #>.Create<#= GetOrdinal(i + 1) #><#= safeTypeBracket #>(v));
     }
 <#     } #>
 <#    } #>
