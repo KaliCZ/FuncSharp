@@ -11,13 +11,13 @@ public static partial class IEnumerableExtensions
     /// </summary>
     public static IEnumerable<T> Flatten<T>(this IEnumerable<Option<T>> source)
     {
-        return source.Where(o => o.NonEmpty).Select(o => o.Value);
+        return source.Where(o => o.NonEmpty).Select(o => o.Get());
     }
 
     /// <summary>
     /// Returns the max value of the enumerable or an empty option if it is empty.
     /// </summary>
-    public static Option<TValue> SafeMax<T, TValue>(this IEnumerable<T> source, Func<T, TValue> selector)
+    public static TValue? SafeMax<T, TValue>(this IEnumerable<T> source, Func<T, TValue> selector)
     {
         return source.AsNonEmpty().Map(s => s.Max(selector));
     }
@@ -25,7 +25,7 @@ public static partial class IEnumerableExtensions
     /// <summary>
     /// Returns the min value of the enumerable or an empty option if it is empty.
     /// </summary>
-    public static Option<TValue> SafeMin<T, TValue>(this IEnumerable<T> source, Func<T, TValue> selector)
+    public static TValue? SafeMin<T, TValue>(this IEnumerable<T> source, Func<T, TValue> selector)
     {
         return source.AsNonEmpty().Map(s => s.Min(selector));
     }

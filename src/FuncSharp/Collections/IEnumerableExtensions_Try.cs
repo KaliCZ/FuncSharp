@@ -16,11 +16,11 @@ public static partial class IEnumerableExtensions
         {
             if (value.IsSuccess)
             {
-                successes.Add(value.Success.GetOrDefault());
+                successes.Add(value.Success.Get());
             }
             else
             {
-                errors.Add(value.Error.GetOrDefault());
+                errors.Add(value.Error.Get());
             }
         }
         return (successes, errors);
@@ -37,11 +37,11 @@ public static partial class IEnumerableExtensions
         {
             if (item.IsSuccess)
             {
-                successes.Add(item.Success.Value);
+                successes.Add(item.Success.Get());
             }
             else
             {
-                errors.Add(item.Error.Value);
+                errors.Add(item.Error.Get());
             }
         }
 
@@ -60,11 +60,11 @@ public static partial class IEnumerableExtensions
         {
             if (item.IsSuccess)
             {
-                successes.Add(item.Success.Value);
+                successes.Add(item.Success.Get());
             }
             else
             {
-                errors.Add(item.Error.Value);
+                errors.Add(item.Error.Get());
             }
         }
 

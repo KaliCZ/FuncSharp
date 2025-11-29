@@ -12,12 +12,12 @@ public static partial class IEnumerableExtensions
     /// Returns a nonEmptyEnumerable in case the collection is nonempty. Otherwise returns empty option.
     /// </summary>
     [DebuggerStepThrough]
-    public static Option<INonEmptyEnumerable<T>> AsNonEmpty<T>(this IEnumerable<T> source)
+    public static INonEmptyEnumerable<T>? AsNonEmpty<T>(this IEnumerable<T> source)
     {
         return source switch
         {
-            null => Option.Empty<INonEmptyEnumerable<T>>(),
-            INonEmptyEnumerable<T> list => Option.Valued(list),
+            null => null,
+            INonEmptyEnumerable<T> list => list,
             _ => NonEmptyEnumerable.Create(source)
         };
     }

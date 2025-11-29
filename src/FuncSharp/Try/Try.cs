@@ -759,7 +759,7 @@ public struct Try<TSuccess, TError> : IEquatable<Try<TSuccess, TError>>
     /// Invokes the applicable function. Success when try succeeded. Error when not.
     /// </summary>
     [Pure]
-    public void Match(Action<TSuccess> ifSuccess = null, Action<TError> ifError = null)
+    public void Match(Action<TSuccess>? ifSuccess = null, Action<TError>? ifError = null)
     {
         if (IsSuccess)
             ifSuccess?.Invoke(Success.Value);
