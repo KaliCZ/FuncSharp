@@ -63,7 +63,6 @@ public static class Coproduct<#= i #>
     /// Creates a new <#= i #>-dimensional coproduct with the <#= GetLowerOrdinal(j) #> value.
     /// </summary>
     public static <#= CoproductImplType(i) #> Create<#= GetOrdinal(j) #><#= TypeBracket(i) #>(<#= Type(j) #> value)
-<#= Lines(i, x => Indent(8) + TypeConstraint(x)) #>
     {
         return new <#= CoproductImplType(i) #>(value);
     }
@@ -75,7 +74,6 @@ public static class Coproduct<#= i #>
 /// A <#= i #>-dimensional immutable coproduct.
 /// </summary>
 public class <#= CoproductImplType(i) #> : CoproductBase, <#= CoproductType(i) #>
-<#= Lines(i, x => Indent(4) + TypeConstraint(x)) #>
 {
 <#    if (i > 0) { #>
 <#    for (var j = 1; j <= i; j++) { #>
@@ -114,15 +112,14 @@ public class <#= CoproductImplType(i) #> : CoproductBase, <#= CoproductType(i) #
 <#    } #>
 
 <#    for (var j = 1; j <= i; j++) { #>
-    public <#= Type(j) #>? <#= GetOrdinal(j) #>
+    public Option<<#= Type(j) #>> <#= GetOrdinal(j) #>
     {
-        get { return Is<#= GetOrdinal(j) #> ? (<#= Type(j) #>)CoproductValue : null; }
+        get { return Is<#= GetOrdinal(j) #> ? Option.Valued((<#= Type(j) #>)CoproductValue) : Option.Empty<<#= Type(j) #>>(); }
     }
 <#    } #>
 
     public <#= CoproductImplType(i, "R") #> Map<#= TypeBracket(i, "R") #>(
 <#= Lines(i, x => Indent(8) + "Func<T" + x + ", R" + x + "> " + IfIth(x), separator: ",") #>)
-<#= Lines(i, x => Indent(12) + TypeConstraint(x, "R")) #>
     {
         switch (CoproductDiscriminator)
         {

@@ -10,7 +10,6 @@ public static partial class IEnumerableExtensions
     /// Returns values of the nonempty options.
     /// </summary>
     public static IEnumerable<T> Flatten<T>(this IEnumerable<Option<T>> source)
-        where T : notnull
     {
         return source.Where(o => o.NonEmpty).Select(o => o.Value);
     }

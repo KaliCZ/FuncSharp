@@ -1,4 +1,3 @@
-﻿
 using System;
 using System.Diagnostics;
 using System.Diagnostics.Contracts;
@@ -14,8 +13,7 @@ public static partial class ObjectExtensions
     /// function. In case when the fallback is null, throws an exception (optionally created by the otherwise function).
     /// </summary>
     [Pure]
-    public static Coproduct1<T1> AsCoproduct<T1>(this object value, Func<object, Coproduct1<T1>>? fallback = null, Func<Unit, Exception>? otherwise = null)
-        where T1 : notnull
+    public static Coproduct1<T1> AsCoproduct<T1>(this object value, Func<object, Coproduct1<T1>> fallback = null, Func<Unit, Exception> otherwise = null)
     {
         switch (value) {
                 case T1 t1: return Coproduct1.CreateFirst<T1>(t1);
@@ -29,7 +27,7 @@ public static partial class ObjectExtensions
         {
             throw otherwise(Unit.Value);
         }
-        throw new ArgumentException("The value " + value.ToString() + " does not match any of the 1 specified types.");
+        throw new ArgumentException("The value " + value.SafeToString() + " does not match any of the 1 specified types.");
     }
 
     /// <summary>
@@ -39,8 +37,7 @@ public static partial class ObjectExtensions
     /// the otherwise function).
     /// </summary>
     [Pure]
-    public static Coproduct1<T1> AsCoproduct<T1>(this object value, T1 t1, Func<object, Coproduct1<T1>>? fallback = null, Func<Unit, Exception>? otherwise = null)
-        where T1 : notnull
+    public static Coproduct1<T1> AsCoproduct<T1>(this object value, T1 t1, Func<object, Coproduct1<T1>> fallback = null, Func<Unit, Exception> otherwise = null)
     {
         if (Equals(value, t1))
         {
@@ -54,7 +51,29 @@ public static partial class ObjectExtensions
         {
             throw otherwise(Unit.Value);
         }
-        throw new ArgumentException("The value " + value.ToString() + " does not match any of the 1 specified values.");
+        throw new ArgumentException("The value " + value.SafeToString() + " does not match any of the 1 specified values.");
+    }
+
+    /// <summary>
+    /// Creates a new 2-dimensional coproduct as a result of type match. The specified value will be on the first place
+    /// whose type matches type of the value. If none of the types matches type of the value, then the value will be placed in
+    /// the last place.
+    /// </summary>
+    [Pure]
+    public static Coproduct2<T1, object> AsSafeCoproduct<T1>(this object value)
+    {
+        return value.AsCoproduct(v => Coproduct2.CreateSecond<T1, object>(v));
+    }
+
+    /// <summary>
+    /// Creates a new 2-dimensional coproduct as a result of value match against the parameters. The specified value will
+    /// be on the first place whose corresponding parameter equals the value. If none of the parameters equals the value, then
+    /// the value will be placed in the last place.
+    /// </summary>
+    [Pure]
+    public static Coproduct2<T1, object> AsSafeCoproduct<T1>(this object value, T1 t1)
+    {
+        return value.AsCoproduct(t1, null, v => Coproduct2.CreateSecond<T1, object>(v));
     }
     /// <summary>
     /// Creates a new 2-dimensional coproduct as a result of type match. The specified value will be on the first place
@@ -62,9 +81,7 @@ public static partial class ObjectExtensions
     /// function. In case when the fallback is null, throws an exception (optionally created by the otherwise function).
     /// </summary>
     [Pure]
-    public static Coproduct2<T1, T2> AsCoproduct<T1, T2>(this object value, Func<object, Coproduct2<T1, T2>>? fallback = null, Func<Unit, Exception>? otherwise = null)
-        where T1 : notnull
-        where T2 : notnull
+    public static Coproduct2<T1, T2> AsCoproduct<T1, T2>(this object value, Func<object, Coproduct2<T1, T2>> fallback = null, Func<Unit, Exception> otherwise = null)
     {
         switch (value) {
                 case T1 t1: return Coproduct2.CreateFirst<T1, T2>(t1);
@@ -79,7 +96,7 @@ public static partial class ObjectExtensions
         {
             throw otherwise(Unit.Value);
         }
-        throw new ArgumentException("The value " + value.ToString() + " does not match any of the 2 specified types.");
+        throw new ArgumentException("The value " + value.SafeToString() + " does not match any of the 2 specified types.");
     }
 
     /// <summary>
@@ -89,9 +106,7 @@ public static partial class ObjectExtensions
     /// the otherwise function).
     /// </summary>
     [Pure]
-    public static Coproduct2<T1, T2> AsCoproduct<T1, T2>(this object value, T1 t1, T2 t2, Func<object, Coproduct2<T1, T2>>? fallback = null, Func<Unit, Exception>? otherwise = null)
-        where T1 : notnull
-        where T2 : notnull
+    public static Coproduct2<T1, T2> AsCoproduct<T1, T2>(this object value, T1 t1, T2 t2, Func<object, Coproduct2<T1, T2>> fallback = null, Func<Unit, Exception> otherwise = null)
     {
         if (Equals(value, t1))
         {
@@ -109,7 +124,29 @@ public static partial class ObjectExtensions
         {
             throw otherwise(Unit.Value);
         }
-        throw new ArgumentException("The value " + value.ToString() + " does not match any of the 2 specified values.");
+        throw new ArgumentException("The value " + value.SafeToString() + " does not match any of the 2 specified values.");
+    }
+
+    /// <summary>
+    /// Creates a new 3-dimensional coproduct as a result of type match. The specified value will be on the first place
+    /// whose type matches type of the value. If none of the types matches type of the value, then the value will be placed in
+    /// the last place.
+    /// </summary>
+    [Pure]
+    public static Coproduct3<T1, T2, object> AsSafeCoproduct<T1, T2>(this object value)
+    {
+        return value.AsCoproduct(v => Coproduct3.CreateThird<T1, T2, object>(v));
+    }
+
+    /// <summary>
+    /// Creates a new 3-dimensional coproduct as a result of value match against the parameters. The specified value will
+    /// be on the first place whose corresponding parameter equals the value. If none of the parameters equals the value, then
+    /// the value will be placed in the last place.
+    /// </summary>
+    [Pure]
+    public static Coproduct3<T1, T2, object> AsSafeCoproduct<T1, T2>(this object value, T1 t1, T2 t2)
+    {
+        return value.AsCoproduct(t1, t2, null, v => Coproduct3.CreateThird<T1, T2, object>(v));
     }
     /// <summary>
     /// Creates a new 3-dimensional coproduct as a result of type match. The specified value will be on the first place
@@ -117,10 +154,7 @@ public static partial class ObjectExtensions
     /// function. In case when the fallback is null, throws an exception (optionally created by the otherwise function).
     /// </summary>
     [Pure]
-    public static Coproduct3<T1, T2, T3> AsCoproduct<T1, T2, T3>(this object value, Func<object, Coproduct3<T1, T2, T3>>? fallback = null, Func<Unit, Exception>? otherwise = null)
-        where T1 : notnull
-        where T2 : notnull
-        where T3 : notnull
+    public static Coproduct3<T1, T2, T3> AsCoproduct<T1, T2, T3>(this object value, Func<object, Coproduct3<T1, T2, T3>> fallback = null, Func<Unit, Exception> otherwise = null)
     {
         switch (value) {
                 case T1 t1: return Coproduct3.CreateFirst<T1, T2, T3>(t1);
@@ -136,7 +170,7 @@ public static partial class ObjectExtensions
         {
             throw otherwise(Unit.Value);
         }
-        throw new ArgumentException("The value " + value.ToString() + " does not match any of the 3 specified types.");
+        throw new ArgumentException("The value " + value.SafeToString() + " does not match any of the 3 specified types.");
     }
 
     /// <summary>
@@ -146,10 +180,7 @@ public static partial class ObjectExtensions
     /// the otherwise function).
     /// </summary>
     [Pure]
-    public static Coproduct3<T1, T2, T3> AsCoproduct<T1, T2, T3>(this object value, T1 t1, T2 t2, T3 t3, Func<object, Coproduct3<T1, T2, T3>>? fallback = null, Func<Unit, Exception>? otherwise = null)
-        where T1 : notnull
-        where T2 : notnull
-        where T3 : notnull
+    public static Coproduct3<T1, T2, T3> AsCoproduct<T1, T2, T3>(this object value, T1 t1, T2 t2, T3 t3, Func<object, Coproduct3<T1, T2, T3>> fallback = null, Func<Unit, Exception> otherwise = null)
     {
         if (Equals(value, t1))
         {
@@ -171,7 +202,29 @@ public static partial class ObjectExtensions
         {
             throw otherwise(Unit.Value);
         }
-        throw new ArgumentException("The value " + value.ToString() + " does not match any of the 3 specified values.");
+        throw new ArgumentException("The value " + value.SafeToString() + " does not match any of the 3 specified values.");
+    }
+
+    /// <summary>
+    /// Creates a new 4-dimensional coproduct as a result of type match. The specified value will be on the first place
+    /// whose type matches type of the value. If none of the types matches type of the value, then the value will be placed in
+    /// the last place.
+    /// </summary>
+    [Pure]
+    public static Coproduct4<T1, T2, T3, object> AsSafeCoproduct<T1, T2, T3>(this object value)
+    {
+        return value.AsCoproduct(v => Coproduct4.CreateFourth<T1, T2, T3, object>(v));
+    }
+
+    /// <summary>
+    /// Creates a new 4-dimensional coproduct as a result of value match against the parameters. The specified value will
+    /// be on the first place whose corresponding parameter equals the value. If none of the parameters equals the value, then
+    /// the value will be placed in the last place.
+    /// </summary>
+    [Pure]
+    public static Coproduct4<T1, T2, T3, object> AsSafeCoproduct<T1, T2, T3>(this object value, T1 t1, T2 t2, T3 t3)
+    {
+        return value.AsCoproduct(t1, t2, t3, null, v => Coproduct4.CreateFourth<T1, T2, T3, object>(v));
     }
     /// <summary>
     /// Creates a new 4-dimensional coproduct as a result of type match. The specified value will be on the first place
@@ -179,11 +232,7 @@ public static partial class ObjectExtensions
     /// function. In case when the fallback is null, throws an exception (optionally created by the otherwise function).
     /// </summary>
     [Pure]
-    public static Coproduct4<T1, T2, T3, T4> AsCoproduct<T1, T2, T3, T4>(this object value, Func<object, Coproduct4<T1, T2, T3, T4>>? fallback = null, Func<Unit, Exception>? otherwise = null)
-        where T1 : notnull
-        where T2 : notnull
-        where T3 : notnull
-        where T4 : notnull
+    public static Coproduct4<T1, T2, T3, T4> AsCoproduct<T1, T2, T3, T4>(this object value, Func<object, Coproduct4<T1, T2, T3, T4>> fallback = null, Func<Unit, Exception> otherwise = null)
     {
         switch (value) {
                 case T1 t1: return Coproduct4.CreateFirst<T1, T2, T3, T4>(t1);
@@ -200,7 +249,7 @@ public static partial class ObjectExtensions
         {
             throw otherwise(Unit.Value);
         }
-        throw new ArgumentException("The value " + value.ToString() + " does not match any of the 4 specified types.");
+        throw new ArgumentException("The value " + value.SafeToString() + " does not match any of the 4 specified types.");
     }
 
     /// <summary>
@@ -210,11 +259,7 @@ public static partial class ObjectExtensions
     /// the otherwise function).
     /// </summary>
     [Pure]
-    public static Coproduct4<T1, T2, T3, T4> AsCoproduct<T1, T2, T3, T4>(this object value, T1 t1, T2 t2, T3 t3, T4 t4, Func<object, Coproduct4<T1, T2, T3, T4>>? fallback = null, Func<Unit, Exception>? otherwise = null)
-        where T1 : notnull
-        where T2 : notnull
-        where T3 : notnull
-        where T4 : notnull
+    public static Coproduct4<T1, T2, T3, T4> AsCoproduct<T1, T2, T3, T4>(this object value, T1 t1, T2 t2, T3 t3, T4 t4, Func<object, Coproduct4<T1, T2, T3, T4>> fallback = null, Func<Unit, Exception> otherwise = null)
     {
         if (Equals(value, t1))
         {
@@ -240,7 +285,29 @@ public static partial class ObjectExtensions
         {
             throw otherwise(Unit.Value);
         }
-        throw new ArgumentException("The value " + value.ToString() + " does not match any of the 4 specified values.");
+        throw new ArgumentException("The value " + value.SafeToString() + " does not match any of the 4 specified values.");
+    }
+
+    /// <summary>
+    /// Creates a new 5-dimensional coproduct as a result of type match. The specified value will be on the first place
+    /// whose type matches type of the value. If none of the types matches type of the value, then the value will be placed in
+    /// the last place.
+    /// </summary>
+    [Pure]
+    public static Coproduct5<T1, T2, T3, T4, object> AsSafeCoproduct<T1, T2, T3, T4>(this object value)
+    {
+        return value.AsCoproduct(v => Coproduct5.CreateFifth<T1, T2, T3, T4, object>(v));
+    }
+
+    /// <summary>
+    /// Creates a new 5-dimensional coproduct as a result of value match against the parameters. The specified value will
+    /// be on the first place whose corresponding parameter equals the value. If none of the parameters equals the value, then
+    /// the value will be placed in the last place.
+    /// </summary>
+    [Pure]
+    public static Coproduct5<T1, T2, T3, T4, object> AsSafeCoproduct<T1, T2, T3, T4>(this object value, T1 t1, T2 t2, T3 t3, T4 t4)
+    {
+        return value.AsCoproduct(t1, t2, t3, t4, null, v => Coproduct5.CreateFifth<T1, T2, T3, T4, object>(v));
     }
     /// <summary>
     /// Creates a new 5-dimensional coproduct as a result of type match. The specified value will be on the first place
@@ -248,12 +315,7 @@ public static partial class ObjectExtensions
     /// function. In case when the fallback is null, throws an exception (optionally created by the otherwise function).
     /// </summary>
     [Pure]
-    public static Coproduct5<T1, T2, T3, T4, T5> AsCoproduct<T1, T2, T3, T4, T5>(this object value, Func<object, Coproduct5<T1, T2, T3, T4, T5>>? fallback = null, Func<Unit, Exception>? otherwise = null)
-        where T1 : notnull
-        where T2 : notnull
-        where T3 : notnull
-        where T4 : notnull
-        where T5 : notnull
+    public static Coproduct5<T1, T2, T3, T4, T5> AsCoproduct<T1, T2, T3, T4, T5>(this object value, Func<object, Coproduct5<T1, T2, T3, T4, T5>> fallback = null, Func<Unit, Exception> otherwise = null)
     {
         switch (value) {
                 case T1 t1: return Coproduct5.CreateFirst<T1, T2, T3, T4, T5>(t1);
@@ -271,7 +333,7 @@ public static partial class ObjectExtensions
         {
             throw otherwise(Unit.Value);
         }
-        throw new ArgumentException("The value " + value.ToString() + " does not match any of the 5 specified types.");
+        throw new ArgumentException("The value " + value.SafeToString() + " does not match any of the 5 specified types.");
     }
 
     /// <summary>
@@ -281,12 +343,7 @@ public static partial class ObjectExtensions
     /// the otherwise function).
     /// </summary>
     [Pure]
-    public static Coproduct5<T1, T2, T3, T4, T5> AsCoproduct<T1, T2, T3, T4, T5>(this object value, T1 t1, T2 t2, T3 t3, T4 t4, T5 t5, Func<object, Coproduct5<T1, T2, T3, T4, T5>>? fallback = null, Func<Unit, Exception>? otherwise = null)
-        where T1 : notnull
-        where T2 : notnull
-        where T3 : notnull
-        where T4 : notnull
-        where T5 : notnull
+    public static Coproduct5<T1, T2, T3, T4, T5> AsCoproduct<T1, T2, T3, T4, T5>(this object value, T1 t1, T2 t2, T3 t3, T4 t4, T5 t5, Func<object, Coproduct5<T1, T2, T3, T4, T5>> fallback = null, Func<Unit, Exception> otherwise = null)
     {
         if (Equals(value, t1))
         {
@@ -316,7 +373,29 @@ public static partial class ObjectExtensions
         {
             throw otherwise(Unit.Value);
         }
-        throw new ArgumentException("The value " + value.ToString() + " does not match any of the 5 specified values.");
+        throw new ArgumentException("The value " + value.SafeToString() + " does not match any of the 5 specified values.");
+    }
+
+    /// <summary>
+    /// Creates a new 6-dimensional coproduct as a result of type match. The specified value will be on the first place
+    /// whose type matches type of the value. If none of the types matches type of the value, then the value will be placed in
+    /// the last place.
+    /// </summary>
+    [Pure]
+    public static Coproduct6<T1, T2, T3, T4, T5, object> AsSafeCoproduct<T1, T2, T3, T4, T5>(this object value)
+    {
+        return value.AsCoproduct(v => Coproduct6.CreateSixth<T1, T2, T3, T4, T5, object>(v));
+    }
+
+    /// <summary>
+    /// Creates a new 6-dimensional coproduct as a result of value match against the parameters. The specified value will
+    /// be on the first place whose corresponding parameter equals the value. If none of the parameters equals the value, then
+    /// the value will be placed in the last place.
+    /// </summary>
+    [Pure]
+    public static Coproduct6<T1, T2, T3, T4, T5, object> AsSafeCoproduct<T1, T2, T3, T4, T5>(this object value, T1 t1, T2 t2, T3 t3, T4 t4, T5 t5)
+    {
+        return value.AsCoproduct(t1, t2, t3, t4, t5, null, v => Coproduct6.CreateSixth<T1, T2, T3, T4, T5, object>(v));
     }
     /// <summary>
     /// Creates a new 6-dimensional coproduct as a result of type match. The specified value will be on the first place
@@ -324,13 +403,7 @@ public static partial class ObjectExtensions
     /// function. In case when the fallback is null, throws an exception (optionally created by the otherwise function).
     /// </summary>
     [Pure]
-    public static Coproduct6<T1, T2, T3, T4, T5, T6> AsCoproduct<T1, T2, T3, T4, T5, T6>(this object value, Func<object, Coproduct6<T1, T2, T3, T4, T5, T6>>? fallback = null, Func<Unit, Exception>? otherwise = null)
-        where T1 : notnull
-        where T2 : notnull
-        where T3 : notnull
-        where T4 : notnull
-        where T5 : notnull
-        where T6 : notnull
+    public static Coproduct6<T1, T2, T3, T4, T5, T6> AsCoproduct<T1, T2, T3, T4, T5, T6>(this object value, Func<object, Coproduct6<T1, T2, T3, T4, T5, T6>> fallback = null, Func<Unit, Exception> otherwise = null)
     {
         switch (value) {
                 case T1 t1: return Coproduct6.CreateFirst<T1, T2, T3, T4, T5, T6>(t1);
@@ -349,7 +422,7 @@ public static partial class ObjectExtensions
         {
             throw otherwise(Unit.Value);
         }
-        throw new ArgumentException("The value " + value.ToString() + " does not match any of the 6 specified types.");
+        throw new ArgumentException("The value " + value.SafeToString() + " does not match any of the 6 specified types.");
     }
 
     /// <summary>
@@ -359,13 +432,7 @@ public static partial class ObjectExtensions
     /// the otherwise function).
     /// </summary>
     [Pure]
-    public static Coproduct6<T1, T2, T3, T4, T5, T6> AsCoproduct<T1, T2, T3, T4, T5, T6>(this object value, T1 t1, T2 t2, T3 t3, T4 t4, T5 t5, T6 t6, Func<object, Coproduct6<T1, T2, T3, T4, T5, T6>>? fallback = null, Func<Unit, Exception>? otherwise = null)
-        where T1 : notnull
-        where T2 : notnull
-        where T3 : notnull
-        where T4 : notnull
-        where T5 : notnull
-        where T6 : notnull
+    public static Coproduct6<T1, T2, T3, T4, T5, T6> AsCoproduct<T1, T2, T3, T4, T5, T6>(this object value, T1 t1, T2 t2, T3 t3, T4 t4, T5 t5, T6 t6, Func<object, Coproduct6<T1, T2, T3, T4, T5, T6>> fallback = null, Func<Unit, Exception> otherwise = null)
     {
         if (Equals(value, t1))
         {
@@ -399,7 +466,29 @@ public static partial class ObjectExtensions
         {
             throw otherwise(Unit.Value);
         }
-        throw new ArgumentException("The value " + value.ToString() + " does not match any of the 6 specified values.");
+        throw new ArgumentException("The value " + value.SafeToString() + " does not match any of the 6 specified values.");
+    }
+
+    /// <summary>
+    /// Creates a new 7-dimensional coproduct as a result of type match. The specified value will be on the first place
+    /// whose type matches type of the value. If none of the types matches type of the value, then the value will be placed in
+    /// the last place.
+    /// </summary>
+    [Pure]
+    public static Coproduct7<T1, T2, T3, T4, T5, T6, object> AsSafeCoproduct<T1, T2, T3, T4, T5, T6>(this object value)
+    {
+        return value.AsCoproduct(v => Coproduct7.CreateSeventh<T1, T2, T3, T4, T5, T6, object>(v));
+    }
+
+    /// <summary>
+    /// Creates a new 7-dimensional coproduct as a result of value match against the parameters. The specified value will
+    /// be on the first place whose corresponding parameter equals the value. If none of the parameters equals the value, then
+    /// the value will be placed in the last place.
+    /// </summary>
+    [Pure]
+    public static Coproduct7<T1, T2, T3, T4, T5, T6, object> AsSafeCoproduct<T1, T2, T3, T4, T5, T6>(this object value, T1 t1, T2 t2, T3 t3, T4 t4, T5 t5, T6 t6)
+    {
+        return value.AsCoproduct(t1, t2, t3, t4, t5, t6, null, v => Coproduct7.CreateSeventh<T1, T2, T3, T4, T5, T6, object>(v));
     }
     /// <summary>
     /// Creates a new 7-dimensional coproduct as a result of type match. The specified value will be on the first place
@@ -407,14 +496,7 @@ public static partial class ObjectExtensions
     /// function. In case when the fallback is null, throws an exception (optionally created by the otherwise function).
     /// </summary>
     [Pure]
-    public static Coproduct7<T1, T2, T3, T4, T5, T6, T7> AsCoproduct<T1, T2, T3, T4, T5, T6, T7>(this object value, Func<object, Coproduct7<T1, T2, T3, T4, T5, T6, T7>>? fallback = null, Func<Unit, Exception>? otherwise = null)
-        where T1 : notnull
-        where T2 : notnull
-        where T3 : notnull
-        where T4 : notnull
-        where T5 : notnull
-        where T6 : notnull
-        where T7 : notnull
+    public static Coproduct7<T1, T2, T3, T4, T5, T6, T7> AsCoproduct<T1, T2, T3, T4, T5, T6, T7>(this object value, Func<object, Coproduct7<T1, T2, T3, T4, T5, T6, T7>> fallback = null, Func<Unit, Exception> otherwise = null)
     {
         switch (value) {
                 case T1 t1: return Coproduct7.CreateFirst<T1, T2, T3, T4, T5, T6, T7>(t1);
@@ -434,7 +516,7 @@ public static partial class ObjectExtensions
         {
             throw otherwise(Unit.Value);
         }
-        throw new ArgumentException("The value " + value.ToString() + " does not match any of the 7 specified types.");
+        throw new ArgumentException("The value " + value.SafeToString() + " does not match any of the 7 specified types.");
     }
 
     /// <summary>
@@ -444,14 +526,7 @@ public static partial class ObjectExtensions
     /// the otherwise function).
     /// </summary>
     [Pure]
-    public static Coproduct7<T1, T2, T3, T4, T5, T6, T7> AsCoproduct<T1, T2, T3, T4, T5, T6, T7>(this object value, T1 t1, T2 t2, T3 t3, T4 t4, T5 t5, T6 t6, T7 t7, Func<object, Coproduct7<T1, T2, T3, T4, T5, T6, T7>>? fallback = null, Func<Unit, Exception>? otherwise = null)
-        where T1 : notnull
-        where T2 : notnull
-        where T3 : notnull
-        where T4 : notnull
-        where T5 : notnull
-        where T6 : notnull
-        where T7 : notnull
+    public static Coproduct7<T1, T2, T3, T4, T5, T6, T7> AsCoproduct<T1, T2, T3, T4, T5, T6, T7>(this object value, T1 t1, T2 t2, T3 t3, T4 t4, T5 t5, T6 t6, T7 t7, Func<object, Coproduct7<T1, T2, T3, T4, T5, T6, T7>> fallback = null, Func<Unit, Exception> otherwise = null)
     {
         if (Equals(value, t1))
         {
@@ -489,7 +564,29 @@ public static partial class ObjectExtensions
         {
             throw otherwise(Unit.Value);
         }
-        throw new ArgumentException("The value " + value.ToString() + " does not match any of the 7 specified values.");
+        throw new ArgumentException("The value " + value.SafeToString() + " does not match any of the 7 specified values.");
+    }
+
+    /// <summary>
+    /// Creates a new 8-dimensional coproduct as a result of type match. The specified value will be on the first place
+    /// whose type matches type of the value. If none of the types matches type of the value, then the value will be placed in
+    /// the last place.
+    /// </summary>
+    [Pure]
+    public static Coproduct8<T1, T2, T3, T4, T5, T6, T7, object> AsSafeCoproduct<T1, T2, T3, T4, T5, T6, T7>(this object value)
+    {
+        return value.AsCoproduct(v => Coproduct8.CreateEighth<T1, T2, T3, T4, T5, T6, T7, object>(v));
+    }
+
+    /// <summary>
+    /// Creates a new 8-dimensional coproduct as a result of value match against the parameters. The specified value will
+    /// be on the first place whose corresponding parameter equals the value. If none of the parameters equals the value, then
+    /// the value will be placed in the last place.
+    /// </summary>
+    [Pure]
+    public static Coproduct8<T1, T2, T3, T4, T5, T6, T7, object> AsSafeCoproduct<T1, T2, T3, T4, T5, T6, T7>(this object value, T1 t1, T2 t2, T3 t3, T4 t4, T5 t5, T6 t6, T7 t7)
+    {
+        return value.AsCoproduct(t1, t2, t3, t4, t5, t6, t7, null, v => Coproduct8.CreateEighth<T1, T2, T3, T4, T5, T6, T7, object>(v));
     }
     /// <summary>
     /// Creates a new 8-dimensional coproduct as a result of type match. The specified value will be on the first place
@@ -497,15 +594,7 @@ public static partial class ObjectExtensions
     /// function. In case when the fallback is null, throws an exception (optionally created by the otherwise function).
     /// </summary>
     [Pure]
-    public static Coproduct8<T1, T2, T3, T4, T5, T6, T7, T8> AsCoproduct<T1, T2, T3, T4, T5, T6, T7, T8>(this object value, Func<object, Coproduct8<T1, T2, T3, T4, T5, T6, T7, T8>>? fallback = null, Func<Unit, Exception>? otherwise = null)
-        where T1 : notnull
-        where T2 : notnull
-        where T3 : notnull
-        where T4 : notnull
-        where T5 : notnull
-        where T6 : notnull
-        where T7 : notnull
-        where T8 : notnull
+    public static Coproduct8<T1, T2, T3, T4, T5, T6, T7, T8> AsCoproduct<T1, T2, T3, T4, T5, T6, T7, T8>(this object value, Func<object, Coproduct8<T1, T2, T3, T4, T5, T6, T7, T8>> fallback = null, Func<Unit, Exception> otherwise = null)
     {
         switch (value) {
                 case T1 t1: return Coproduct8.CreateFirst<T1, T2, T3, T4, T5, T6, T7, T8>(t1);
@@ -526,7 +615,7 @@ public static partial class ObjectExtensions
         {
             throw otherwise(Unit.Value);
         }
-        throw new ArgumentException("The value " + value.ToString() + " does not match any of the 8 specified types.");
+        throw new ArgumentException("The value " + value.SafeToString() + " does not match any of the 8 specified types.");
     }
 
     /// <summary>
@@ -536,15 +625,7 @@ public static partial class ObjectExtensions
     /// the otherwise function).
     /// </summary>
     [Pure]
-    public static Coproduct8<T1, T2, T3, T4, T5, T6, T7, T8> AsCoproduct<T1, T2, T3, T4, T5, T6, T7, T8>(this object value, T1 t1, T2 t2, T3 t3, T4 t4, T5 t5, T6 t6, T7 t7, T8 t8, Func<object, Coproduct8<T1, T2, T3, T4, T5, T6, T7, T8>>? fallback = null, Func<Unit, Exception>? otherwise = null)
-        where T1 : notnull
-        where T2 : notnull
-        where T3 : notnull
-        where T4 : notnull
-        where T5 : notnull
-        where T6 : notnull
-        where T7 : notnull
-        where T8 : notnull
+    public static Coproduct8<T1, T2, T3, T4, T5, T6, T7, T8> AsCoproduct<T1, T2, T3, T4, T5, T6, T7, T8>(this object value, T1 t1, T2 t2, T3 t3, T4 t4, T5 t5, T6 t6, T7 t7, T8 t8, Func<object, Coproduct8<T1, T2, T3, T4, T5, T6, T7, T8>> fallback = null, Func<Unit, Exception> otherwise = null)
     {
         if (Equals(value, t1))
         {
@@ -586,7 +667,29 @@ public static partial class ObjectExtensions
         {
             throw otherwise(Unit.Value);
         }
-        throw new ArgumentException("The value " + value.ToString() + " does not match any of the 8 specified values.");
+        throw new ArgumentException("The value " + value.SafeToString() + " does not match any of the 8 specified values.");
+    }
+
+    /// <summary>
+    /// Creates a new 9-dimensional coproduct as a result of type match. The specified value will be on the first place
+    /// whose type matches type of the value. If none of the types matches type of the value, then the value will be placed in
+    /// the last place.
+    /// </summary>
+    [Pure]
+    public static Coproduct9<T1, T2, T3, T4, T5, T6, T7, T8, object> AsSafeCoproduct<T1, T2, T3, T4, T5, T6, T7, T8>(this object value)
+    {
+        return value.AsCoproduct(v => Coproduct9.CreateNinth<T1, T2, T3, T4, T5, T6, T7, T8, object>(v));
+    }
+
+    /// <summary>
+    /// Creates a new 9-dimensional coproduct as a result of value match against the parameters. The specified value will
+    /// be on the first place whose corresponding parameter equals the value. If none of the parameters equals the value, then
+    /// the value will be placed in the last place.
+    /// </summary>
+    [Pure]
+    public static Coproduct9<T1, T2, T3, T4, T5, T6, T7, T8, object> AsSafeCoproduct<T1, T2, T3, T4, T5, T6, T7, T8>(this object value, T1 t1, T2 t2, T3 t3, T4 t4, T5 t5, T6 t6, T7 t7, T8 t8)
+    {
+        return value.AsCoproduct(t1, t2, t3, t4, t5, t6, t7, t8, null, v => Coproduct9.CreateNinth<T1, T2, T3, T4, T5, T6, T7, T8, object>(v));
     }
     /// <summary>
     /// Creates a new 9-dimensional coproduct as a result of type match. The specified value will be on the first place
@@ -594,16 +697,7 @@ public static partial class ObjectExtensions
     /// function. In case when the fallback is null, throws an exception (optionally created by the otherwise function).
     /// </summary>
     [Pure]
-    public static Coproduct9<T1, T2, T3, T4, T5, T6, T7, T8, T9> AsCoproduct<T1, T2, T3, T4, T5, T6, T7, T8, T9>(this object value, Func<object, Coproduct9<T1, T2, T3, T4, T5, T6, T7, T8, T9>>? fallback = null, Func<Unit, Exception>? otherwise = null)
-        where T1 : notnull
-        where T2 : notnull
-        where T3 : notnull
-        where T4 : notnull
-        where T5 : notnull
-        where T6 : notnull
-        where T7 : notnull
-        where T8 : notnull
-        where T9 : notnull
+    public static Coproduct9<T1, T2, T3, T4, T5, T6, T7, T8, T9> AsCoproduct<T1, T2, T3, T4, T5, T6, T7, T8, T9>(this object value, Func<object, Coproduct9<T1, T2, T3, T4, T5, T6, T7, T8, T9>> fallback = null, Func<Unit, Exception> otherwise = null)
     {
         switch (value) {
                 case T1 t1: return Coproduct9.CreateFirst<T1, T2, T3, T4, T5, T6, T7, T8, T9>(t1);
@@ -625,7 +719,7 @@ public static partial class ObjectExtensions
         {
             throw otherwise(Unit.Value);
         }
-        throw new ArgumentException("The value " + value.ToString() + " does not match any of the 9 specified types.");
+        throw new ArgumentException("The value " + value.SafeToString() + " does not match any of the 9 specified types.");
     }
 
     /// <summary>
@@ -635,16 +729,7 @@ public static partial class ObjectExtensions
     /// the otherwise function).
     /// </summary>
     [Pure]
-    public static Coproduct9<T1, T2, T3, T4, T5, T6, T7, T8, T9> AsCoproduct<T1, T2, T3, T4, T5, T6, T7, T8, T9>(this object value, T1 t1, T2 t2, T3 t3, T4 t4, T5 t5, T6 t6, T7 t7, T8 t8, T9 t9, Func<object, Coproduct9<T1, T2, T3, T4, T5, T6, T7, T8, T9>>? fallback = null, Func<Unit, Exception>? otherwise = null)
-        where T1 : notnull
-        where T2 : notnull
-        where T3 : notnull
-        where T4 : notnull
-        where T5 : notnull
-        where T6 : notnull
-        where T7 : notnull
-        where T8 : notnull
-        where T9 : notnull
+    public static Coproduct9<T1, T2, T3, T4, T5, T6, T7, T8, T9> AsCoproduct<T1, T2, T3, T4, T5, T6, T7, T8, T9>(this object value, T1 t1, T2 t2, T3 t3, T4 t4, T5 t5, T6 t6, T7 t7, T8 t8, T9 t9, Func<object, Coproduct9<T1, T2, T3, T4, T5, T6, T7, T8, T9>> fallback = null, Func<Unit, Exception> otherwise = null)
     {
         if (Equals(value, t1))
         {
@@ -690,7 +775,29 @@ public static partial class ObjectExtensions
         {
             throw otherwise(Unit.Value);
         }
-        throw new ArgumentException("The value " + value.ToString() + " does not match any of the 9 specified values.");
+        throw new ArgumentException("The value " + value.SafeToString() + " does not match any of the 9 specified values.");
+    }
+
+    /// <summary>
+    /// Creates a new 10-dimensional coproduct as a result of type match. The specified value will be on the first place
+    /// whose type matches type of the value. If none of the types matches type of the value, then the value will be placed in
+    /// the last place.
+    /// </summary>
+    [Pure]
+    public static Coproduct10<T1, T2, T3, T4, T5, T6, T7, T8, T9, object> AsSafeCoproduct<T1, T2, T3, T4, T5, T6, T7, T8, T9>(this object value)
+    {
+        return value.AsCoproduct(v => Coproduct10.CreateTenth<T1, T2, T3, T4, T5, T6, T7, T8, T9, object>(v));
+    }
+
+    /// <summary>
+    /// Creates a new 10-dimensional coproduct as a result of value match against the parameters. The specified value will
+    /// be on the first place whose corresponding parameter equals the value. If none of the parameters equals the value, then
+    /// the value will be placed in the last place.
+    /// </summary>
+    [Pure]
+    public static Coproduct10<T1, T2, T3, T4, T5, T6, T7, T8, T9, object> AsSafeCoproduct<T1, T2, T3, T4, T5, T6, T7, T8, T9>(this object value, T1 t1, T2 t2, T3 t3, T4 t4, T5 t5, T6 t6, T7 t7, T8 t8, T9 t9)
+    {
+        return value.AsCoproduct(t1, t2, t3, t4, t5, t6, t7, t8, t9, null, v => Coproduct10.CreateTenth<T1, T2, T3, T4, T5, T6, T7, T8, T9, object>(v));
     }
     /// <summary>
     /// Creates a new 10-dimensional coproduct as a result of type match. The specified value will be on the first place
@@ -698,17 +805,7 @@ public static partial class ObjectExtensions
     /// function. In case when the fallback is null, throws an exception (optionally created by the otherwise function).
     /// </summary>
     [Pure]
-    public static Coproduct10<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10> AsCoproduct<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10>(this object value, Func<object, Coproduct10<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10>>? fallback = null, Func<Unit, Exception>? otherwise = null)
-        where T1 : notnull
-        where T2 : notnull
-        where T3 : notnull
-        where T4 : notnull
-        where T5 : notnull
-        where T6 : notnull
-        where T7 : notnull
-        where T8 : notnull
-        where T9 : notnull
-        where T10 : notnull
+    public static Coproduct10<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10> AsCoproduct<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10>(this object value, Func<object, Coproduct10<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10>> fallback = null, Func<Unit, Exception> otherwise = null)
     {
         switch (value) {
                 case T1 t1: return Coproduct10.CreateFirst<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10>(t1);
@@ -731,7 +828,7 @@ public static partial class ObjectExtensions
         {
             throw otherwise(Unit.Value);
         }
-        throw new ArgumentException("The value " + value.ToString() + " does not match any of the 10 specified types.");
+        throw new ArgumentException("The value " + value.SafeToString() + " does not match any of the 10 specified types.");
     }
 
     /// <summary>
@@ -741,17 +838,7 @@ public static partial class ObjectExtensions
     /// the otherwise function).
     /// </summary>
     [Pure]
-    public static Coproduct10<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10> AsCoproduct<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10>(this object value, T1 t1, T2 t2, T3 t3, T4 t4, T5 t5, T6 t6, T7 t7, T8 t8, T9 t9, T10 t10, Func<object, Coproduct10<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10>>? fallback = null, Func<Unit, Exception>? otherwise = null)
-        where T1 : notnull
-        where T2 : notnull
-        where T3 : notnull
-        where T4 : notnull
-        where T5 : notnull
-        where T6 : notnull
-        where T7 : notnull
-        where T8 : notnull
-        where T9 : notnull
-        where T10 : notnull
+    public static Coproduct10<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10> AsCoproduct<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10>(this object value, T1 t1, T2 t2, T3 t3, T4 t4, T5 t5, T6 t6, T7 t7, T8 t8, T9 t9, T10 t10, Func<object, Coproduct10<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10>> fallback = null, Func<Unit, Exception> otherwise = null)
     {
         if (Equals(value, t1))
         {
@@ -801,7 +888,29 @@ public static partial class ObjectExtensions
         {
             throw otherwise(Unit.Value);
         }
-        throw new ArgumentException("The value " + value.ToString() + " does not match any of the 10 specified values.");
+        throw new ArgumentException("The value " + value.SafeToString() + " does not match any of the 10 specified values.");
+    }
+
+    /// <summary>
+    /// Creates a new 11-dimensional coproduct as a result of type match. The specified value will be on the first place
+    /// whose type matches type of the value. If none of the types matches type of the value, then the value will be placed in
+    /// the last place.
+    /// </summary>
+    [Pure]
+    public static Coproduct11<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, object> AsSafeCoproduct<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10>(this object value)
+    {
+        return value.AsCoproduct(v => Coproduct11.CreateEleventh<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, object>(v));
+    }
+
+    /// <summary>
+    /// Creates a new 11-dimensional coproduct as a result of value match against the parameters. The specified value will
+    /// be on the first place whose corresponding parameter equals the value. If none of the parameters equals the value, then
+    /// the value will be placed in the last place.
+    /// </summary>
+    [Pure]
+    public static Coproduct11<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, object> AsSafeCoproduct<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10>(this object value, T1 t1, T2 t2, T3 t3, T4 t4, T5 t5, T6 t6, T7 t7, T8 t8, T9 t9, T10 t10)
+    {
+        return value.AsCoproduct(t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, null, v => Coproduct11.CreateEleventh<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, object>(v));
     }
     /// <summary>
     /// Creates a new 11-dimensional coproduct as a result of type match. The specified value will be on the first place
@@ -809,18 +918,7 @@ public static partial class ObjectExtensions
     /// function. In case when the fallback is null, throws an exception (optionally created by the otherwise function).
     /// </summary>
     [Pure]
-    public static Coproduct11<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11> AsCoproduct<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11>(this object value, Func<object, Coproduct11<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11>>? fallback = null, Func<Unit, Exception>? otherwise = null)
-        where T1 : notnull
-        where T2 : notnull
-        where T3 : notnull
-        where T4 : notnull
-        where T5 : notnull
-        where T6 : notnull
-        where T7 : notnull
-        where T8 : notnull
-        where T9 : notnull
-        where T10 : notnull
-        where T11 : notnull
+    public static Coproduct11<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11> AsCoproduct<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11>(this object value, Func<object, Coproduct11<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11>> fallback = null, Func<Unit, Exception> otherwise = null)
     {
         switch (value) {
                 case T1 t1: return Coproduct11.CreateFirst<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11>(t1);
@@ -844,7 +942,7 @@ public static partial class ObjectExtensions
         {
             throw otherwise(Unit.Value);
         }
-        throw new ArgumentException("The value " + value.ToString() + " does not match any of the 11 specified types.");
+        throw new ArgumentException("The value " + value.SafeToString() + " does not match any of the 11 specified types.");
     }
 
     /// <summary>
@@ -854,18 +952,7 @@ public static partial class ObjectExtensions
     /// the otherwise function).
     /// </summary>
     [Pure]
-    public static Coproduct11<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11> AsCoproduct<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11>(this object value, T1 t1, T2 t2, T3 t3, T4 t4, T5 t5, T6 t6, T7 t7, T8 t8, T9 t9, T10 t10, T11 t11, Func<object, Coproduct11<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11>>? fallback = null, Func<Unit, Exception>? otherwise = null)
-        where T1 : notnull
-        where T2 : notnull
-        where T3 : notnull
-        where T4 : notnull
-        where T5 : notnull
-        where T6 : notnull
-        where T7 : notnull
-        where T8 : notnull
-        where T9 : notnull
-        where T10 : notnull
-        where T11 : notnull
+    public static Coproduct11<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11> AsCoproduct<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11>(this object value, T1 t1, T2 t2, T3 t3, T4 t4, T5 t5, T6 t6, T7 t7, T8 t8, T9 t9, T10 t10, T11 t11, Func<object, Coproduct11<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11>> fallback = null, Func<Unit, Exception> otherwise = null)
     {
         if (Equals(value, t1))
         {
@@ -919,7 +1006,29 @@ public static partial class ObjectExtensions
         {
             throw otherwise(Unit.Value);
         }
-        throw new ArgumentException("The value " + value.ToString() + " does not match any of the 11 specified values.");
+        throw new ArgumentException("The value " + value.SafeToString() + " does not match any of the 11 specified values.");
+    }
+
+    /// <summary>
+    /// Creates a new 12-dimensional coproduct as a result of type match. The specified value will be on the first place
+    /// whose type matches type of the value. If none of the types matches type of the value, then the value will be placed in
+    /// the last place.
+    /// </summary>
+    [Pure]
+    public static Coproduct12<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, object> AsSafeCoproduct<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11>(this object value)
+    {
+        return value.AsCoproduct(v => Coproduct12.CreateTwelfth<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, object>(v));
+    }
+
+    /// <summary>
+    /// Creates a new 12-dimensional coproduct as a result of value match against the parameters. The specified value will
+    /// be on the first place whose corresponding parameter equals the value. If none of the parameters equals the value, then
+    /// the value will be placed in the last place.
+    /// </summary>
+    [Pure]
+    public static Coproduct12<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, object> AsSafeCoproduct<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11>(this object value, T1 t1, T2 t2, T3 t3, T4 t4, T5 t5, T6 t6, T7 t7, T8 t8, T9 t9, T10 t10, T11 t11)
+    {
+        return value.AsCoproduct(t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, null, v => Coproduct12.CreateTwelfth<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, object>(v));
     }
     /// <summary>
     /// Creates a new 12-dimensional coproduct as a result of type match. The specified value will be on the first place
@@ -927,19 +1036,7 @@ public static partial class ObjectExtensions
     /// function. In case when the fallback is null, throws an exception (optionally created by the otherwise function).
     /// </summary>
     [Pure]
-    public static Coproduct12<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12> AsCoproduct<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12>(this object value, Func<object, Coproduct12<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12>>? fallback = null, Func<Unit, Exception>? otherwise = null)
-        where T1 : notnull
-        where T2 : notnull
-        where T3 : notnull
-        where T4 : notnull
-        where T5 : notnull
-        where T6 : notnull
-        where T7 : notnull
-        where T8 : notnull
-        where T9 : notnull
-        where T10 : notnull
-        where T11 : notnull
-        where T12 : notnull
+    public static Coproduct12<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12> AsCoproduct<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12>(this object value, Func<object, Coproduct12<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12>> fallback = null, Func<Unit, Exception> otherwise = null)
     {
         switch (value) {
                 case T1 t1: return Coproduct12.CreateFirst<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12>(t1);
@@ -964,7 +1061,7 @@ public static partial class ObjectExtensions
         {
             throw otherwise(Unit.Value);
         }
-        throw new ArgumentException("The value " + value.ToString() + " does not match any of the 12 specified types.");
+        throw new ArgumentException("The value " + value.SafeToString() + " does not match any of the 12 specified types.");
     }
 
     /// <summary>
@@ -974,19 +1071,7 @@ public static partial class ObjectExtensions
     /// the otherwise function).
     /// </summary>
     [Pure]
-    public static Coproduct12<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12> AsCoproduct<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12>(this object value, T1 t1, T2 t2, T3 t3, T4 t4, T5 t5, T6 t6, T7 t7, T8 t8, T9 t9, T10 t10, T11 t11, T12 t12, Func<object, Coproduct12<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12>>? fallback = null, Func<Unit, Exception>? otherwise = null)
-        where T1 : notnull
-        where T2 : notnull
-        where T3 : notnull
-        where T4 : notnull
-        where T5 : notnull
-        where T6 : notnull
-        where T7 : notnull
-        where T8 : notnull
-        where T9 : notnull
-        where T10 : notnull
-        where T11 : notnull
-        where T12 : notnull
+    public static Coproduct12<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12> AsCoproduct<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12>(this object value, T1 t1, T2 t2, T3 t3, T4 t4, T5 t5, T6 t6, T7 t7, T8 t8, T9 t9, T10 t10, T11 t11, T12 t12, Func<object, Coproduct12<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12>> fallback = null, Func<Unit, Exception> otherwise = null)
     {
         if (Equals(value, t1))
         {
@@ -1044,7 +1129,29 @@ public static partial class ObjectExtensions
         {
             throw otherwise(Unit.Value);
         }
-        throw new ArgumentException("The value " + value.ToString() + " does not match any of the 12 specified values.");
+        throw new ArgumentException("The value " + value.SafeToString() + " does not match any of the 12 specified values.");
+    }
+
+    /// <summary>
+    /// Creates a new 13-dimensional coproduct as a result of type match. The specified value will be on the first place
+    /// whose type matches type of the value. If none of the types matches type of the value, then the value will be placed in
+    /// the last place.
+    /// </summary>
+    [Pure]
+    public static Coproduct13<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, object> AsSafeCoproduct<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12>(this object value)
+    {
+        return value.AsCoproduct(v => Coproduct13.CreateThirteenth<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, object>(v));
+    }
+
+    /// <summary>
+    /// Creates a new 13-dimensional coproduct as a result of value match against the parameters. The specified value will
+    /// be on the first place whose corresponding parameter equals the value. If none of the parameters equals the value, then
+    /// the value will be placed in the last place.
+    /// </summary>
+    [Pure]
+    public static Coproduct13<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, object> AsSafeCoproduct<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12>(this object value, T1 t1, T2 t2, T3 t3, T4 t4, T5 t5, T6 t6, T7 t7, T8 t8, T9 t9, T10 t10, T11 t11, T12 t12)
+    {
+        return value.AsCoproduct(t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12, null, v => Coproduct13.CreateThirteenth<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, object>(v));
     }
     /// <summary>
     /// Creates a new 13-dimensional coproduct as a result of type match. The specified value will be on the first place
@@ -1052,20 +1159,7 @@ public static partial class ObjectExtensions
     /// function. In case when the fallback is null, throws an exception (optionally created by the otherwise function).
     /// </summary>
     [Pure]
-    public static Coproduct13<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13> AsCoproduct<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13>(this object value, Func<object, Coproduct13<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13>>? fallback = null, Func<Unit, Exception>? otherwise = null)
-        where T1 : notnull
-        where T2 : notnull
-        where T3 : notnull
-        where T4 : notnull
-        where T5 : notnull
-        where T6 : notnull
-        where T7 : notnull
-        where T8 : notnull
-        where T9 : notnull
-        where T10 : notnull
-        where T11 : notnull
-        where T12 : notnull
-        where T13 : notnull
+    public static Coproduct13<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13> AsCoproduct<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13>(this object value, Func<object, Coproduct13<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13>> fallback = null, Func<Unit, Exception> otherwise = null)
     {
         switch (value) {
                 case T1 t1: return Coproduct13.CreateFirst<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13>(t1);
@@ -1091,7 +1185,7 @@ public static partial class ObjectExtensions
         {
             throw otherwise(Unit.Value);
         }
-        throw new ArgumentException("The value " + value.ToString() + " does not match any of the 13 specified types.");
+        throw new ArgumentException("The value " + value.SafeToString() + " does not match any of the 13 specified types.");
     }
 
     /// <summary>
@@ -1101,20 +1195,7 @@ public static partial class ObjectExtensions
     /// the otherwise function).
     /// </summary>
     [Pure]
-    public static Coproduct13<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13> AsCoproduct<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13>(this object value, T1 t1, T2 t2, T3 t3, T4 t4, T5 t5, T6 t6, T7 t7, T8 t8, T9 t9, T10 t10, T11 t11, T12 t12, T13 t13, Func<object, Coproduct13<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13>>? fallback = null, Func<Unit, Exception>? otherwise = null)
-        where T1 : notnull
-        where T2 : notnull
-        where T3 : notnull
-        where T4 : notnull
-        where T5 : notnull
-        where T6 : notnull
-        where T7 : notnull
-        where T8 : notnull
-        where T9 : notnull
-        where T10 : notnull
-        where T11 : notnull
-        where T12 : notnull
-        where T13 : notnull
+    public static Coproduct13<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13> AsCoproduct<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13>(this object value, T1 t1, T2 t2, T3 t3, T4 t4, T5 t5, T6 t6, T7 t7, T8 t8, T9 t9, T10 t10, T11 t11, T12 t12, T13 t13, Func<object, Coproduct13<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13>> fallback = null, Func<Unit, Exception> otherwise = null)
     {
         if (Equals(value, t1))
         {
@@ -1176,7 +1257,29 @@ public static partial class ObjectExtensions
         {
             throw otherwise(Unit.Value);
         }
-        throw new ArgumentException("The value " + value.ToString() + " does not match any of the 13 specified values.");
+        throw new ArgumentException("The value " + value.SafeToString() + " does not match any of the 13 specified values.");
+    }
+
+    /// <summary>
+    /// Creates a new 14-dimensional coproduct as a result of type match. The specified value will be on the first place
+    /// whose type matches type of the value. If none of the types matches type of the value, then the value will be placed in
+    /// the last place.
+    /// </summary>
+    [Pure]
+    public static Coproduct14<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, object> AsSafeCoproduct<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13>(this object value)
+    {
+        return value.AsCoproduct(v => Coproduct14.CreateFourteenth<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, object>(v));
+    }
+
+    /// <summary>
+    /// Creates a new 14-dimensional coproduct as a result of value match against the parameters. The specified value will
+    /// be on the first place whose corresponding parameter equals the value. If none of the parameters equals the value, then
+    /// the value will be placed in the last place.
+    /// </summary>
+    [Pure]
+    public static Coproduct14<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, object> AsSafeCoproduct<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13>(this object value, T1 t1, T2 t2, T3 t3, T4 t4, T5 t5, T6 t6, T7 t7, T8 t8, T9 t9, T10 t10, T11 t11, T12 t12, T13 t13)
+    {
+        return value.AsCoproduct(t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12, t13, null, v => Coproduct14.CreateFourteenth<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, object>(v));
     }
     /// <summary>
     /// Creates a new 14-dimensional coproduct as a result of type match. The specified value will be on the first place
@@ -1184,21 +1287,7 @@ public static partial class ObjectExtensions
     /// function. In case when the fallback is null, throws an exception (optionally created by the otherwise function).
     /// </summary>
     [Pure]
-    public static Coproduct14<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14> AsCoproduct<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14>(this object value, Func<object, Coproduct14<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14>>? fallback = null, Func<Unit, Exception>? otherwise = null)
-        where T1 : notnull
-        where T2 : notnull
-        where T3 : notnull
-        where T4 : notnull
-        where T5 : notnull
-        where T6 : notnull
-        where T7 : notnull
-        where T8 : notnull
-        where T9 : notnull
-        where T10 : notnull
-        where T11 : notnull
-        where T12 : notnull
-        where T13 : notnull
-        where T14 : notnull
+    public static Coproduct14<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14> AsCoproduct<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14>(this object value, Func<object, Coproduct14<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14>> fallback = null, Func<Unit, Exception> otherwise = null)
     {
         switch (value) {
                 case T1 t1: return Coproduct14.CreateFirst<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14>(t1);
@@ -1225,7 +1314,7 @@ public static partial class ObjectExtensions
         {
             throw otherwise(Unit.Value);
         }
-        throw new ArgumentException("The value " + value.ToString() + " does not match any of the 14 specified types.");
+        throw new ArgumentException("The value " + value.SafeToString() + " does not match any of the 14 specified types.");
     }
 
     /// <summary>
@@ -1235,21 +1324,7 @@ public static partial class ObjectExtensions
     /// the otherwise function).
     /// </summary>
     [Pure]
-    public static Coproduct14<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14> AsCoproduct<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14>(this object value, T1 t1, T2 t2, T3 t3, T4 t4, T5 t5, T6 t6, T7 t7, T8 t8, T9 t9, T10 t10, T11 t11, T12 t12, T13 t13, T14 t14, Func<object, Coproduct14<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14>>? fallback = null, Func<Unit, Exception>? otherwise = null)
-        where T1 : notnull
-        where T2 : notnull
-        where T3 : notnull
-        where T4 : notnull
-        where T5 : notnull
-        where T6 : notnull
-        where T7 : notnull
-        where T8 : notnull
-        where T9 : notnull
-        where T10 : notnull
-        where T11 : notnull
-        where T12 : notnull
-        where T13 : notnull
-        where T14 : notnull
+    public static Coproduct14<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14> AsCoproduct<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14>(this object value, T1 t1, T2 t2, T3 t3, T4 t4, T5 t5, T6 t6, T7 t7, T8 t8, T9 t9, T10 t10, T11 t11, T12 t12, T13 t13, T14 t14, Func<object, Coproduct14<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14>> fallback = null, Func<Unit, Exception> otherwise = null)
     {
         if (Equals(value, t1))
         {
@@ -1315,7 +1390,29 @@ public static partial class ObjectExtensions
         {
             throw otherwise(Unit.Value);
         }
-        throw new ArgumentException("The value " + value.ToString() + " does not match any of the 14 specified values.");
+        throw new ArgumentException("The value " + value.SafeToString() + " does not match any of the 14 specified values.");
+    }
+
+    /// <summary>
+    /// Creates a new 15-dimensional coproduct as a result of type match. The specified value will be on the first place
+    /// whose type matches type of the value. If none of the types matches type of the value, then the value will be placed in
+    /// the last place.
+    /// </summary>
+    [Pure]
+    public static Coproduct15<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, object> AsSafeCoproduct<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14>(this object value)
+    {
+        return value.AsCoproduct(v => Coproduct15.CreateFifteenth<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, object>(v));
+    }
+
+    /// <summary>
+    /// Creates a new 15-dimensional coproduct as a result of value match against the parameters. The specified value will
+    /// be on the first place whose corresponding parameter equals the value. If none of the parameters equals the value, then
+    /// the value will be placed in the last place.
+    /// </summary>
+    [Pure]
+    public static Coproduct15<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, object> AsSafeCoproduct<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14>(this object value, T1 t1, T2 t2, T3 t3, T4 t4, T5 t5, T6 t6, T7 t7, T8 t8, T9 t9, T10 t10, T11 t11, T12 t12, T13 t13, T14 t14)
+    {
+        return value.AsCoproduct(t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12, t13, t14, null, v => Coproduct15.CreateFifteenth<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, object>(v));
     }
     /// <summary>
     /// Creates a new 15-dimensional coproduct as a result of type match. The specified value will be on the first place
@@ -1323,22 +1420,7 @@ public static partial class ObjectExtensions
     /// function. In case when the fallback is null, throws an exception (optionally created by the otherwise function).
     /// </summary>
     [Pure]
-    public static Coproduct15<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15> AsCoproduct<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15>(this object value, Func<object, Coproduct15<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15>>? fallback = null, Func<Unit, Exception>? otherwise = null)
-        where T1 : notnull
-        where T2 : notnull
-        where T3 : notnull
-        where T4 : notnull
-        where T5 : notnull
-        where T6 : notnull
-        where T7 : notnull
-        where T8 : notnull
-        where T9 : notnull
-        where T10 : notnull
-        where T11 : notnull
-        where T12 : notnull
-        where T13 : notnull
-        where T14 : notnull
-        where T15 : notnull
+    public static Coproduct15<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15> AsCoproduct<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15>(this object value, Func<object, Coproduct15<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15>> fallback = null, Func<Unit, Exception> otherwise = null)
     {
         switch (value) {
                 case T1 t1: return Coproduct15.CreateFirst<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15>(t1);
@@ -1366,7 +1448,7 @@ public static partial class ObjectExtensions
         {
             throw otherwise(Unit.Value);
         }
-        throw new ArgumentException("The value " + value.ToString() + " does not match any of the 15 specified types.");
+        throw new ArgumentException("The value " + value.SafeToString() + " does not match any of the 15 specified types.");
     }
 
     /// <summary>
@@ -1376,22 +1458,7 @@ public static partial class ObjectExtensions
     /// the otherwise function).
     /// </summary>
     [Pure]
-    public static Coproduct15<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15> AsCoproduct<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15>(this object value, T1 t1, T2 t2, T3 t3, T4 t4, T5 t5, T6 t6, T7 t7, T8 t8, T9 t9, T10 t10, T11 t11, T12 t12, T13 t13, T14 t14, T15 t15, Func<object, Coproduct15<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15>>? fallback = null, Func<Unit, Exception>? otherwise = null)
-        where T1 : notnull
-        where T2 : notnull
-        where T3 : notnull
-        where T4 : notnull
-        where T5 : notnull
-        where T6 : notnull
-        where T7 : notnull
-        where T8 : notnull
-        where T9 : notnull
-        where T10 : notnull
-        where T11 : notnull
-        where T12 : notnull
-        where T13 : notnull
-        where T14 : notnull
-        where T15 : notnull
+    public static Coproduct15<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15> AsCoproduct<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15>(this object value, T1 t1, T2 t2, T3 t3, T4 t4, T5 t5, T6 t6, T7 t7, T8 t8, T9 t9, T10 t10, T11 t11, T12 t12, T13 t13, T14 t14, T15 t15, Func<object, Coproduct15<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15>> fallback = null, Func<Unit, Exception> otherwise = null)
     {
         if (Equals(value, t1))
         {
@@ -1461,7 +1528,29 @@ public static partial class ObjectExtensions
         {
             throw otherwise(Unit.Value);
         }
-        throw new ArgumentException("The value " + value.ToString() + " does not match any of the 15 specified values.");
+        throw new ArgumentException("The value " + value.SafeToString() + " does not match any of the 15 specified values.");
+    }
+
+    /// <summary>
+    /// Creates a new 16-dimensional coproduct as a result of type match. The specified value will be on the first place
+    /// whose type matches type of the value. If none of the types matches type of the value, then the value will be placed in
+    /// the last place.
+    /// </summary>
+    [Pure]
+    public static Coproduct16<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, object> AsSafeCoproduct<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15>(this object value)
+    {
+        return value.AsCoproduct(v => Coproduct16.CreateSixteenth<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, object>(v));
+    }
+
+    /// <summary>
+    /// Creates a new 16-dimensional coproduct as a result of value match against the parameters. The specified value will
+    /// be on the first place whose corresponding parameter equals the value. If none of the parameters equals the value, then
+    /// the value will be placed in the last place.
+    /// </summary>
+    [Pure]
+    public static Coproduct16<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, object> AsSafeCoproduct<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15>(this object value, T1 t1, T2 t2, T3 t3, T4 t4, T5 t5, T6 t6, T7 t7, T8 t8, T9 t9, T10 t10, T11 t11, T12 t12, T13 t13, T14 t14, T15 t15)
+    {
+        return value.AsCoproduct(t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12, t13, t14, t15, null, v => Coproduct16.CreateSixteenth<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, object>(v));
     }
     /// <summary>
     /// Creates a new 16-dimensional coproduct as a result of type match. The specified value will be on the first place
@@ -1469,23 +1558,7 @@ public static partial class ObjectExtensions
     /// function. In case when the fallback is null, throws an exception (optionally created by the otherwise function).
     /// </summary>
     [Pure]
-    public static Coproduct16<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16> AsCoproduct<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16>(this object value, Func<object, Coproduct16<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16>>? fallback = null, Func<Unit, Exception>? otherwise = null)
-        where T1 : notnull
-        where T2 : notnull
-        where T3 : notnull
-        where T4 : notnull
-        where T5 : notnull
-        where T6 : notnull
-        where T7 : notnull
-        where T8 : notnull
-        where T9 : notnull
-        where T10 : notnull
-        where T11 : notnull
-        where T12 : notnull
-        where T13 : notnull
-        where T14 : notnull
-        where T15 : notnull
-        where T16 : notnull
+    public static Coproduct16<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16> AsCoproduct<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16>(this object value, Func<object, Coproduct16<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16>> fallback = null, Func<Unit, Exception> otherwise = null)
     {
         switch (value) {
                 case T1 t1: return Coproduct16.CreateFirst<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16>(t1);
@@ -1514,7 +1587,7 @@ public static partial class ObjectExtensions
         {
             throw otherwise(Unit.Value);
         }
-        throw new ArgumentException("The value " + value.ToString() + " does not match any of the 16 specified types.");
+        throw new ArgumentException("The value " + value.SafeToString() + " does not match any of the 16 specified types.");
     }
 
     /// <summary>
@@ -1524,23 +1597,7 @@ public static partial class ObjectExtensions
     /// the otherwise function).
     /// </summary>
     [Pure]
-    public static Coproduct16<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16> AsCoproduct<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16>(this object value, T1 t1, T2 t2, T3 t3, T4 t4, T5 t5, T6 t6, T7 t7, T8 t8, T9 t9, T10 t10, T11 t11, T12 t12, T13 t13, T14 t14, T15 t15, T16 t16, Func<object, Coproduct16<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16>>? fallback = null, Func<Unit, Exception>? otherwise = null)
-        where T1 : notnull
-        where T2 : notnull
-        where T3 : notnull
-        where T4 : notnull
-        where T5 : notnull
-        where T6 : notnull
-        where T7 : notnull
-        where T8 : notnull
-        where T9 : notnull
-        where T10 : notnull
-        where T11 : notnull
-        where T12 : notnull
-        where T13 : notnull
-        where T14 : notnull
-        where T15 : notnull
-        where T16 : notnull
+    public static Coproduct16<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16> AsCoproduct<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16>(this object value, T1 t1, T2 t2, T3 t3, T4 t4, T5 t5, T6 t6, T7 t7, T8 t8, T9 t9, T10 t10, T11 t11, T12 t12, T13 t13, T14 t14, T15 t15, T16 t16, Func<object, Coproduct16<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16>> fallback = null, Func<Unit, Exception> otherwise = null)
     {
         if (Equals(value, t1))
         {
@@ -1614,7 +1671,29 @@ public static partial class ObjectExtensions
         {
             throw otherwise(Unit.Value);
         }
-        throw new ArgumentException("The value " + value.ToString() + " does not match any of the 16 specified values.");
+        throw new ArgumentException("The value " + value.SafeToString() + " does not match any of the 16 specified values.");
+    }
+
+    /// <summary>
+    /// Creates a new 17-dimensional coproduct as a result of type match. The specified value will be on the first place
+    /// whose type matches type of the value. If none of the types matches type of the value, then the value will be placed in
+    /// the last place.
+    /// </summary>
+    [Pure]
+    public static Coproduct17<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, object> AsSafeCoproduct<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16>(this object value)
+    {
+        return value.AsCoproduct(v => Coproduct17.CreateSeventeenth<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, object>(v));
+    }
+
+    /// <summary>
+    /// Creates a new 17-dimensional coproduct as a result of value match against the parameters. The specified value will
+    /// be on the first place whose corresponding parameter equals the value. If none of the parameters equals the value, then
+    /// the value will be placed in the last place.
+    /// </summary>
+    [Pure]
+    public static Coproduct17<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, object> AsSafeCoproduct<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16>(this object value, T1 t1, T2 t2, T3 t3, T4 t4, T5 t5, T6 t6, T7 t7, T8 t8, T9 t9, T10 t10, T11 t11, T12 t12, T13 t13, T14 t14, T15 t15, T16 t16)
+    {
+        return value.AsCoproduct(t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12, t13, t14, t15, t16, null, v => Coproduct17.CreateSeventeenth<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, object>(v));
     }
     /// <summary>
     /// Creates a new 17-dimensional coproduct as a result of type match. The specified value will be on the first place
@@ -1622,24 +1701,7 @@ public static partial class ObjectExtensions
     /// function. In case when the fallback is null, throws an exception (optionally created by the otherwise function).
     /// </summary>
     [Pure]
-    public static Coproduct17<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17> AsCoproduct<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17>(this object value, Func<object, Coproduct17<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17>>? fallback = null, Func<Unit, Exception>? otherwise = null)
-        where T1 : notnull
-        where T2 : notnull
-        where T3 : notnull
-        where T4 : notnull
-        where T5 : notnull
-        where T6 : notnull
-        where T7 : notnull
-        where T8 : notnull
-        where T9 : notnull
-        where T10 : notnull
-        where T11 : notnull
-        where T12 : notnull
-        where T13 : notnull
-        where T14 : notnull
-        where T15 : notnull
-        where T16 : notnull
-        where T17 : notnull
+    public static Coproduct17<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17> AsCoproduct<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17>(this object value, Func<object, Coproduct17<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17>> fallback = null, Func<Unit, Exception> otherwise = null)
     {
         switch (value) {
                 case T1 t1: return Coproduct17.CreateFirst<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17>(t1);
@@ -1669,7 +1731,7 @@ public static partial class ObjectExtensions
         {
             throw otherwise(Unit.Value);
         }
-        throw new ArgumentException("The value " + value.ToString() + " does not match any of the 17 specified types.");
+        throw new ArgumentException("The value " + value.SafeToString() + " does not match any of the 17 specified types.");
     }
 
     /// <summary>
@@ -1679,24 +1741,7 @@ public static partial class ObjectExtensions
     /// the otherwise function).
     /// </summary>
     [Pure]
-    public static Coproduct17<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17> AsCoproduct<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17>(this object value, T1 t1, T2 t2, T3 t3, T4 t4, T5 t5, T6 t6, T7 t7, T8 t8, T9 t9, T10 t10, T11 t11, T12 t12, T13 t13, T14 t14, T15 t15, T16 t16, T17 t17, Func<object, Coproduct17<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17>>? fallback = null, Func<Unit, Exception>? otherwise = null)
-        where T1 : notnull
-        where T2 : notnull
-        where T3 : notnull
-        where T4 : notnull
-        where T5 : notnull
-        where T6 : notnull
-        where T7 : notnull
-        where T8 : notnull
-        where T9 : notnull
-        where T10 : notnull
-        where T11 : notnull
-        where T12 : notnull
-        where T13 : notnull
-        where T14 : notnull
-        where T15 : notnull
-        where T16 : notnull
-        where T17 : notnull
+    public static Coproduct17<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17> AsCoproduct<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17>(this object value, T1 t1, T2 t2, T3 t3, T4 t4, T5 t5, T6 t6, T7 t7, T8 t8, T9 t9, T10 t10, T11 t11, T12 t12, T13 t13, T14 t14, T15 t15, T16 t16, T17 t17, Func<object, Coproduct17<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17>> fallback = null, Func<Unit, Exception> otherwise = null)
     {
         if (Equals(value, t1))
         {
@@ -1774,7 +1819,29 @@ public static partial class ObjectExtensions
         {
             throw otherwise(Unit.Value);
         }
-        throw new ArgumentException("The value " + value.ToString() + " does not match any of the 17 specified values.");
+        throw new ArgumentException("The value " + value.SafeToString() + " does not match any of the 17 specified values.");
+    }
+
+    /// <summary>
+    /// Creates a new 18-dimensional coproduct as a result of type match. The specified value will be on the first place
+    /// whose type matches type of the value. If none of the types matches type of the value, then the value will be placed in
+    /// the last place.
+    /// </summary>
+    [Pure]
+    public static Coproduct18<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, object> AsSafeCoproduct<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17>(this object value)
+    {
+        return value.AsCoproduct(v => Coproduct18.CreateEighteenth<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, object>(v));
+    }
+
+    /// <summary>
+    /// Creates a new 18-dimensional coproduct as a result of value match against the parameters. The specified value will
+    /// be on the first place whose corresponding parameter equals the value. If none of the parameters equals the value, then
+    /// the value will be placed in the last place.
+    /// </summary>
+    [Pure]
+    public static Coproduct18<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, object> AsSafeCoproduct<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17>(this object value, T1 t1, T2 t2, T3 t3, T4 t4, T5 t5, T6 t6, T7 t7, T8 t8, T9 t9, T10 t10, T11 t11, T12 t12, T13 t13, T14 t14, T15 t15, T16 t16, T17 t17)
+    {
+        return value.AsCoproduct(t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12, t13, t14, t15, t16, t17, null, v => Coproduct18.CreateEighteenth<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, object>(v));
     }
     /// <summary>
     /// Creates a new 18-dimensional coproduct as a result of type match. The specified value will be on the first place
@@ -1782,25 +1849,7 @@ public static partial class ObjectExtensions
     /// function. In case when the fallback is null, throws an exception (optionally created by the otherwise function).
     /// </summary>
     [Pure]
-    public static Coproduct18<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18> AsCoproduct<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18>(this object value, Func<object, Coproduct18<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18>>? fallback = null, Func<Unit, Exception>? otherwise = null)
-        where T1 : notnull
-        where T2 : notnull
-        where T3 : notnull
-        where T4 : notnull
-        where T5 : notnull
-        where T6 : notnull
-        where T7 : notnull
-        where T8 : notnull
-        where T9 : notnull
-        where T10 : notnull
-        where T11 : notnull
-        where T12 : notnull
-        where T13 : notnull
-        where T14 : notnull
-        where T15 : notnull
-        where T16 : notnull
-        where T17 : notnull
-        where T18 : notnull
+    public static Coproduct18<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18> AsCoproduct<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18>(this object value, Func<object, Coproduct18<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18>> fallback = null, Func<Unit, Exception> otherwise = null)
     {
         switch (value) {
                 case T1 t1: return Coproduct18.CreateFirst<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18>(t1);
@@ -1831,7 +1880,7 @@ public static partial class ObjectExtensions
         {
             throw otherwise(Unit.Value);
         }
-        throw new ArgumentException("The value " + value.ToString() + " does not match any of the 18 specified types.");
+        throw new ArgumentException("The value " + value.SafeToString() + " does not match any of the 18 specified types.");
     }
 
     /// <summary>
@@ -1841,25 +1890,7 @@ public static partial class ObjectExtensions
     /// the otherwise function).
     /// </summary>
     [Pure]
-    public static Coproduct18<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18> AsCoproduct<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18>(this object value, T1 t1, T2 t2, T3 t3, T4 t4, T5 t5, T6 t6, T7 t7, T8 t8, T9 t9, T10 t10, T11 t11, T12 t12, T13 t13, T14 t14, T15 t15, T16 t16, T17 t17, T18 t18, Func<object, Coproduct18<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18>>? fallback = null, Func<Unit, Exception>? otherwise = null)
-        where T1 : notnull
-        where T2 : notnull
-        where T3 : notnull
-        where T4 : notnull
-        where T5 : notnull
-        where T6 : notnull
-        where T7 : notnull
-        where T8 : notnull
-        where T9 : notnull
-        where T10 : notnull
-        where T11 : notnull
-        where T12 : notnull
-        where T13 : notnull
-        where T14 : notnull
-        where T15 : notnull
-        where T16 : notnull
-        where T17 : notnull
-        where T18 : notnull
+    public static Coproduct18<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18> AsCoproduct<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18>(this object value, T1 t1, T2 t2, T3 t3, T4 t4, T5 t5, T6 t6, T7 t7, T8 t8, T9 t9, T10 t10, T11 t11, T12 t12, T13 t13, T14 t14, T15 t15, T16 t16, T17 t17, T18 t18, Func<object, Coproduct18<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18>> fallback = null, Func<Unit, Exception> otherwise = null)
     {
         if (Equals(value, t1))
         {
@@ -1941,7 +1972,29 @@ public static partial class ObjectExtensions
         {
             throw otherwise(Unit.Value);
         }
-        throw new ArgumentException("The value " + value.ToString() + " does not match any of the 18 specified values.");
+        throw new ArgumentException("The value " + value.SafeToString() + " does not match any of the 18 specified values.");
+    }
+
+    /// <summary>
+    /// Creates a new 19-dimensional coproduct as a result of type match. The specified value will be on the first place
+    /// whose type matches type of the value. If none of the types matches type of the value, then the value will be placed in
+    /// the last place.
+    /// </summary>
+    [Pure]
+    public static Coproduct19<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, object> AsSafeCoproduct<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18>(this object value)
+    {
+        return value.AsCoproduct(v => Coproduct19.CreateNineteenth<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, object>(v));
+    }
+
+    /// <summary>
+    /// Creates a new 19-dimensional coproduct as a result of value match against the parameters. The specified value will
+    /// be on the first place whose corresponding parameter equals the value. If none of the parameters equals the value, then
+    /// the value will be placed in the last place.
+    /// </summary>
+    [Pure]
+    public static Coproduct19<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, object> AsSafeCoproduct<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18>(this object value, T1 t1, T2 t2, T3 t3, T4 t4, T5 t5, T6 t6, T7 t7, T8 t8, T9 t9, T10 t10, T11 t11, T12 t12, T13 t13, T14 t14, T15 t15, T16 t16, T17 t17, T18 t18)
+    {
+        return value.AsCoproduct(t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12, t13, t14, t15, t16, t17, t18, null, v => Coproduct19.CreateNineteenth<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, object>(v));
     }
     /// <summary>
     /// Creates a new 19-dimensional coproduct as a result of type match. The specified value will be on the first place
@@ -1949,26 +2002,7 @@ public static partial class ObjectExtensions
     /// function. In case when the fallback is null, throws an exception (optionally created by the otherwise function).
     /// </summary>
     [Pure]
-    public static Coproduct19<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19> AsCoproduct<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19>(this object value, Func<object, Coproduct19<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19>>? fallback = null, Func<Unit, Exception>? otherwise = null)
-        where T1 : notnull
-        where T2 : notnull
-        where T3 : notnull
-        where T4 : notnull
-        where T5 : notnull
-        where T6 : notnull
-        where T7 : notnull
-        where T8 : notnull
-        where T9 : notnull
-        where T10 : notnull
-        where T11 : notnull
-        where T12 : notnull
-        where T13 : notnull
-        where T14 : notnull
-        where T15 : notnull
-        where T16 : notnull
-        where T17 : notnull
-        where T18 : notnull
-        where T19 : notnull
+    public static Coproduct19<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19> AsCoproduct<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19>(this object value, Func<object, Coproduct19<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19>> fallback = null, Func<Unit, Exception> otherwise = null)
     {
         switch (value) {
                 case T1 t1: return Coproduct19.CreateFirst<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19>(t1);
@@ -2000,7 +2034,7 @@ public static partial class ObjectExtensions
         {
             throw otherwise(Unit.Value);
         }
-        throw new ArgumentException("The value " + value.ToString() + " does not match any of the 19 specified types.");
+        throw new ArgumentException("The value " + value.SafeToString() + " does not match any of the 19 specified types.");
     }
 
     /// <summary>
@@ -2010,26 +2044,7 @@ public static partial class ObjectExtensions
     /// the otherwise function).
     /// </summary>
     [Pure]
-    public static Coproduct19<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19> AsCoproduct<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19>(this object value, T1 t1, T2 t2, T3 t3, T4 t4, T5 t5, T6 t6, T7 t7, T8 t8, T9 t9, T10 t10, T11 t11, T12 t12, T13 t13, T14 t14, T15 t15, T16 t16, T17 t17, T18 t18, T19 t19, Func<object, Coproduct19<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19>>? fallback = null, Func<Unit, Exception>? otherwise = null)
-        where T1 : notnull
-        where T2 : notnull
-        where T3 : notnull
-        where T4 : notnull
-        where T5 : notnull
-        where T6 : notnull
-        where T7 : notnull
-        where T8 : notnull
-        where T9 : notnull
-        where T10 : notnull
-        where T11 : notnull
-        where T12 : notnull
-        where T13 : notnull
-        where T14 : notnull
-        where T15 : notnull
-        where T16 : notnull
-        where T17 : notnull
-        where T18 : notnull
-        where T19 : notnull
+    public static Coproduct19<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19> AsCoproduct<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19>(this object value, T1 t1, T2 t2, T3 t3, T4 t4, T5 t5, T6 t6, T7 t7, T8 t8, T9 t9, T10 t10, T11 t11, T12 t12, T13 t13, T14 t14, T15 t15, T16 t16, T17 t17, T18 t18, T19 t19, Func<object, Coproduct19<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19>> fallback = null, Func<Unit, Exception> otherwise = null)
     {
         if (Equals(value, t1))
         {
@@ -2115,7 +2130,29 @@ public static partial class ObjectExtensions
         {
             throw otherwise(Unit.Value);
         }
-        throw new ArgumentException("The value " + value.ToString() + " does not match any of the 19 specified values.");
+        throw new ArgumentException("The value " + value.SafeToString() + " does not match any of the 19 specified values.");
+    }
+
+    /// <summary>
+    /// Creates a new 20-dimensional coproduct as a result of type match. The specified value will be on the first place
+    /// whose type matches type of the value. If none of the types matches type of the value, then the value will be placed in
+    /// the last place.
+    /// </summary>
+    [Pure]
+    public static Coproduct20<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, object> AsSafeCoproduct<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19>(this object value)
+    {
+        return value.AsCoproduct(v => Coproduct20.CreateTwentieth<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, object>(v));
+    }
+
+    /// <summary>
+    /// Creates a new 20-dimensional coproduct as a result of value match against the parameters. The specified value will
+    /// be on the first place whose corresponding parameter equals the value. If none of the parameters equals the value, then
+    /// the value will be placed in the last place.
+    /// </summary>
+    [Pure]
+    public static Coproduct20<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, object> AsSafeCoproduct<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19>(this object value, T1 t1, T2 t2, T3 t3, T4 t4, T5 t5, T6 t6, T7 t7, T8 t8, T9 t9, T10 t10, T11 t11, T12 t12, T13 t13, T14 t14, T15 t15, T16 t16, T17 t17, T18 t18, T19 t19)
+    {
+        return value.AsCoproduct(t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12, t13, t14, t15, t16, t17, t18, t19, null, v => Coproduct20.CreateTwentieth<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, object>(v));
     }
     /// <summary>
     /// Creates a new 20-dimensional coproduct as a result of type match. The specified value will be on the first place
@@ -2123,27 +2160,7 @@ public static partial class ObjectExtensions
     /// function. In case when the fallback is null, throws an exception (optionally created by the otherwise function).
     /// </summary>
     [Pure]
-    public static Coproduct20<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20> AsCoproduct<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20>(this object value, Func<object, Coproduct20<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20>>? fallback = null, Func<Unit, Exception>? otherwise = null)
-        where T1 : notnull
-        where T2 : notnull
-        where T3 : notnull
-        where T4 : notnull
-        where T5 : notnull
-        where T6 : notnull
-        where T7 : notnull
-        where T8 : notnull
-        where T9 : notnull
-        where T10 : notnull
-        where T11 : notnull
-        where T12 : notnull
-        where T13 : notnull
-        where T14 : notnull
-        where T15 : notnull
-        where T16 : notnull
-        where T17 : notnull
-        where T18 : notnull
-        where T19 : notnull
-        where T20 : notnull
+    public static Coproduct20<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20> AsCoproduct<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20>(this object value, Func<object, Coproduct20<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20>> fallback = null, Func<Unit, Exception> otherwise = null)
     {
         switch (value) {
                 case T1 t1: return Coproduct20.CreateFirst<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20>(t1);
@@ -2176,7 +2193,7 @@ public static partial class ObjectExtensions
         {
             throw otherwise(Unit.Value);
         }
-        throw new ArgumentException("The value " + value.ToString() + " does not match any of the 20 specified types.");
+        throw new ArgumentException("The value " + value.SafeToString() + " does not match any of the 20 specified types.");
     }
 
     /// <summary>
@@ -2186,27 +2203,7 @@ public static partial class ObjectExtensions
     /// the otherwise function).
     /// </summary>
     [Pure]
-    public static Coproduct20<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20> AsCoproduct<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20>(this object value, T1 t1, T2 t2, T3 t3, T4 t4, T5 t5, T6 t6, T7 t7, T8 t8, T9 t9, T10 t10, T11 t11, T12 t12, T13 t13, T14 t14, T15 t15, T16 t16, T17 t17, T18 t18, T19 t19, T20 t20, Func<object, Coproduct20<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20>>? fallback = null, Func<Unit, Exception>? otherwise = null)
-        where T1 : notnull
-        where T2 : notnull
-        where T3 : notnull
-        where T4 : notnull
-        where T5 : notnull
-        where T6 : notnull
-        where T7 : notnull
-        where T8 : notnull
-        where T9 : notnull
-        where T10 : notnull
-        where T11 : notnull
-        where T12 : notnull
-        where T13 : notnull
-        where T14 : notnull
-        where T15 : notnull
-        where T16 : notnull
-        where T17 : notnull
-        where T18 : notnull
-        where T19 : notnull
-        where T20 : notnull
+    public static Coproduct20<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20> AsCoproduct<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20>(this object value, T1 t1, T2 t2, T3 t3, T4 t4, T5 t5, T6 t6, T7 t7, T8 t8, T9 t9, T10 t10, T11 t11, T12 t12, T13 t13, T14 t14, T15 t15, T16 t16, T17 t17, T18 t18, T19 t19, T20 t20, Func<object, Coproduct20<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20>> fallback = null, Func<Unit, Exception> otherwise = null)
     {
         if (Equals(value, t1))
         {
@@ -2296,7 +2293,29 @@ public static partial class ObjectExtensions
         {
             throw otherwise(Unit.Value);
         }
-        throw new ArgumentException("The value " + value.ToString() + " does not match any of the 20 specified values.");
+        throw new ArgumentException("The value " + value.SafeToString() + " does not match any of the 20 specified values.");
+    }
+
+    /// <summary>
+    /// Creates a new 21-dimensional coproduct as a result of type match. The specified value will be on the first place
+    /// whose type matches type of the value. If none of the types matches type of the value, then the value will be placed in
+    /// the last place.
+    /// </summary>
+    [Pure]
+    public static Coproduct21<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, object> AsSafeCoproduct<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20>(this object value)
+    {
+        return value.AsCoproduct(v => Coproduct21.CreateTwentyFirst<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, object>(v));
+    }
+
+    /// <summary>
+    /// Creates a new 21-dimensional coproduct as a result of value match against the parameters. The specified value will
+    /// be on the first place whose corresponding parameter equals the value. If none of the parameters equals the value, then
+    /// the value will be placed in the last place.
+    /// </summary>
+    [Pure]
+    public static Coproduct21<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, object> AsSafeCoproduct<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20>(this object value, T1 t1, T2 t2, T3 t3, T4 t4, T5 t5, T6 t6, T7 t7, T8 t8, T9 t9, T10 t10, T11 t11, T12 t12, T13 t13, T14 t14, T15 t15, T16 t16, T17 t17, T18 t18, T19 t19, T20 t20)
+    {
+        return value.AsCoproduct(t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12, t13, t14, t15, t16, t17, t18, t19, t20, null, v => Coproduct21.CreateTwentyFirst<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, object>(v));
     }
     /// <summary>
     /// Creates a new 21-dimensional coproduct as a result of type match. The specified value will be on the first place
@@ -2304,28 +2323,7 @@ public static partial class ObjectExtensions
     /// function. In case when the fallback is null, throws an exception (optionally created by the otherwise function).
     /// </summary>
     [Pure]
-    public static Coproduct21<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21> AsCoproduct<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21>(this object value, Func<object, Coproduct21<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21>>? fallback = null, Func<Unit, Exception>? otherwise = null)
-        where T1 : notnull
-        where T2 : notnull
-        where T3 : notnull
-        where T4 : notnull
-        where T5 : notnull
-        where T6 : notnull
-        where T7 : notnull
-        where T8 : notnull
-        where T9 : notnull
-        where T10 : notnull
-        where T11 : notnull
-        where T12 : notnull
-        where T13 : notnull
-        where T14 : notnull
-        where T15 : notnull
-        where T16 : notnull
-        where T17 : notnull
-        where T18 : notnull
-        where T19 : notnull
-        where T20 : notnull
-        where T21 : notnull
+    public static Coproduct21<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21> AsCoproduct<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21>(this object value, Func<object, Coproduct21<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21>> fallback = null, Func<Unit, Exception> otherwise = null)
     {
         switch (value) {
                 case T1 t1: return Coproduct21.CreateFirst<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21>(t1);
@@ -2359,7 +2357,7 @@ public static partial class ObjectExtensions
         {
             throw otherwise(Unit.Value);
         }
-        throw new ArgumentException("The value " + value.ToString() + " does not match any of the 21 specified types.");
+        throw new ArgumentException("The value " + value.SafeToString() + " does not match any of the 21 specified types.");
     }
 
     /// <summary>
@@ -2369,28 +2367,7 @@ public static partial class ObjectExtensions
     /// the otherwise function).
     /// </summary>
     [Pure]
-    public static Coproduct21<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21> AsCoproduct<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21>(this object value, T1 t1, T2 t2, T3 t3, T4 t4, T5 t5, T6 t6, T7 t7, T8 t8, T9 t9, T10 t10, T11 t11, T12 t12, T13 t13, T14 t14, T15 t15, T16 t16, T17 t17, T18 t18, T19 t19, T20 t20, T21 t21, Func<object, Coproduct21<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21>>? fallback = null, Func<Unit, Exception>? otherwise = null)
-        where T1 : notnull
-        where T2 : notnull
-        where T3 : notnull
-        where T4 : notnull
-        where T5 : notnull
-        where T6 : notnull
-        where T7 : notnull
-        where T8 : notnull
-        where T9 : notnull
-        where T10 : notnull
-        where T11 : notnull
-        where T12 : notnull
-        where T13 : notnull
-        where T14 : notnull
-        where T15 : notnull
-        where T16 : notnull
-        where T17 : notnull
-        where T18 : notnull
-        where T19 : notnull
-        where T20 : notnull
-        where T21 : notnull
+    public static Coproduct21<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21> AsCoproduct<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21>(this object value, T1 t1, T2 t2, T3 t3, T4 t4, T5 t5, T6 t6, T7 t7, T8 t8, T9 t9, T10 t10, T11 t11, T12 t12, T13 t13, T14 t14, T15 t15, T16 t16, T17 t17, T18 t18, T19 t19, T20 t20, T21 t21, Func<object, Coproduct21<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21>> fallback = null, Func<Unit, Exception> otherwise = null)
     {
         if (Equals(value, t1))
         {
@@ -2484,6 +2461,7 @@ public static partial class ObjectExtensions
         {
             throw otherwise(Unit.Value);
         }
-        throw new ArgumentException("The value " + value.ToString() + " does not match any of the 21 specified values.");
+        throw new ArgumentException("The value " + value.SafeToString() + " does not match any of the 21 specified values.");
     }
+
 }
