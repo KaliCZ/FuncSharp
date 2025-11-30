@@ -21,11 +21,11 @@ public class DigitTests
         AssertDigitOption(8, '8'.AsDigit());
         AssertDigitOption(9, '9'.AsDigit());
 
-        OptionAssert.IsEmpty('a'.AsDigit());
-        OptionAssert.IsEmpty('z'.AsDigit());
-        OptionAssert.IsEmpty('B'.AsDigit());
-        OptionAssert.IsEmpty(char.MinValue.AsDigit());
-        OptionAssert.IsEmpty(char.MaxValue.AsDigit());
+        Assert.Null('a'.AsDigit());
+        Assert.Null('z'.AsDigit());
+        Assert.Null('B'.AsDigit());
+        Assert.Null(char.MinValue.AsDigit());
+        Assert.Null(char.MaxValue.AsDigit());
     }
 
     [Fact]
@@ -57,20 +57,20 @@ public class DigitTests
     internal void AllNumbersSucceed(int number)
     {
         var firstDigit = Math.Abs(number).ToString()[0];
-        OptionAssert.NonEmpty(firstDigit.AsDigit());
+        Assert.NotNull(firstDigit.AsDigit());
     }
 
     [Property]
     internal void AllCharsSucceed(char c)
     {
         var result = c.AsDigit();
-        Assert.Equal(char.IsDigit(c), result.NonEmpty);
+        Assert.Equal(char.IsDigit(c), result is not null);
     }
 
-    private void AssertDigitOption(byte value, Option<Digit> digit)
+    private void AssertDigitOption(byte value, Digit? digit)
     {
-        Assert.True(digit.NonEmpty, "Option was expected to have a value, but was empty.");
-        Assert.Equal(value, digit.Get());
-        Assert.Equal(value, digit.Get().Value);
+        Assert.True(digit is not null, "Option was expected to have a value, but was empty.");
+        Assert.Equal(value, digit!.Value);
+        Assert.Equal(value, digit!.Value.Value);
     }
 }

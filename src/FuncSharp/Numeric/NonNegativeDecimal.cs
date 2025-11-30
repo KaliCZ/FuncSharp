@@ -35,19 +35,23 @@ public struct NonNegativeDecimal : IEquatable<NonNegativeDecimal>
         return new(d1.Value * d2.Value);
     }
 
-    public static Option<NonNegativeDecimal> Create(decimal value)
+    public static NonNegativeDecimal Create(decimal value)
     {
-        return CreateNullable(value).ToOption();
+        return TryCreate(value) ?? throw new ArgumentException($"'{value}' is not a non-negative decimal.");
     }
 
-    public static NonNegativeDecimal CreateUnsafe(decimal value)
-    {
-        return CreateNullable(value) ?? throw new ArgumentException($"'{value}' is not a non-negative decimal.");
-    }
-
-    public static NonNegativeDecimal? CreateNullable(decimal value)
+    public static NonNegativeDecimal? TryCreate(decimal value)
     {
         return value >= 0 ? new(value) : null;
+    }
+
+    public static NonNegativeDecimal? TryCreate(decimal? value)
+    {
+        if (value is null)
+        {
+            return null;
+        }
+        return TryCreate(value.Value);
     }
 
     public NonNegativeDecimal Sum(params NonNegativeDecimal[] values)

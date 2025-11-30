@@ -24,19 +24,23 @@ public struct NonPositiveInt : IEquatable<NonPositiveInt>
         return a.Sum(b);
     }
 
-    public static Option<NonPositiveInt> Create(int value)
+    public static NonPositiveInt Create(int value)
     {
-        return CreateNullable(value).ToOption();
+        return TryCreate(value) ?? throw new ArgumentException($"'{value}' is not a non-positive integer.");
     }
 
-    public static NonPositiveInt CreateUnsafe(int value)
-    {
-        return CreateNullable(value) ?? throw new ArgumentException($"'{value}' is not a non-positive integer.");
-    }
-
-    public static NonPositiveInt? CreateNullable(int value)
+    public static NonPositiveInt? TryCreate(int value)
     {
         return value <= 0 ? new NonPositiveInt(value) : null;
+    }
+
+    public static NonPositiveInt? TryCreate(int? value)
+    {
+        if (value is null)
+        {
+            return null;
+        }
+        return TryCreate(value.Value);
     }
 
     public NonPositiveInt Sum(params NonPositiveInt[] values)

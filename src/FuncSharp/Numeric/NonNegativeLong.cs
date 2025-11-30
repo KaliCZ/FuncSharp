@@ -24,28 +24,23 @@ public struct NonNegativeLong : IEquatable<NonNegativeLong>
         return a.Sum(b);
     }
 
-    public static Option<NonNegativeLong> Create(long value)
+    public static NonNegativeLong Create(long value)
     {
-        return CreateNullable(value).ToOption();
+        return TryCreate(value) ?? throw new ArgumentException($"'{value}' is not a non-negative long.");
     }
 
-    public static NonNegativeLong CreateUnsafe(long value)
-    {
-        return CreateNullable(value) ?? throw new ArgumentException($"'{value}' is not a non-negative long.");
-    }
-
-    public static NonNegativeLong? CreateNullable(long value)
+    public static NonNegativeLong? TryCreate(long value)
     {
         return value >= 0 ? new NonNegativeLong(value) : null;
     }
 
-    public static NonNegativeLong? CreateNullable(long? value)
+    public static NonNegativeLong? TryCreate(long? value)
     {
-        if (value is >= 0)
+        if (value is null)
         {
-            return new NonNegativeLong(value.Value);
+            return null;
         }
-        return null;
+        return TryCreate(value.Value);
     }
 
     public NonNegativeLong Sum(params NonNegativeLong[] values)

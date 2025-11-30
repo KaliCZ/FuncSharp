@@ -9,25 +9,13 @@ public class NonNegativeDecimalTests
     [Fact]
     internal void AsNonNegative_Manual()
     {
-        OptionAssert.IsEmpty((-14m).AsNonNegative());
-        OptionAssert.IsEmpty((-1m).AsNonNegative());
+        Assert.Null((-14m).AsNonNegative());
+        Assert.Null((-1m).AsNonNegative());
 
-        Assert.Equal(0m, 0m.AsNonNegative().Get());
-        Assert.Equal(1m, 1m.AsNonNegative().Get());
-        Assert.Equal(20m, 20m.AsNonNegative().Get());
-        Assert.Equal(26579m, 26579m.AsNonNegative().Get());
-    }
-
-    [Fact]
-    internal void AsNonNegativeUnsafe_Manual()
-    {
-        Assert.Throws<ArgumentException>(() => (-14m).AsUnsafeNonNegative());
-        Assert.Throws<ArgumentException>(() => (-1m).AsUnsafeNonNegative());
-
-        Assert.Equal(0m, 0m.AsUnsafeNonNegative());
-        Assert.Equal(1m, 1m.AsUnsafeNonNegative());
-        Assert.Equal(20m, 20m.AsUnsafeNonNegative());
-        Assert.Equal(26579m, 26579m.AsUnsafeNonNegative());
+        Assert.Equal(0m, 0m.AsNonNegative()!.Value);
+        Assert.Equal(1m, 1m.AsNonNegative()!.Value);
+        Assert.Equal(20m, 20m.AsNonNegative()!.Value);
+        Assert.Equal(26579m, 26579m.AsNonNegative()!.Value);
     }
 
     [Property]
@@ -36,28 +24,13 @@ public class NonNegativeDecimalTests
         var result = number.AsNonNegative();
         if (number >= 0)
         {
-            OptionAssert.NonEmpty(result);
-            Assert.Equal(number, result.Get());
-            Assert.Equal(number, result.Get().Value);
+            Assert.NotNull(result);
+            Assert.Equal(number, result!.Value);
+            Assert.Equal(number, result!.Value.Value);
         }
         else
         {
-            OptionAssert.IsEmpty(result);
-        }
-    }
-
-    [Property]
-    internal void AsUnsafeNonNegative(decimal number)
-    {
-        if (number >= 0)
-        {
-            var result = number.AsUnsafeNonNegative();
-            Assert.Equal(number, result);
-            Assert.Equal(number, result.Value);
-        }
-        else
-        {
-            Assert.Throws<ArgumentException>(() => number.AsUnsafeNonNegative());
+            Assert.Null(result);
         }
     }
 
@@ -67,7 +40,7 @@ public class NonNegativeDecimalTests
         var numbersAreEqual = first == second;
         var firstOption = first.AsNonNegative();
         var secondOption = second.AsNonNegative();
-        var bothOptionsEmpty = firstOption.IsEmpty && secondOption.IsEmpty;
+        var bothOptionsEmpty = firstOption is null && secondOption is null;
         if (!bothOptionsEmpty)
         {
             Assert.Equal(numbersAreEqual, firstOption == secondOption);

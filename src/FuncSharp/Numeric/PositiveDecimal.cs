@@ -21,7 +21,7 @@ public struct PositiveDecimal : IEquatable<PositiveDecimal>
 
     public static implicit operator NonNegativeDecimal(PositiveDecimal d)
     {
-        return NonNegativeDecimal.CreateUnsafe(d.Value);
+        return NonNegativeDecimal.Create(d.Value);
     }
 
     public static PositiveDecimal operator +(PositiveDecimal d1, PositiveDecimal d2)
@@ -39,19 +39,23 @@ public struct PositiveDecimal : IEquatable<PositiveDecimal>
         return new(d1.Value * d2.Value);
     }
 
-    public static Option<PositiveDecimal> Create(decimal value)
+    public static PositiveDecimal Create(decimal value)
     {
-        return CreateNullable(value).ToOption();
+        return TryCreate(value) ?? throw new ArgumentException($"'{value}' is not a positive decimal.");
     }
 
-    public static PositiveDecimal CreateUnsafe(decimal value)
-    {
-        return CreateNullable(value) ?? throw new ArgumentException($"'{value}' is not a positive decimal.");
-    }
-
-    public static PositiveDecimal? CreateNullable(decimal value)
+    public static PositiveDecimal? TryCreate(decimal value)
     {
         return value > 0 ? new(value) : null;
+    }
+
+    public static PositiveDecimal? TryCreate(decimal? value)
+    {
+        if (value is null)
+        {
+            return null;
+        }
+        return TryCreate(value.Value);
     }
 
     public PositiveDecimal Sum(params PositiveDecimal[] values)

@@ -9,23 +9,23 @@ public static partial class IEnumerableExtensions
     [Pure]
     public static PositiveInt Sum(this INonEmptyEnumerable<PositiveInt> values)
     {
-        return PositiveInt.CreateUnsafe(values.Sum(v => v.Value));
+        return PositiveInt.Create(values.Sum(v => v.Value));
     }
 
     [Pure]
     public static PositiveDecimal Sum(this INonEmptyEnumerable<PositiveDecimal> values)
     {
-        return PositiveDecimal.CreateUnsafe(values.Sum(v => v.Value));
+        return PositiveDecimal.Create(values.Sum(v => v.Value));
     }
 
     public static PositiveInt? SafeSum(this IEnumerable<PositiveInt> values)
     {
-        return PositiveInt.Create(values.Sum(v => v.Value));
+        return PositiveInt.TryCreate(values.Sum(v => v.Value));
     }
 
     public static PositiveDecimal? SafeSum(this IEnumerable<PositiveDecimal> values)
     {
-        return PositiveDecimal.Create(values.Sum(v => v.Value));
+        return PositiveDecimal.TryCreate(values.Sum(v => v.Value));
     }
 
     public static NonPositiveInt Sum(this IEnumerable<NonPositiveInt> values)

@@ -21,7 +21,7 @@ public struct PositiveLong : IEquatable<PositiveLong>
 
     public static implicit operator NonNegativeLong(PositiveLong i)
     {
-        return NonNegativeLong.CreateUnsafe(i.Value);
+        return NonNegativeLong.Create(i.Value);
     }
 
     public static PositiveLong operator +(PositiveLong a, NonNegativeLong b)
@@ -34,19 +34,23 @@ public struct PositiveLong : IEquatable<PositiveLong>
         return a.Multiply(b);
     }
 
-    public static Option<PositiveLong> Create(long value)
+    public static PositiveLong Create(long value)
     {
-        return CreateNullable(value).ToOption();
+        return TryCreate(value) ?? throw new ArgumentException($"'{value}' is not a positive long.");
     }
 
-    public static PositiveLong CreateUnsafe(long value)
-    {
-        return CreateNullable(value) ?? throw new ArgumentException($"'{value}' is not a positive long.");
-    }
-
-    public static PositiveLong? CreateNullable(long value)
+    public static PositiveLong? TryCreate(long value)
     {
         return value > 0 ? new PositiveLong(value) : null;
+    }
+
+    public static PositiveLong? TryCreate(long? value)
+    {
+        if (value is null)
+        {
+            return null;
+        }
+        return TryCreate(value.Value);
     }
 
     public PositiveLong Sum(params NonNegativeLong[] values)
@@ -68,7 +72,7 @@ public struct PositiveLong : IEquatable<PositiveLong>
     {
         return Value.ToString();
     }
-    
+
     public static bool operator ==(PositiveLong left, PositiveLong right)
     {
         return left.Equals(right);

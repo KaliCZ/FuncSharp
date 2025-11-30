@@ -21,7 +21,7 @@ public struct PositiveShort : IEquatable<PositiveShort>
 
     public static implicit operator NonNegativeShort(PositiveShort i)
     {
-        return NonNegativeShort.CreateUnsafe(i.Value);
+        return NonNegativeShort.Create(i.Value);
     }
 
     public static PositiveShort operator +(PositiveShort a, NonNegativeShort b)
@@ -42,6 +42,15 @@ public struct PositiveShort : IEquatable<PositiveShort>
     public static PositiveShort? TryCreate(short value)
     {
         return value > 0 ? new PositiveShort(value) : null;
+    }
+
+    public static PositiveShort? TryCreate(short? value)
+    {
+        if (value is null)
+        {
+            return null;
+        }
+        return TryCreate(value.Value);
     }
 
     public PositiveShort Sum(params NonNegativeShort[] values)

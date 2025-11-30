@@ -9,25 +9,13 @@ public class NonPositiveIntTests
     [Fact]
     internal void AsNonPositive_Manual()
     {
-        OptionAssert.IsEmpty(14.AsNonPositive());
-        OptionAssert.IsEmpty(1.AsNonPositive());
+        Assert.Null(14.AsNonPositive());
+        Assert.Null(1.AsNonPositive());
 
-        Assert.Equal(0, 0.AsNonPositive().Get());
-        Assert.Equal(-1, (-1).AsNonPositive().Get());
-        Assert.Equal(-20, (-20).AsNonPositive().Get());
-        Assert.Equal(-26579, (-26579).AsNonPositive().Get());
-    }
-
-    [Fact]
-    internal void AsNonPositiveUnsafe_Manual()
-    {
-        Assert.Throws<ArgumentException>(() => 14.AsUnsafeNonPositive());
-        Assert.Throws<ArgumentException>(() => 1.AsUnsafeNonPositive());
-
-        Assert.Equal(0, 0.AsUnsafeNonPositive());
-        Assert.Equal(-1, (-1).AsUnsafeNonPositive());
-        Assert.Equal(-20, (-20).AsUnsafeNonPositive());
-        Assert.Equal(-26579, (-26579).AsUnsafeNonPositive());
+        Assert.Equal(0, 0.AsNonPositive()!.Value);
+        Assert.Equal(-1, (-1).AsNonPositive()!.Value);
+        Assert.Equal(-20, (-20).AsNonPositive()!.Value);
+        Assert.Equal(-26579, (-26579).AsNonPositive()!.Value);
     }
 
     [Property]
@@ -36,28 +24,13 @@ public class NonPositiveIntTests
         var result = number.AsNonPositive();
         if (number <= 0)
         {
-            OptionAssert.NonEmpty(result);
-            Assert.Equal(number, result.Get());
-            Assert.Equal(number, result.Get().Value);
+            Assert.NotNull(result);
+            Assert.Equal(number, result!.Value);
+            Assert.Equal(number, result!.Value.Value);
         }
         else
         {
-            OptionAssert.IsEmpty(result);
-        }
-    }
-
-    [Property]
-    internal void AsUnsafeNonPositive(int number)
-    {
-        if (number <= 0)
-        {
-            var result = number.AsUnsafeNonPositive();
-            Assert.Equal(number, result);
-            Assert.Equal(number, result.Value);
-        }
-        else
-        {
-            Assert.Throws<ArgumentException>(() => number.AsUnsafeNonPositive());
+            Assert.Null(result);
         }
     }
 
@@ -67,7 +40,7 @@ public class NonPositiveIntTests
         var numbersAreEqual = first == second;
         var firstOption = first.AsNonPositive();
         var secondOption = second.AsNonPositive();
-        var bothOptionsEmpty = firstOption.IsEmpty && secondOption.IsEmpty;
+        var bothOptionsEmpty = firstOption is null && secondOption is null;
         if (!bothOptionsEmpty)
         {
             Assert.Equal(numbersAreEqual, firstOption == secondOption);

@@ -9,25 +9,13 @@ public class PositiveIntTests
     [Fact]
     internal void AsPositive_Manual()
     {
-        OptionAssert.IsEmpty((-14).AsPositive());
-        OptionAssert.IsEmpty((-1).AsPositive());
-        OptionAssert.IsEmpty(0.AsPositive());
+        Assert.Null((-14).AsPositive());
+        Assert.Null((-1).AsPositive());
+        Assert.Null(0.AsPositive());
 
-        Assert.Equal(1, 1.AsPositive().Get());
-        Assert.Equal(20, 20.AsPositive().Get());
-        Assert.Equal(26579, 26579.AsPositive().Get());
-    }
-
-    [Fact]
-    internal void AsPositiveUnsafe_Manual()
-    {
-        Assert.Throws<ArgumentException>(() => (-14).AsUnsafePositive());
-        Assert.Throws<ArgumentException>(() => (-1).AsUnsafePositive());
-        Assert.Throws<ArgumentException>(() => 0.AsUnsafePositive());
-
-        Assert.Equal(1, 1.AsUnsafePositive());
-        Assert.Equal(20, 20.AsUnsafePositive());
-        Assert.Equal(26579, 26579.AsUnsafePositive());
+        Assert.Equal(1, 1.AsPositive()!.Value);
+        Assert.Equal(20, 20.AsPositive()!.Value);
+        Assert.Equal(26579, 26579.AsPositive()!.Value);
     }
 
     [Property]
@@ -36,28 +24,13 @@ public class PositiveIntTests
         var result = number.AsPositive();
         if (number > 0)
         {
-            OptionAssert.NonEmpty(result);
-            Assert.Equal(number, result.Get());
-            Assert.Equal(number, result.Get().Value);
+            Assert.NotNull(result);
+            Assert.Equal(number, result!.Value);
+            Assert.Equal(number, result!.Value.Value);
         }
         else
         {
-            OptionAssert.IsEmpty(result);
-        }
-    }
-
-    [Property]
-    internal void AsUnsafePositive(int number)
-    {
-        if (number > 0)
-        {
-            var result = number.AsUnsafePositive();
-            Assert.Equal(number, result);
-            Assert.Equal(number, result.Value);
-        }
-        else
-        {
-            Assert.Throws<ArgumentException>(() => number.AsUnsafePositive());
+            Assert.Null(result);
         }
     }
 
@@ -67,7 +40,7 @@ public class PositiveIntTests
         var numbersAreEqual = first == second;
         var firstOption = first.AsPositive();
         var secondOption = second.AsPositive();
-        var bothOptionsEmpty = firstOption.IsEmpty && secondOption.IsEmpty;
+        var bothOptionsEmpty = firstOption is null && secondOption is null;
         if (!bothOptionsEmpty)
         {
             Assert.Equal(numbersAreEqual, firstOption == secondOption);

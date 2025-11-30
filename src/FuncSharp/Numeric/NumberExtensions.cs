@@ -16,12 +16,12 @@ public static class NumberExtensions
 
     public static PositiveLong? AsPositive(this long value)
     {
-        return PositiveLong.Create(value);
+        return PositiveLong.TryCreate(value);
     }
 
     public static PositiveDecimal? AsPositive(this decimal value)
     {
-        return PositiveDecimal.Create(value);
+        return PositiveDecimal.TryCreate(value);
     }
 
     #endregion
@@ -69,7 +69,7 @@ public static class NumberExtensions
 
     public static NonPositiveDecimal? AsNonPositive(this decimal value)
     {
-        return NonPositiveDecimal.Create(value);
+        return NonPositiveDecimal.TryCreate(value);
     }
 
     #endregion

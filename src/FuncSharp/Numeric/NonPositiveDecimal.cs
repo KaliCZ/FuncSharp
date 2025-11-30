@@ -24,19 +24,23 @@ public struct NonPositiveDecimal : IEquatable<NonPositiveDecimal>
         return new(d1.Value + d2.Value);
     }
 
-    public static Option<NonPositiveDecimal> Create(decimal value)
+    public static NonPositiveDecimal Create(decimal value)
     {
-        return CreateNullable(value).ToOption();
+        return TryCreate(value) ?? throw new ArgumentException($"'{value}' is not a non-positive decimal.");
     }
 
-    public static NonPositiveDecimal CreateUnsafe(decimal value)
-    {
-        return CreateNullable(value) ?? throw new ArgumentException($"'{value}' is not a non-positive decimal.");
-    }
-
-    public static NonPositiveDecimal? CreateNullable(decimal value)
+    public static NonPositiveDecimal? TryCreate(decimal value)
     {
         return value <= 0 ? new(value) : null;
+    }
+
+    public static NonPositiveDecimal? TryCreate(decimal? value)
+    {
+        if (value is null)
+        {
+            return null;
+        }
+        return TryCreate(value.Value);
     }
 
     public NonPositiveDecimal Sum(params NonPositiveDecimal[] values)

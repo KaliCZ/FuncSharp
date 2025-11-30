@@ -21,7 +21,7 @@ public struct PositiveInt : IEquatable<PositiveInt>
 
     public static implicit operator NonNegativeInt(PositiveInt i)
     {
-        return NonNegativeInt.CreateUnsafe(i.Value);
+        return NonNegativeInt.Create(i.Value);
     }
 
     public static PositiveInt operator +(PositiveInt a, NonNegativeInt b)
@@ -42,6 +42,15 @@ public struct PositiveInt : IEquatable<PositiveInt>
     public static PositiveInt? TryCreate(int value)
     {
         return value > 0 ? new PositiveInt(value) : null;
+    }
+
+    public static PositiveInt? TryCreate(int? value)
+    {
+        if (value is null)
+        {
+            return null;
+        }
+        return TryCreate(value.Value);
     }
 
     public PositiveInt Sum(params NonNegativeInt[] values)

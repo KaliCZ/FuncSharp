@@ -24,19 +24,23 @@ public struct NonPositiveShort : IEquatable<NonPositiveShort>
         return a.Sum(b);
     }
 
-    public static Option<NonPositiveShort> Create(short value)
+    public static NonPositiveShort Create(short value)
     {
-        return CreateNullable(value).ToOption();
+        return TryCreate(value) ?? throw new ArgumentException($"'{value}' is not a non-positive short.");
     }
 
-    public static NonPositiveShort CreateUnsafe(short value)
-    {
-        return CreateNullable(value) ?? throw new ArgumentException($"'{value}' is not a non-positive short.");
-    }
-
-    public static NonPositiveShort? CreateNullable(short value)
+    public static NonPositiveShort? TryCreate(short value)
     {
         return value <= 0 ? new NonPositiveShort(value) : null;
+    }
+
+    public static NonPositiveShort? TryCreate(short? value)
+    {
+        if (value is null)
+        {
+            return null;
+        }
+        return TryCreate(value.Value);
     }
 
     public NonPositiveShort Sum(params NonPositiveShort[] values)
