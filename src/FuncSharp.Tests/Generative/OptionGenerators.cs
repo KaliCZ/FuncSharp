@@ -27,6 +27,7 @@ public class OptionGenerators
         NullableDouble = Arb.From(DefaultOptionGenerator<double?>(), Shrinkers.Options.NullableDouble);
 
         Unit = Arb.From(Gen.Constant(FuncSharp.Unit.Value).SometimesEmpty()); // No shrinker needed for Unit
+        Units = Arb.From(Gen.Constant(FuncSharp.Unit.Value).ToList().SometimesEmpty()); // No shrinker needed for Unit
 
         var referenceTypeGenerator = Arb.From<int>().Generator.Select(i => new ReferenceType(i));
         ReferenceType = Arb.From(referenceTypeGenerator.SometimesEmpty(), Shrinkers.Options.ReferenceType);

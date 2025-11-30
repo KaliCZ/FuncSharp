@@ -13,9 +13,9 @@ public class OptionAssert
     /// <param name="option">The option to check for being empty.</param>
     /// <param name="message">Message to display if the assert fails. If null, a generic message with the value of the failed option is used.</param>
     /// <typeparam name="T">Type of the option</typeparam>
-    public static void IsEmpty<T>(Option<T> option, string message = null)
+    public static void IsEmpty<T>(Option<T> option, string? message = null)
     {
-        Assert.True(option.IsEmpty, message ?? $"Option was expected to be empty, but had a value `{option.GetOrDefault()}`.");
+        Assert.True(option.IsEmpty, message ?? $"Option was expected to be empty, but had a value `{option.GetOrNull()}`.");
     }
 
     /// <summary>
@@ -24,7 +24,7 @@ public class OptionAssert
     /// <param name="option">The option to check for being empty.</param>
     /// <param name="message">Message to display if the assert fails. If null, a generic message is used.</param>
     /// <typeparam name="T">Type of the option</typeparam>
-    public static void NonEmpty<T>(Option<T> option, string message = null)
+    public static void NonEmpty<T>(Option<T> option, string? message = null)
     {
         Assert.True(option.NonEmpty, message ?? "Option was expected to have a value, but was empty.");
     }
@@ -36,7 +36,7 @@ public class OptionAssert
     /// <param name="option">The option to check for having a specific value.</param>
     /// <param name="message">Message to display if the assert fails. If null, a generic message is used.</param>
     /// <typeparam name="T">Type of the option</typeparam>
-    public static void NonEmptyWithValue<T>(T expected, Option<T> option, string message = null)
+    public static void NonEmptyWithValue<T>(T expected, Option<T> option, string? message = null)
     {
         Assert.True(option.NonEmpty, message ?? "Option was expected to have a value, but was empty.");
         Assert.Equal(expected, option.Get());

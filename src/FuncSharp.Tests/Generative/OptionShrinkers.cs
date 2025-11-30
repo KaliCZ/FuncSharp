@@ -11,7 +11,7 @@ internal class OptionShrinkers
     internal IEnumerable<Option<short>> Short(Option<short> option)
     {
         if(option.NonEmpty)
-            yield return Option.Valued((short)(option.GetOrDefault() - 1));
+            yield return Option.Valued((short)(option.Get() - 1));
     }
 
     internal IEnumerable<Option<List<short>>> ShortList(Option<List<short>> option)
@@ -29,7 +29,7 @@ internal class OptionShrinkers
     {
         if(option.NonEmpty)
         {
-            yield return Option.Valued((short?)(option.GetOrDefault() - 1));
+            yield return Option.Valued((short?)(option.Get() - 1));
             yield return Option.Valued((short?)null);
             yield return Option.Empty<short?>();
         }
@@ -38,7 +38,7 @@ internal class OptionShrinkers
     internal IEnumerable<Option<int>> Int(Option<int> option)
     {
         if(option.NonEmpty)
-            yield return Option.Valued(option.GetOrDefault() - 1);
+            yield return Option.Valued(option.Get() - 1);
     }
 
     internal IEnumerable<Option<List<int>>> IntList(Option<List<int>> option)
@@ -56,7 +56,7 @@ internal class OptionShrinkers
     {
         if(option.NonEmpty)
         {
-            yield return Option.Valued(option.GetOrDefault() - 1);
+            yield return Option.Valued(option.Get() - 1);
             yield return Option.Valued((int?)null);
             yield return Option.Empty<int?>();
         }
@@ -65,7 +65,7 @@ internal class OptionShrinkers
     internal IEnumerable<Option<long>> Long(Option<long> option)
     {
         if(option.NonEmpty)
-            yield return Option.Valued(option.GetOrDefault() - 1);
+            yield return Option.Valued(option.Get() - 1);
     }
 
     internal IEnumerable<Option<List<long>>> LongList(Option<List<long>> option)
@@ -83,7 +83,7 @@ internal class OptionShrinkers
     {
         if(option.NonEmpty)
         {
-            yield return Option.Valued(option.GetOrDefault() - 1);
+            yield return Option.Valued(option.Get() - 1);
             yield return Option.Valued((long?)null);
             yield return Option.Empty<long?>();
         }
@@ -92,7 +92,7 @@ internal class OptionShrinkers
     internal IEnumerable<Option<decimal>> Decimal(Option<decimal> option)
     {
         if(option.NonEmpty)
-            yield return Option.Valued(option.GetOrDefault() - 0.1m);
+            yield return Option.Valued(option.Get() - 0.1m);
     }
 
     internal IEnumerable<Option<List<decimal>>> DecimalList(Option<List<decimal>> option)
@@ -110,7 +110,7 @@ internal class OptionShrinkers
     {
         if(option.NonEmpty)
         {
-            yield return Option.Valued(option.GetOrDefault() - 0.1m);
+            yield return Option.Valued(option.Get() - 0.1m);
             yield return Option.Valued((decimal?)null);
             yield return Option.Empty<decimal?>();
         }
@@ -119,7 +119,7 @@ internal class OptionShrinkers
     internal IEnumerable<Option<double>> Double(Option<double> option)
     {
         if(option.NonEmpty)
-            yield return Option.Valued(option.GetOrDefault() - 0.1d);
+            yield return Option.Valued(option.Get() - 0.1d);
     }
 
     internal IEnumerable<Option<List<double>>> DoubleList(Option<List<double>> option)
@@ -137,7 +137,7 @@ internal class OptionShrinkers
     {
         if(option.NonEmpty)
         {
-            yield return Option.Valued(option.GetOrDefault() - 0.1d);
+            yield return Option.Valued(option.Get() - 0.1d);
             yield return Option.Valued((double?)null);
             yield return Option.Empty<double?>();
         }
@@ -146,7 +146,7 @@ internal class OptionShrinkers
     internal IEnumerable<Option<ReferenceType>> ReferenceType(Option<ReferenceType> option)
     {
         if(option.NonEmpty)
-            yield return Option.Valued(new ReferenceType(option.GetOrDefault().Value - 1));
+            yield return Option.Valued(new ReferenceType(option.Get().Value - 1));
     }
 
     internal IEnumerable<Option<List<ReferenceType>>> ReferenceTypeList(Option<List<ReferenceType>> option)
@@ -163,7 +163,7 @@ internal class OptionShrinkers
     internal IEnumerable<Option<ReferenceTypeBase>> ReferenceTypeBase(Option<ReferenceTypeBase> option)
     {
         if(option.NonEmpty)
-            yield return Option.Valued(new ReferenceTypeBase(option.GetOrDefault().BaseValue - 1));
+            yield return Option.Valued(new ReferenceTypeBase(option.Get().BaseValue - 1));
     }
 
     internal IEnumerable<Option<List<ReferenceTypeBase>>> ReferenceTypeBaseList(Option<List<ReferenceTypeBase>> option)

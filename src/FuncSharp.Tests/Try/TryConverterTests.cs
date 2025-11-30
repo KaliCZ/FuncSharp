@@ -113,6 +113,7 @@ public class TryConverterTests
         var value = JsonSerializer.Deserialize<ComplexObject>(json);
 
         // Assert
+        Assert.NotNull(value);
         Assert.Equal("before", value.PropertyBefore);
         Assert.True(value.Value.IsSuccess);
         Assert.Equal(new DummySuccess("success!"), value.Value.Success.Get());
