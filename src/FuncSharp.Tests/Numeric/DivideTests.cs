@@ -9,8 +9,8 @@ public class DivideTests
     {
         Assert.Equal(0.5m, 1.SafeDivide(2));
         Assert.Equal(1.5m, 3.SafeDivide(2));
-        Assert.Equal(14.33m, 1.SafeDivide(0, 14.33m));
-        Assert.Equal(12.12m, 3489.SafeDivide(0, 12.12m));
+        Assert.Equal(14.33m, 1.Divide(0, 14.33m));
+        Assert.Equal(12.12m, 3489.Divide(0, 12.12m));
     }
 
     [Fact]
@@ -18,8 +18,8 @@ public class DivideTests
     {
         Assert.Equal(0.5m, 1m.SafeDivide(2));
         Assert.Equal(1.5m, 3m.SafeDivide(2));
-        Assert.Equal(14.33m, 1m.SafeDivide(0, 14.33m));
-        Assert.Equal(12.12m, 3489m.SafeDivide(0, 12.12m));
+        Assert.Equal(14.33m, 1m.Divide(0, 14.33m));
+        Assert.Equal(12.12m, 3489m.Divide(0, 12.12m));
     }
 
     [Fact]

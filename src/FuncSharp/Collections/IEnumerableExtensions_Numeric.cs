@@ -18,12 +18,12 @@ public static partial class IEnumerableExtensions
         return PositiveDecimal.CreateUnsafe(values.Sum(v => v.Value));
     }
 
-    public static Option<PositiveInt> SafeSum(this IEnumerable<PositiveInt> values)
+    public static PositiveInt? SafeSum(this IEnumerable<PositiveInt> values)
     {
         return PositiveInt.Create(values.Sum(v => v.Value));
     }
 
-    public static Option<PositiveDecimal> SafeSum(this IEnumerable<PositiveDecimal> values)
+    public static PositiveDecimal? SafeSum(this IEnumerable<PositiveDecimal> values)
     {
         return PositiveDecimal.Create(values.Sum(v => v.Value));
     }

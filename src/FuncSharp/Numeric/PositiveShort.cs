@@ -34,17 +34,12 @@ public struct PositiveShort : IEquatable<PositiveShort>
         return a.Multiply(b);
     }
 
-    public static Option<PositiveShort> Create(short value)
+    public static PositiveShort Create(short value)
     {
-        return CreateNullable(value).ToOption();
+        return TryCreate(value) ?? throw new ArgumentException($"'{value}' is not a positive short.");
     }
 
-    public static PositiveShort CreateUnsafe(short value)
-    {
-        return CreateNullable(value) ?? throw new ArgumentException($"'{value}' is not a positive short.");
-    }
-
-    public static PositiveShort? CreateNullable(short value)
+    public static PositiveShort? TryCreate(short value)
     {
         return value > 0 ? new PositiveShort(value) : null;
     }
