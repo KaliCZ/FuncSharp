@@ -72,12 +72,12 @@ public sealed class TryConverterFactory : JsonConverterFactory
             if (isSuccess)
             {
                 var success = _successConverter.Read(ref reader, _successType, options);
-                tryInstance = new Try<TSuccess, TError>(success);
+                tryInstance = new Try<TSuccess, TError>(success!);
             }
             else
             {
                 var error = _errorConverter.Read(ref reader, _errorType, options);
-                tryInstance = new Try<TSuccess, TError>(error);
+                tryInstance = new Try<TSuccess, TError>(error!);
             }
 
             reader.Read();

@@ -42,7 +42,7 @@ public static class ICoproductExtensions
     /// <summary>
     /// Canonical representation of the coproduct.
     /// </summary>
-    public static (int, int, object) CoproductRepresentation(this ICoproduct c)
+    public static (int, int, object?) CoproductRepresentation(this ICoproduct c)
     {
         return (c.CoproductArity, c.CoproductDiscriminator, c.CoproductValue);
     }
@@ -76,7 +76,7 @@ public static class ICoproductExtensions
         return
             c.GetType().SimpleName() + "(" +
                 GetOrdinal(c.CoproductDiscriminator) + "(" +
-                    c.CoproductValue.ToString() +
+                    (c.CoproductValue?.ToString() ?? "null") +
                 ")" +
             ")";
     }
