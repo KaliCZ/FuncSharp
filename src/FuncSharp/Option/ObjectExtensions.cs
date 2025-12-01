@@ -10,30 +10,19 @@ public static partial class OptionExtensions
     /// Maps the not null value using the specified function and returns the result.
     /// </summary>
     [Pure]
-    public static TResult? Map<T, TResult>(this T? value, Func<T, TResult> func)
-        where T : struct
+    public static TResult? Map<T, TResult>(this T? value, Func<T, TResult?> func)
+        where TResult : struct
     {
-        if (value is {} v)
-        {
-            return func(v);
-        }
-
-        return default;
+        return value is { } v ? func(v) : null;
     }
 
     /// <summary>
     /// Maps the not null value using the specified function and returns the result.
     /// </summary>
     [Pure]
-    public static TResult? Map<T, TResult>(this T? value, Func<T, TResult> func)
-        where T : class
+    public static TResult? Map<T, TResult>(this T? value, Func<T, TResult?> func)
     {
-        if (value is {} v)
-        {
-            return func(v);
-        }
-
-        return default;
+        return value is { } v ? func(v) : default;
     }
 
     /// <summary>
@@ -43,12 +32,7 @@ public static partial class OptionExtensions
     public static async Task<TResult?> MapAsync<T, TResult>(this T? value, Func<T, Task<TResult>> func)
         where T : struct
     {
-        if (value is {} v)
-        {
-            return await func(v);
-        }
-
-        return default;
+        return value is { } v ? await func(v) : default;
     }
 
     /// <summary>
@@ -58,11 +42,26 @@ public static partial class OptionExtensions
     public static async Task<TResult?> MapAsync<T, TResult>(this T? value, Func<T, Task<TResult>> func)
         where T : class
     {
-        if (value is {} v)
-        {
-            return await func(v);
-        }
+        return value is { } v ? await func(v) : default;
+    }
 
-        return default;
+    /// <summary>
+    /// Maps the value using the specified function and returns the result.
+    /// </summary>
+    [Pure]
+    public static T? Condition<T>(this T value, Func<T, bool> condition)
+        where T : notnull
+    {
+        return condition(value) ? value : null;
+    }
+
+    /// <summary>
+    /// Maps the not null value using the specified function and returns the result.
+    /// </summary>
+    [Pure]
+    public static async Task<TResult?> ConditionalMapAsync<T, TResult>(this T value, Func<T, bool> condition, Func<T, Task<TResult>> func)
+        where T : struct
+    {
+        return condition(value) ? await func(value) : default;
     }
 }

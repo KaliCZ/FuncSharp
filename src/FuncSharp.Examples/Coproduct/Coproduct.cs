@@ -6,21 +6,8 @@ public class Tree<A> : Coproduct2<Node<A>, Leaf>
     public Tree(Leaf leaf) : base(leaf) { }
 }
 
-public class Leaf : Product0
-{
-}
-
-public class Node<A> : Product3<A, Tree<A>, Tree<A>>
-{
-    public Node(A value, Tree<A> left, Tree<A> right)
-        : base(value, left, right)
-    {
-    }
-
-    public A Value { get { return ProductValue1; } }
-    public Tree<A> Left { get { return ProductValue2; } }
-    public Tree<A> Right { get { return ProductValue3; } }
-}
+public record Leaf;
+public record Node<A>(A Value, Tree<A> Left, Tree<A> Right);
 
 public static class TreeUtilities
 {

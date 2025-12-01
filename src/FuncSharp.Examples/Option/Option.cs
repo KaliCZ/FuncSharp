@@ -15,28 +15,21 @@ public static class OptionUsages
         Option<bool> emptyOption3 = Option.Create(emptyNullableBool);
 
         Option<bool> valuedOption1 = Option.Valued<bool>(false);
+        Option<bool> valuedOption2 = false.ToValuedOption();
         bool? nullableBool = false;
-        Option<bool> valuedOption2 = nullableBool.ToOption();
-        Option<bool> valuedOption3 = Option.Create(nullableBool);
+        Option<bool> valuedOption3 = nullableBool.ToOption();
+        Option<bool> valuedOption4 = Option.Create(nullableBool);
 
         // Option.Valued can construct options with null value inside. Therefore it can cause confusion and is an anti-pattern.
-        Option<object> valuedOptionWithNullInside2 = Option.Valued<object>(null);
-        Option<bool?> valuedOptionWithNullInside1 = Option.Valued(emptyNullableBool);
+        Option<object?> valuedOptionWithNullInside1 = Option.Valued<object?>(null);
+        Option<bool?> valuedOptionWithNullInside2 = Option.Valued(emptyNullableBool);
+        Option<bool?> valuedOptionWithNullInside3 = emptyNullableBool.ToValuedOption();
         Option<bool?> valuedOptionWithFalse = Option.Valued(nullableBool);
-
-        // Instead, you can use option of an option. For example when updating a value of a nullable property.
-        // Outer option defines whether we're changing value, inner option holds the value to assign.
-        Option<Option<bool>> notUpdating = Option.Empty<Option<bool>>();
-        Option<Option<bool>> settingToTrue1 = Option.Create(true.ToOption());
-        Option<Option<bool>> settingToTrue2 = Option.Create(Option.Create(true));
-        Option<Option<bool>> settingToTrue3 = true.ToOption().ToOption();
-        Option<Option<bool>> settingToNull1 = Option.Create(Option.Empty<bool>());
-        Option<Option<bool>> settingToNull2 = Option.Empty<bool>().ToOption();
     }
 
     public static Option<decimal> Divide(decimal number, decimal divisor)
     {
-        return divisor.ToOption().Where(d => d != 0).Map(d => number / d);
+        return divisor.ToValuedOption().Where(d => d != 0).Map(d => number / d);
     }
 
     private static void TransformingOptionValuesWithMap(decimal number, decimal divisor)
@@ -85,13 +78,13 @@ public static class OptionUsages
         // You should rather use Match to branch your code into individual cases where each case is guaranteed to work.
         decimal valueOrExceptionThrown = divisionResult.Get();
 
-        decimal? valueOrNull = divisionResult.ToNullable();
-        decimal valueOrFallback1 = divisionResult.GetOrZero();
+        decimal? valueOrNull = divisionResult.GetOrNull();
+        decimal valueOrFallback1 = divisionResult.GetOrElse(0m);
         decimal valueOrFallback2 = divisionResult.GetOrElse(114m);
         decimal valueOrFallback3 = divisionResult.GetOrElse(_ => 114m); // Lazy. Will only run the lambda if it needs to.
 
         // These two are identical. Just Map creates one extra instance of Option for no reason.
-        decimal roundedDivisionResult1 = divisionResult.Map(r => Math.Round(r)).GetOrZero();
+        decimal roundedDivisionResult1 = divisionResult.Map(r => Math.Round(r)).GetOrElse(0m);
         decimal roundedDivisionResult2 = divisionResult.Match(
             r => Math.Round(r),
             _ => 0

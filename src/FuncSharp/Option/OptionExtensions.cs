@@ -61,4 +61,23 @@ public static partial class OptionExtensions
         }
         return alternative(Unit.Value);
     }
+
+    /// <summary>
+    /// Returns the value of the outer option or an empty opion.
+    /// </summary>
+    [Pure]
+    public static Option<A> Flatten<A>(this Option<Option<A>> option)
+    {
+        return option.FlatMap(o => o);
+    }
+
+    /// <summary>
+    /// Turns the option of nullable into an option.
+    /// </summary>
+    [Pure]
+    public static Option<A> Flatten<A>(this Option<A?> option)
+        where A : struct
+    {
+        return option.FlatMap(a => a.ToOption());
+    }
 }

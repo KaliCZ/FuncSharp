@@ -9,12 +9,23 @@ public static class Option
     /// </summary>
     [Pure]
     public static Option<A> Create<A>(A? value)
+        where A : class
     {
-        if (value is not null)
-        {
-            return new Option<A>(value);
-        }
-        return Option<A>.Empty;
+        return value is { } v
+            ? new Option<A>(v)
+            : Option<A>.Empty;
+    }
+
+    /// <summary>
+    /// Creates a new option based on the specified value. Returns option with the value if is is non-null, empty otherwise.
+    /// </summary>
+    [Pure]
+    public static Option<A> Create<A>(A? value)
+        where A : struct
+    {
+        return value is { } v
+            ? Valued(v)
+            : Option<A>.Empty;
     }
 
     /// <summary>
