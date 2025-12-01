@@ -17,17 +17,19 @@ public static partial class IEnumerableExtensions
     /// <summary>
     /// Returns the max value of the enumerable or an empty option if it is empty.
     /// </summary>
-    public static TValue? SafeMax<T, TValue>(this IEnumerable<T> source, Func<T, TValue> selector)
+    public static TResult? SafeMax<T, TResult>(this IEnumerable<T> source, Func<T, TResult> selector)
+        where TResult : struct
     {
-        return source.AsNonEmpty().Map(s => s.Max(selector));
+        return source.AsNonEmpty().Map<INonEmptyEnumerable<T>, TResult>(s => s.Max(selector));
     }
 
     /// <summary>
     /// Returns the min value of the enumerable or an empty option if it is empty.
     /// </summary>
-    public static TValue? SafeMin<T, TValue>(this IEnumerable<T> source, Func<T, TValue> selector)
+    public static TResult? SafeMin<T, TResult>(this IEnumerable<T> source, Func<T, TResult> selector)
+        where TResult : struct
     {
-        return source.AsNonEmpty().Map(s => s.Min(selector));
+        return source.AsNonEmpty().Map<INonEmptyEnumerable<T>, TResult>(s => s.Min(selector));
     }
 
     /// <summary>

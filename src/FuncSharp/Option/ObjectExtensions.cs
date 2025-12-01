@@ -21,8 +21,9 @@ public static partial class OptionExtensions
     /// </summary>
     [Pure]
     public static TResult? Map<T, TResult>(this T? value, Func<T, TResult?> func)
+        where TResult : class
     {
-        return value is { } v ? func(v) : default;
+        return value is { } v ? func(v) : null;
     }
 
     /// <summary>
