@@ -20,9 +20,9 @@ public class OptionValuedTests
         OptionAssert.NonEmptyWithValue(2, Option.Valued<int?>(2));
         OptionAssert.NonEmptyWithValue(null, Option.Valued<int?>(null));
         OptionAssert.NonEmptyWithValue(new ReferenceType(14), Option.Valued(new ReferenceType(14)));
-        OptionAssert.NonEmptyWithValue(null, Option.Valued<ReferenceType>(null));
+        OptionAssert.NonEmptyWithValue(null, Option.Valued<ReferenceType?>(null));
         OptionAssert.NonEmptyWithValue(Unit.Value, Option.Valued(Unit.Value));
-        OptionAssert.NonEmptyWithValue(null, Option.Valued<Unit>(null));
+        OptionAssert.NonEmptyWithValue(null, Option.Valued<Unit?>(null));
     }
 
     [Property]

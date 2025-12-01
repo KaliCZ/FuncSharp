@@ -15,7 +15,7 @@ public class GetOrElseTests
     [Fact]
     public void GetOrElse()
     {
-        Assert.Equal(1, 1.ToOption().GetOrElse(2));
+        Assert.Equal(1, 1.ToValuedOption().GetOrElse(2));
         Assert.Equal(2, Option.Empty<int>().GetOrElse(2));
 
         Assert.Equal("asd", "asd".ToOption().GetOrElse("123"));
@@ -64,6 +64,7 @@ public class GetOrElseTests
     }
 
     private void AssertGetOrElse<T>(Option<T> option, T otherwise)
+        where T : notnull
     {
         var result = option.GetOrElse(otherwise);
         if (option.NonEmpty)

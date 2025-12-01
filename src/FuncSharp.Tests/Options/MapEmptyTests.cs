@@ -24,7 +24,7 @@ public class MapEmptyTests
         // Empty option will always have value when mapped with MapEmpty
         OptionAssert.NonEmptyWithValue(14, Option.Empty<int>().MapEmpty(_ => 14));
         OptionAssert.NonEmptyWithValue(28, Option.Empty<string>().MapEmpty(_ => (int?)28));
-        OptionAssert.NonEmptyWithValue(null, Option.Empty<int>().MapEmpty(_ => (string)null));
+        OptionAssert.NonEmptyWithValue(null, Option.Empty<int>().MapEmpty(_ => (string?)null));
         OptionAssert.NonEmptyWithValue("xxxxx", Option.Empty<string>().MapEmpty(v => "xxxxx"));
     }
 
@@ -60,7 +60,7 @@ public class MapEmptyTests
 
     private void AssertMapEmpty<T>(Option<T> option)
     {
-        AssertMapEmpty(option, _ => (ReferenceType)null);
+        AssertMapEmpty(option, _ => (ReferenceType?)null);
         AssertMapEmpty(option, _ => new ReferenceType(6));
         AssertMapEmpty(option, _ => 14);
         AssertMapEmpty(option, _ => (int?)14);

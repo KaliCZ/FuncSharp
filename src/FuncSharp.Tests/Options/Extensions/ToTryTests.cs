@@ -15,7 +15,7 @@ public class ToTryTests
     [Fact]
     public void ToTry()
     {
-        var success1 = 42.ToOption().ToTry(_ => "Error");
+        var success1 = 42.ToValuedOption().ToTry(_ => "Error");
         Assert.True(success1.IsSuccess);
         Assert.Equal(Option.Valued(42), success1.Success);
         Assert.Equal(Option.Empty<string>(), success1.Error);

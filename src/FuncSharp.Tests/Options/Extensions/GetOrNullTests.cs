@@ -16,7 +16,7 @@ public class GetOrNullTests
     public void GetOrNull()
     {
         Assert.Equal(new ReferenceType(14), new ReferenceType(14).ToOption().GetOrNull());
-        Assert.Null(Option.Valued<ReferenceType>(null).GetOrNull());
+        Assert.Null(Option.Valued<ReferenceType?>(null).GetOrNull());
         Assert.Null(Option.Empty<ReferenceType>().GetOrNull());
     }
 
@@ -33,7 +33,7 @@ public class GetOrNullTests
         if (option.NonEmpty)
         {
             Assert.NotNull(result);
-            Assert.Equal(option.GetOrDefault(), result);
+            Assert.Equal(option.Get(), result);
         }
         else
         {

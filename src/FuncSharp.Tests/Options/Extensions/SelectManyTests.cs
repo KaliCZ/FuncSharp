@@ -17,13 +17,13 @@ public class SelectManyTests
     public void SelectMany()
     {
         // SelectMany to a valued option should have the value.
-        OptionAssert.NonEmptyWithValue(84, 42.ToOption().SelectMany(v => (v * 2).ToOption()));
+        OptionAssert.NonEmptyWithValue(84, 42.ToValuedOption().SelectMany(v => (v * 2).ToValuedOption()));
 
         // SelectMany to Empty option should be empty.
-        OptionAssert.IsEmpty(42.ToOption().SelectMany(v => Option.Empty<int>()));
+        OptionAssert.IsEmpty(42.ToValuedOption().SelectMany(v => Option.Empty<int>()));
 
         // SelectMany on empty option is always empty.
-        OptionAssert.IsEmpty(Option.Empty<int>().SelectMany(v => (v * 2).ToOption()));
+        OptionAssert.IsEmpty(Option.Empty<int>().SelectMany(v => (v * 2).ToValuedOption()));
         OptionAssert.IsEmpty(Option.Empty<int>().SelectMany(v => Option.Empty<int>()));
     }
 
@@ -31,23 +31,23 @@ public class SelectManyTests
     public void Linq()
     {
         var sum =
-            from x in 1.ToOption()
-            from y in 2.ToOption()
-            from z in 3.ToOption()
+            from x in 1.ToValuedOption()
+            from y in 2.ToValuedOption()
+            from z in 3.ToValuedOption()
             select x + y + z;
 
-        Assert.Equal(6.ToOption(), sum);
+        Assert.Equal(6.ToValuedOption(), sum);
 
         var emptySum =
-            from x in 1.ToOption()
+            from x in 1.ToValuedOption()
             from y in Option.Empty<int>()
             select x + y;
 
         Assert.Equal(Option.Empty<int>(), emptySum);
 
         var filteredSum =
-            from x in 1.ToOption()
-            from y in 2.ToOption()
+            from x in 1.ToValuedOption()
+            from y in 2.ToValuedOption()
             where x > 100
             select x + y;
 
@@ -115,7 +115,7 @@ public class SelectManyTests
 
         if (option.NonEmpty)
         {
-            Assert.Equal(map(option.GetOrDefault()), selectManyResult.GetOrDefault());
+            Assert.Equal(map(option.Get()), selectManyResult.Get());
         }
 
         var linqResult =

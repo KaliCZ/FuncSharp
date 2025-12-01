@@ -72,7 +72,7 @@ public class MatchTests_Action
             v =>
             {
                 Assert.NotNull(v);
-                Assert.Equal(option.GetOrDefault(), v);
+                Assert.Equal(option.Get(), v);
                 flag1 = 14;
             },
             _ => flag2 = 2

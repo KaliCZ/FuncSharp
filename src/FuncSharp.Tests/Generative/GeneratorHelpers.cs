@@ -20,12 +20,12 @@ internal static class GeneratorExtensions
         return generator.SelectMany(val => Gen.Choose(0, 1000).Select(i =>
         {
             if (i > emptyChance * 100)
-                return val.ToOption();
+                return Option.Valued<T>(val);
             else
                 return Option.Empty<T>();
         }));
     }
-    
+
     /// <summary>
     /// Generates a collection of values from a given generator.
     /// </summary>

@@ -16,8 +16,8 @@ public class OrElseTests_Lazy
     [Fact]
     public void OrElse()
     {
-        Assert.Equal(1.ToOption(), 1.ToOption().OrElse(_ => 2.ToOption()));
-        Assert.Equal(2.ToOption(), Option.Empty<int>().OrElse(_ => 2.ToOption()));
+        Assert.Equal(1.ToValuedOption(), 1.ToValuedOption().OrElse(_ => 2.ToValuedOption()));
+        Assert.Equal(2.ToValuedOption(), Option.Empty<int>().OrElse(_ => 2.ToValuedOption()));
 
         Assert.Equal("asd".ToOption(), "asd".ToOption().OrElse(_ => "123".ToOption()));
         Assert.Equal("123".ToOption(), Option.Empty<string>().OrElse(_ => "123".ToOption()));
@@ -30,25 +30,25 @@ public class OrElseTests_Lazy
     [Property]
     internal void OrElse_int(Option<int> option)
     {
-        AssertOrElse(option, _ => (-14).ToOption());
+        AssertOrElse(option, _ => (-14).ToValuedOption());
     }
 
     [Property]
     internal void OrElse_decimal(Option<decimal> option)
     {
-        AssertOrElse(option, _ => 2156.384m.ToOption());
+        AssertOrElse(option, _ => 2156.384m.ToValuedOption());
     }
 
     [Property]
     internal void OrElse_double(Option<double> option)
     {
-        AssertOrElse(option, _ => 2842.456.ToOption());
+        AssertOrElse(option, _ => 2842.456.ToValuedOption());
     }
 
     [Property]
     internal void OrElse_bool(Option<bool> option)
     {
-        AssertOrElse(option, _ => true.ToOption());
+        AssertOrElse(option, _ => true.ToValuedOption());
     }
 
     [Property]
@@ -64,7 +64,7 @@ public class OrElseTests_Lazy
         AssertOrElse(option, _ => new ReferenceTypeBase(17).ToOption());
     }
 
-    private void AssertOrElse<T>(Option<T> option, Func<Unit, Option<T>> otherwise)
+    private void AssertOrElse<T>(Option<T> option, Func<Unit, Option<T>> otherwise) where T : notnull
     {
         var result = option.OrElse(otherwise);
         if (option.NonEmpty)

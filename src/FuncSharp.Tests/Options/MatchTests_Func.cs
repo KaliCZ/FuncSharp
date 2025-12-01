@@ -94,7 +94,7 @@ public class MatchTests_Func
         }
         else
         {
-            Assert.Equal(map(option.GetOrDefault()), result);
+            Assert.Equal(map(option.Get()), result);
         }
     }
 }

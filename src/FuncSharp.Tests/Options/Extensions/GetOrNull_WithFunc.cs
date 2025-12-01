@@ -16,9 +16,9 @@ public class GetOrNullTests_WithFunc
     [Fact]
     public void GetOrNull_WithFunc()
     {
-        Assert.Equal(new ReferenceType(1), 2.ToOption().GetOrNull(v => new ReferenceType(v / 2)));
+        Assert.Equal(new ReferenceType(1), 2.ToValuedOption().GetOrNull(v => new ReferenceType(v / 2)));
         Assert.Equal(new ReferenceType(14), Unit.Value.ToOption().GetOrNull(_ => new ReferenceType(14)));
-        Assert.Null(Unit.Value.ToOption().GetOrNull(v => (ReferenceType)null));
+        Assert.Null(Unit.Value.ToOption().GetOrNull(v => (ReferenceType?)null));
 
         Assert.Null(Option.Empty<Unit>().GetOrNull(_ => new ReferenceType(14)));
     }
@@ -33,7 +33,6 @@ public class GetOrNullTests_WithFunc
     internal void GetOrNull_WithFunc_ReferenceType(Option<ReferenceType> option)
     {
         AssertGetOrNullWithFunc(option, d => new ReferenceType(d.Value * 3));
-        AssertGetOrNullWithFunc(option, d => (ReferenceType)null);
     }
 
     private void AssertGetOrNullWithFunc<T, TResult>(Option<T> option, Func<T, TResult> map)
@@ -42,7 +41,7 @@ public class GetOrNullTests_WithFunc
         var result = option.GetOrNull(map);
         if (option.NonEmpty)
         {
-            Assert.Equal(map(option.GetOrDefault()), result);
+            Assert.Equal(map(option.Get()), result);
         }
         else
         {

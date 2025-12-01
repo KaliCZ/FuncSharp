@@ -15,8 +15,8 @@ public class OrElseTests
     [Fact]
     public void OrElse()
     {
-        Assert.Equal(1.ToOption(), 1.ToOption().OrElse(2.ToOption()));
-        Assert.Equal(2.ToOption(), Option.Empty<int>().OrElse(2.ToOption()));
+        Assert.Equal(1.ToValuedOption(), 1.ToValuedOption().OrElse(2.ToValuedOption()));
+        Assert.Equal(2.ToValuedOption(), Option.Empty<int>().OrElse(2.ToValuedOption()));
 
         Assert.Equal("asd".ToOption(), "asd".ToOption().OrElse("123".ToOption()));
         Assert.Equal("123".ToOption(), Option.Empty<string>().OrElse("123".ToOption()));
@@ -29,25 +29,25 @@ public class OrElseTests
     [Property]
     internal void OrElse_int(Option<int> option)
     {
-        AssertOrElse(option, (-14).ToOption());
+        AssertOrElse(option, (-14).ToValuedOption());
     }
 
     [Property]
     internal void OrElse_decimal(Option<decimal> option)
     {
-        AssertOrElse(option, 2156.384m.ToOption());
+        AssertOrElse(option, 2156.384m.ToValuedOption());
     }
 
     [Property]
     internal void OrElse_double(Option<double> option)
     {
-        AssertOrElse(option, 2842.456.ToOption());
+        AssertOrElse(option, 2842.456.ToValuedOption());
     }
 
     [Property]
     internal void OrElse_bool(Option<bool> option)
     {
-        AssertOrElse(option, true.ToOption());
+        AssertOrElse(option, true.ToValuedOption());
     }
 
     [Property]
@@ -63,7 +63,7 @@ public class OrElseTests
         AssertOrElse(option, new ReferenceTypeBase(17).ToOption());
     }
 
-    private void AssertOrElse<T>(Option<T> option, Option<T> otherwise)
+    private void AssertOrElse<T>(Option<T> option, Option<T> otherwise) where T : notnull
     {
         var result = option.OrElse(otherwise);
         if (option.NonEmpty)

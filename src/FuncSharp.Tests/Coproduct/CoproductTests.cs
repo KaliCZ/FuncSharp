@@ -56,13 +56,13 @@ public class CoproductTests
 
         Coproduct2<bool, int> result1 = u1.Map(v => v == "foo", v => v + 2);
         Assert.True(result1.IsFirst);
-        Assert.True((bool)result1.CoproductValue);
+        Assert.True((bool)result1.CoproductValue!);
 
         Coproduct2<bool, int> result2 = u2.Map(v => v == "foo", v => v + 2);
         Assert.True(result2.IsSecond);
-        Assert.Equal(44, (int)result2.CoproductValue);
+        Assert.Equal(44, (int)result2.CoproductValue!);
 
-        Coproduct3<double, int, object> result3 = u3.Map(d => d + 1, i => i + 3, o => o);
+        Coproduct3<double, int, object?> result3 = u3.Map(d => d + 1, i => i + 3, o => o);
         Assert.True(result3.IsThird);
         Assert.Equal("foo", result3.CoproductValue);
     }
@@ -78,7 +78,7 @@ public class CoproductTests
         Assert.True(u2.Match(v => false, v => v == 42));
         Assert.True(u3.Match(s => false, d => false, _ => true));
     }
-        
+
     [Fact]
     public async Task MatchAsync()
     {

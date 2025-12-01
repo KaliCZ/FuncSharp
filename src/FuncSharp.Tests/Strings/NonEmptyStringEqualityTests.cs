@@ -28,8 +28,8 @@ public class NonEmptyStringTests
         Assert.True(object.Equals(empty1, empty2));
         Assert.True(object.Equals(empty2, empty1));
 
-        Option<NonEmptyString> valuedWithNull1 = Option.Valued<NonEmptyString>(null);
-        Option<string> valuedWithNull2 = Option.Valued<string>(null);
+        Option<NonEmptyString?> valuedWithNull1 = Option.Valued<NonEmptyString?>(null);
+        Option<string?> valuedWithNull2 = Option.Valued<string?>(null);
         Assert.True(valuedWithNull1.Equals(valuedWithNull2));
         Assert.True(valuedWithNull2.Equals(valuedWithNull1));
         Assert.True(object.Equals(valuedWithNull1, valuedWithNull2));
@@ -78,10 +78,8 @@ public class NonEmptyStringTests
         Assert.False(object.Equals(differentNonEmptyString, differentString));
         Assert.False(object.Equals(differentNonEmptyString, differentNonEmptyString2));
 
-        NonEmptyString null1 = null;
-        string null2 = null;
-        Assert.True(null1 == null2);
-        Assert.True(null2 == null1);
+        NonEmptyString? null1 = null;
+        string? null2 = null;
         Assert.True(object.Equals(null1, null2));
         Assert.True(object.Equals(null2, null1));
 

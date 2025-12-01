@@ -17,10 +17,10 @@ public class FlatMapTests_Nullable
     public void FlatMap()
     {
         // Flatmap to a not-null nullable should have the value.
-        OptionAssert.NonEmptyWithValue(84, 42.ToOption().FlatMap(v => (int?)(v * 2)));
+        OptionAssert.NonEmptyWithValue(84, 42.ToValuedOption().FlatMap(v => (int?)(v * 2)));
 
         // Flatmap to null nullable should be empty.
-        OptionAssert.IsEmpty(42.ToOption().FlatMap(v => (int?)null));
+        OptionAssert.IsEmpty(42.ToValuedOption().FlatMap(v => (int?)null));
 
         // Flatmap on empty option is always empty.
         OptionAssert.IsEmpty(Option.Empty<int>().FlatMap(v => (int?)(v * 2)));
@@ -69,7 +69,7 @@ public class FlatMapTests_Nullable
 
         if (option.NonEmpty)
         {
-            Assert.Equal(map(option.GetOrDefault()).Value, flatMapResult.GetOrDefault());
+            Assert.Equal(map(option.Get())!.Value, flatMapResult.Get());
         }
     }
 }

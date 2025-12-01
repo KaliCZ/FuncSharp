@@ -21,13 +21,13 @@ public class SelectTests
         OptionAssert.IsEmpty(Option.Empty<string>().Select(v => (int?)null));
 
         // Valued option mapped will always have value
-        OptionAssert.NonEmptyWithValue(84, 42.ToOption().Select(v => v * 2));
-        OptionAssert.NonEmptyWithValue(84, 42.ToOption().Select(v => v * 2 as int?));
-        OptionAssert.NonEmptyWithValue("xxxxx", 5.ToOption().Select(v => new String('x', v)));
+        OptionAssert.NonEmptyWithValue(84, 42.ToValuedOption().Select(v => v * 2));
+        OptionAssert.NonEmptyWithValue(84, 42.ToValuedOption().Select(v => v * 2 as int?));
+        OptionAssert.NonEmptyWithValue("xxxxx", 5.ToValuedOption().Select(v => new String('x', v)));
 
         // Even if you map to null, the option is still valued
-        OptionAssert.NonEmpty(5.ToOption().Select(v => null as int?));
-        OptionAssert.NonEmpty(5.ToOption().Select(v => (string)null));
+        OptionAssert.NonEmpty(5.ToValuedOption().Select(v => null as int?));
+        OptionAssert.NonEmpty(5.ToValuedOption().Select(v => (string?)null));
     }
 
     [Property]
@@ -72,7 +72,7 @@ public class SelectTests
         Assert.Equal(option.IsEmpty, result.IsEmpty);
         if (option.NonEmpty)
         {
-            Assert.Equal(map(option.GetOrDefault()), result.GetOrDefault());
+            Assert.Equal(map(option.Get()), result.Get());
         }
 
         var linqResult =

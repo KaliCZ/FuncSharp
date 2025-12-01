@@ -17,13 +17,13 @@ public class FlatMapTests
     public void FlatMap()
     {
         // Flatmap to a valued option should have the value.
-        OptionAssert.NonEmptyWithValue(84, 42.ToOption().FlatMap(v => (v * 2).ToOption()));
+        OptionAssert.NonEmptyWithValue(84, 42.ToValuedOption().FlatMap(v => (v * 2).ToValuedOption()));
 
         // Flatmap to Empty option should be empty.
-        OptionAssert.IsEmpty(42.ToOption().FlatMap(v => Option.Empty<int>()));
+        OptionAssert.IsEmpty(42.ToValuedOption().FlatMap(v => Option.Empty<int>()));
 
         // Flatmap on empty option is always empty.
-        OptionAssert.IsEmpty(Option.Empty<int>().FlatMap(v => (v * 2).ToOption()));
+        OptionAssert.IsEmpty(Option.Empty<int>().FlatMap(v => (v * 2).ToValuedOption()));
         OptionAssert.IsEmpty(Option.Empty<int>().FlatMap(v => Option.Empty<int>()));
     }
 
@@ -85,7 +85,7 @@ public class FlatMapTests
 
         if (option.NonEmpty)
         {
-            Assert.Equal(map(option.GetOrDefault()), flatMapResult.GetOrDefault());
+            Assert.Equal(map(option.Get()), flatMapResult.Get());
         }
     }
 }

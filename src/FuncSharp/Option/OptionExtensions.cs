@@ -70,14 +70,4 @@ public static partial class OptionExtensions
     {
         return option.FlatMap(o => o);
     }
-
-    /// <summary>
-    /// Turns the option of nullable into an option.
-    /// </summary>
-    [Pure]
-    public static Option<A> Flatten<A>(this Option<A?> option)
-        where A : struct
-    {
-        return option.FlatMap(a => a.ToOption());
-    }
 }

@@ -15,7 +15,7 @@ public class NonEmptyTests
     [Fact]
     public void NonEmpty()
     {
-        Assert.True(42.ToOption().NonEmpty);
+        Assert.True(42.ToValuedOption().NonEmpty);
         Assert.True((42 as int?).ToOption().NonEmpty);
         Assert.False((null as int?).ToOption().NonEmpty);
 

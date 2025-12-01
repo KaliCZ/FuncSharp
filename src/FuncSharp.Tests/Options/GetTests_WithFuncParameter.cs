@@ -16,7 +16,7 @@ public class GetTests_WithFuncParameter
     [Fact]
     public void GetWithFunc()
     {
-        Assert.Equal(8, 4.ToOption().Get(i => i * 2));
+        Assert.Equal(8, 4.ToValuedOption().Get(i => i * 2));
         Assert.Equal(18, (6 as int?).ToOption().Get(i => i * 3));
         Assert.Throws<InvalidOperationException>(() => Option.Empty<int>().Get(i => i * 4));
         Assert.Throws<NullReferenceException>(() => Option.Empty<int>().Get(i => i * 4, _ => new NullReferenceException()));
@@ -64,14 +64,14 @@ public class GetTests_WithFuncParameter
         AssertGetWithFunc<T, TResult, InvalidOperationException>(option, map);
     }
 
-    private void AssertGetWithFunc<T, TResult, TException>(Option<T> option, Func<T, TResult> map, Func<Unit, TException> otherwise = null)
+    private void AssertGetWithFunc<T, TResult, TException>(Option<T> option, Func<T, TResult> map, Func<Unit, TException>? otherwise = null)
         where TException : Exception
     {
         if(option.NonEmpty)
         {
             var result = option.Get(map, otherwise);
             Assert.NotNull(result);
-            Assert.Equal(map(option.GetOrDefault()), result);
+            Assert.Equal(map(option.Get()), result);
         }
         else
         {

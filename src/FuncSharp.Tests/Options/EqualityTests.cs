@@ -39,13 +39,13 @@ public class EqualityTests
         AssertAreNotEqual(Option.Empty<int?>(), Option.Valued((int?)null));
         AssertAreNotEqual(Option.Empty<int>(), Option.Valued(0));
         AssertAreNotEqual(Option.Empty<int>(), Option.Valued(1));
-        AssertAreNotEqual(Option.Empty<string>(), Option.Valued<string>(null));
+        AssertAreNotEqual(Option.Empty<string>(), Option.Valued<string?>(null));
         AssertAreNotEqual(Option.Empty<string>(), Option.Valued("ASDF"));
         AssertAreNotEqual(Option.Empty<ReferenceType>(), Option.Valued(new ReferenceType(14)));
-        AssertAreNotEqual(Option.Empty<ReferenceType>(), Option.Valued<ReferenceTypeBase>(null));
+        AssertAreNotEqual(Option.Empty<ReferenceType>(), Option.Valued<ReferenceTypeBase?>(null));
 
         // Empty option and non-empty of different type
-        AssertAreNotEqual(Option.Empty<int>(), Option.Valued<ReferenceTypeBase>(null));
+        AssertAreNotEqual(Option.Empty<int>(), Option.Valued<ReferenceTypeBase?>(null));
         AssertAreNotEqual(Option.Empty<ReferenceType>(), Option.Valued(1));
         AssertAreNotEqual(Option.Empty<ReferenceType>(), Option.Valued("ASDF"));
 
@@ -53,9 +53,9 @@ public class EqualityTests
         AssertAreNotEqual(Option.Valued(14), Option.Valued(-6));
         AssertAreNotEqual(Option.Valued(-6), Option.Valued(0));
         AssertAreNotEqual(Option.Valued(new ReferenceType(28167)), Option.Valued(new ReferenceType(-5)));
-        AssertAreNotEqual(Option.Valued(new ReferenceType(28167)), Option.Valued<ReferenceType>(null));
+        AssertAreNotEqual(Option.Valued(new ReferenceType(28167)), Option.Valued<ReferenceType?>(null));
         AssertAreNotEqual(Option.Valued("ASDF123Q"), Option.Valued("Other string"));
-        AssertAreNotEqual(Option.Valued("ASDF123Q"), Option.Valued<string>(null));
+        AssertAreNotEqual(Option.Valued("ASDF123Q"), Option.Valued<string?>(null));
     }
 
     [Property]
@@ -93,7 +93,7 @@ public class EqualityTests
         AssertAreEqual(first, first);
         AssertAreEqual(second, second);
 
-        var shouldBeEqual = first.NonEmpty == second.NonEmpty && Equals(first.GetOrDefault(), second.GetOrDefault());
+        var shouldBeEqual = first.NonEmpty == second.NonEmpty && Equals(first.Get(), second.Get());
         Assert.Equal(shouldBeEqual, first.Equals(second));
         Assert.Equal(shouldBeEqual, first == second);
         Assert.Equal(!shouldBeEqual, first != second);

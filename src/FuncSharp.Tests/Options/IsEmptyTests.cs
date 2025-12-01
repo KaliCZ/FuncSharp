@@ -15,7 +15,7 @@ public class IsEmptyTests
     [Fact]
     public void IsEmpty()
     {
-        Assert.False(42.ToOption().IsEmpty);
+        Assert.False(42.ToValuedOption().IsEmpty);
         Assert.False((42 as int?).ToOption().IsEmpty);
         Assert.True((null as int?).ToOption().IsEmpty);
 

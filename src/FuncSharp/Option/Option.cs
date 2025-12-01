@@ -308,6 +308,23 @@ public readonly struct Option<T> : IEquatable<Option<T>>
     /// </summary>
     [Pure]
     public async Task<Option<B>> FlatMapAsync<B>(Func<T, Task<B?>> f)
+        where B : struct
+    {
+        if (NonEmpty)
+        {
+            return (await f(Value!)).ToOption();
+        }
+
+        return Option.Empty<B>();
+    }
+
+    /// <summary>
+    /// Maps value of the current <see cref="Option{A}"/> (if present) into a new option using the specified function and
+    /// returns <see cref="Option{B}"/> wrapped in a <see cref="System.Threading.Tasks.Task"/>.
+    /// </summary>
+    [Pure]
+    public async Task<Option<B>> FlatMapAsync<B>(Func<T, Task<B?>> f)
+        where B : class
     {
         if (NonEmpty)
         {
@@ -369,6 +386,14 @@ public readonly struct Option<T> : IEquatable<Option<T>>
         if (obj is Option<T> other)
         {
             return Equals(other);
+        }
+        if (typeof(T) == typeof(NonEmptyString) && obj is Option<string> otherString)
+        {
+            return NonEmpty == otherString.NonEmpty && string.Equals(otherString.Value, (Value as NonEmptyString)?.Value);
+        }
+        if (typeof(T) == typeof(string) && obj is Option<NonEmptyString> otherNonEmptyString)
+        {
+            return NonEmpty == otherNonEmptyString.NonEmpty && string.Equals(otherNonEmptyString.Value, Value);
         }
         return false;
     }

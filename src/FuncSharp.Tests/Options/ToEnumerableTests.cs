@@ -15,7 +15,7 @@ public class ToEnumerableTests
     [Fact]
     public void ToEnumerable()
     {
-        Assert.NotEmpty(42.ToOption().AsReadOnlyList());
+        Assert.NotEmpty(42.ToValuedOption().AsReadOnlyList());
         Assert.NotEmpty((42 as int?).ToOption().AsReadOnlyList());
         Assert.Empty((null as int?).ToOption().AsReadOnlyList());
 

@@ -12,38 +12,8 @@ public class IEnumerableExtensionsTests
     {
         Assert.True(new List<int>().FirstOption().IsEmpty);
         Assert.True(new List<int>().LastOption().IsEmpty);
-        Assert.Equal(1.ToOption(), new List<int> { 1, 2, 3 }.FirstOption());
-        Assert.Equal(3.ToOption(), new List<int> { 1, 2, 3 }.LastOption());
-    }
-
-    [Fact]
-    public void ToCollectionDataCube()
-    {
-        var source = new List<IProduct3<string, string, string>>
-        {
-            Product3.Create("A", "B", "C"),
-            Product3.Create("A", "B", "D")
-        };
-
-        var collectionDataCube = source.ToCollectionDataCube(s => s.ProductValue1, s => s.ProductValue2, s => s.ProductValue3);
-        Assert.Equal(new List<string> { "C", "D" }, collectionDataCube.Get("A", "B").Get());
-    }
-
-    [Fact]
-    public void ToDataCube()
-    {
-        var source = new List<IProduct3<string, string, string>>
-        {
-            Product3.Create("A", "B", "D"),
-            Product3.Create("A", "C", "E")
-        };
-
-        var dataCube = source.ToDataCube(s => s.ProductValue2, s => s.ProductValue3);
-        Assert.Equal(new List<string> { "B", "C" }, dataCube.Domain1);
-        Assert.Equal(new List<string> { "D", "E" }, dataCube.Values);
-
-        // A duplicit key throws exception.
-        Assert.Throws<ArgumentException>(() => source.ToDataCube(s => s.ProductValue1, s => s.ProductValue3));
+        Assert.Equal(1.ToValuedOption(), new List<int> { 1, 2, 3 }.FirstOption());
+        Assert.Equal(3.ToValuedOption(), new List<int> { 1, 2, 3 }.LastOption());
     }
 
     [Fact]
@@ -77,8 +47,8 @@ public class IEnumerableExtensionsTests
     {
         var e = new Exception();
 
-        Assert.Equal(Option.Empty<Exception>(), new List<Exception>().Aggregate());
-        Assert.Equal(e.ToOption(), new[] { e }.Aggregate());
-        Assert.True(new[] { e, e, e }.Aggregate().Get() is AggregateException);
+        Assert.Null(new List<Exception>().Aggregate());
+        Assert.Equal(e, new[] { e }.Aggregate());
+        Assert.True(new[] { e, e, e }.Aggregate() is AggregateException);
     }
 }

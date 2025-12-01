@@ -16,7 +16,7 @@ public class GetOrElseTests_Lazy
     [Fact]
     public void GetOrElseLazy()
     {
-        Assert.Equal(1, 1.ToOption().GetOrElse(_ => 2));
+        Assert.Equal(1, 1.ToValuedOption().GetOrElse(_ => 2));
         Assert.Equal(2, Option.Empty<int>().GetOrElse(_ => 2));
 
         Assert.Equal("asd", "asd".ToOption().GetOrElse(_ => "123"));
@@ -65,6 +65,7 @@ public class GetOrElseTests_Lazy
     }
 
     private void AssertGetOrElseLazy<T>(Option<T> option, Func<Unit, T> otherwise)
+        where T : notnull
     {
         var result = option.GetOrElse(otherwise);
         if (option.NonEmpty)

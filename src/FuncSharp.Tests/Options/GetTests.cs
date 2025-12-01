@@ -16,7 +16,7 @@ public class GetTests
     [Fact]
     public void Get()
     {
-        Assert.Equal(42, 42.ToOption().Get());
+        Assert.Equal(42, 42.ToValuedOption().Get());
         Assert.Equal(42, (42 as int?).ToOption().Get());
         var exception = Assert.Throws<InvalidOperationException>(() => Option.Empty<int>().Get());
         Assert.Contains(nameof(Int32), exception.Message);
@@ -63,14 +63,14 @@ public class GetTests
         AssertGet<T, InvalidOperationException>(option);
     }
 
-    private void AssertGet<T, TException>(Option<T> option, Func<Unit, TException> otherwise = null)
+    private void AssertGet<T, TException>(Option<T> option, Func<Unit, TException>? otherwise = null)
         where TException : Exception
     {
         if(option.NonEmpty)
         {
             var result = option.Get(otherwise);
             Assert.NotNull(result);
-            Assert.Equal(option.GetOrDefault(), result);
+            Assert.Equal(option.Get(), result);
         }
         else
         {
