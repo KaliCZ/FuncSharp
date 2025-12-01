@@ -6,12 +6,12 @@ public static class NumberExtensions
 
     public static PositiveShort? AsPositive(this short value)
     {
-        return PositiveShort.Create(value);
+        return PositiveShort.TryCreate(value);
     }
 
     public static PositiveInt? AsPositive(this int value)
     {
-        return PositiveInt.Create(value);
+        return PositiveInt.TryCreate(value);
     }
 
     public static PositiveLong? AsPositive(this long value)
@@ -30,22 +30,22 @@ public static class NumberExtensions
 
     public static NonNegativeShort? AsNonNegative(this short value)
     {
-        return NonNegativeShort.Create(value);
+        return NonNegativeShort.TryCreate(value);
     }
 
     public static NonNegativeInt? AsNonNegative(this int value)
     {
-        return NonNegativeInt.Create(value);
+        return NonNegativeInt.TryCreate(value);
     }
 
     public static NonNegativeLong? AsNonNegative(this long value)
     {
-        return NonNegativeLong.Create(value);
+        return NonNegativeLong.TryCreate(value);
     }
 
     public static NonNegativeDecimal? AsNonNegative(this decimal value)
     {
-        return NonNegativeDecimal.Create(value);
+        return NonNegativeDecimal.TryCreate(value);
     }
 
     #endregion
@@ -54,17 +54,17 @@ public static class NumberExtensions
 
     public static NonPositiveShort? AsNonPositive(this short value)
     {
-        return NonPositiveShort.Create(value);
+        return NonPositiveShort.TryCreate(value);
     }
 
     public static NonPositiveInt? AsNonPositive(this int value)
     {
-        return NonPositiveInt.Create(value);
+        return NonPositiveInt.TryCreate(value);
     }
 
     public static NonPositiveLong? AsNonPositive(this long value)
     {
-        return NonPositiveLong.Create(value);
+        return NonPositiveLong.TryCreate(value);
     }
 
     public static NonPositiveDecimal? AsNonPositive(this decimal value)
