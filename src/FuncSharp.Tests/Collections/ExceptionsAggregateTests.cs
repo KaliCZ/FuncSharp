@@ -8,7 +8,7 @@ namespace FuncSharp.Tests.Collections;
 public class CustomException : Exception
 {
     public CustomException(string message) : base(message) { }
-    public bool Equals(CustomException other) => Message.Equals(other?.Message);
+    public bool Equals(CustomException? other) => Message.Equals(other?.Message);
     public override bool Equals(object? obj) => Equals(obj as CustomException);
     public override int GetHashCode() => Message.GetHashCode();
 }
@@ -21,8 +21,8 @@ public class ExceptionsAggregateTests
         IEnumerable<Exception> enumerable = Enumerable.Empty<Exception>();
         Exception[] array = new Exception[]{};
 
-        OptionAssert.IsEmpty(enumerable.Aggregate());
-        OptionAssert.IsEmpty(array.Aggregate());
+        Assert.Null(enumerable.Aggregate());
+        Assert.Null(array.Aggregate());
     }
 
     [Fact]
@@ -32,25 +32,25 @@ public class ExceptionsAggregateTests
 
         IEnumerable<Exception> enumerable = Enumerable.Repeat(singleException, 1);
         CustomException[] array = new []{singleException};
-        var nonEmpty = array.AsNonEmpty().Get();
+        var nonEmpty = array.AsNonEmpty()!;
 
-        OptionAssert.NonEmptyWithValue(singleException, enumerable.Aggregate());
-        OptionAssert.NonEmptyWithValue(singleException, array.Aggregate());
+        Assert.Equal(singleException, enumerable.Aggregate());
+        Assert.Equal(singleException, array.Aggregate());
         Assert.IsType<CustomException>(nonEmpty.Aggregate());
     }
 
     [Fact]
     public void Aggregate_Multiple()
     {
-        IEnumerable<Exception> enumerable = Enumerable.Range(0, 10).Select(i => new CustomException($"{i} potatoes"));
+        IEnumerable<Exception> enumerable = Enumerable.Range(0, 10).Select(i => new CustomException($"{i} potatoes")).ToArray();
         CustomException[] array = Enumerable.Range(0, 10).Select(i => new CustomException($"{i} potatoes")).ToArray();
-        INonEmptyEnumerable<Exception> nonEmpty = array.AsNonEmpty().Get();
+        INonEmptyEnumerable<Exception> nonEmpty = array.AsNonEmpty()!;
 
-        OptionAssert.NonEmpty(enumerable.Aggregate());
-        Assert.Equal(array, ((AggregateException)enumerable.Aggregate().Get()).InnerExceptions);
+        Assert.NotNull(enumerable.Aggregate());
+        Assert.Equal(array, ((AggregateException)enumerable.Aggregate()!).InnerExceptions);
 
-        OptionAssert.NonEmpty(array.Aggregate());
-        Assert.Equal(array, ((AggregateException)array.Aggregate().Get()).InnerExceptions);
+        Assert.NotNull(array.Aggregate());
+        Assert.Equal(array, ((AggregateException)array.Aggregate()!).InnerExceptions);
 
         Assert.NotNull(nonEmpty.Aggregate());
         Assert.Equal(array, ((AggregateException)nonEmpty.Aggregate()).InnerExceptions);

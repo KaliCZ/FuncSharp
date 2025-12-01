@@ -10,7 +10,7 @@ public class ExceptNullsTests
     [Fact]
     public void ExceptNulls()
     {
-        var list = new List<string> { null, "1 potato", null, "2 potatoes", null };
+        var list = new List<string?> { null, "1 potato", null, "2 potatoes", null };
         var result = list.ExceptNulls().ToArray();
 
         Assert.Equal(2, result.Length);

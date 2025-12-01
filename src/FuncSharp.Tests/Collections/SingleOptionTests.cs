@@ -9,7 +9,7 @@ public class SingleOptionTests
     [Fact]
     public void SingleOption_Empty()
     {
-        IEnumerable<string> enumerable = Enumerable.Empty<string>();
+        IEnumerable<string> enumerable = Enumerable.Empty<string>().ToArray();
         string[] array = new string[]{};
 
         OptionAssert.IsEmpty(enumerable.SingleOption());
@@ -22,7 +22,7 @@ public class SingleOptionTests
     [Fact]
     public void SingleOption_Single()
     {
-        IEnumerable<string> enumerable = Enumerable.Repeat("A potato", 1);
+        IEnumerable<string> enumerable = Enumerable.Repeat("A potato", 1).ToArray();
         string[] array = new []{"A potato"};
 
         OptionAssert.NonEmptyWithValue("A potato", enumerable.SingleOption());
@@ -38,7 +38,7 @@ public class SingleOptionTests
     [Fact]
     public void SingleOption_Multiple()
     {
-        IEnumerable<string> enumerable = Enumerable.Range(0, 10).Select(i => $"{i} potatoes");
+        IEnumerable<string> enumerable = Enumerable.Range(0, 10).Select(i => $"{i} potatoes").ToArray();
         string[] array = Enumerable.Range(0, 10).Select(i => $"{i} potatoes").ToArray();
 
         OptionAssert.IsEmpty(enumerable.SingleOption());

@@ -46,16 +46,6 @@ public static partial class OptionExtensions
     }
 
     /// <summary>
-    /// Maps the value using the specified function and returns the result.
-    /// </summary>
-    [Pure]
-    public static T? Condition<T>(this T value, Func<T, bool> condition)
-        where T : notnull
-    {
-        return condition(value) ? value : null;
-    }
-
-    /// <summary>
     /// Maps the not null value using the specified function and returns the result.
     /// </summary>
     [Pure]

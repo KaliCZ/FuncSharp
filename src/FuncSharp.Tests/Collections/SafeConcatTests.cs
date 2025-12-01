@@ -6,7 +6,7 @@ namespace FuncSharp.Tests.Collections;
 
 public class SafeSafeConcatTests
 {
-    private static readonly IEnumerable<string> NullEnumerable = null;
+    private static readonly IEnumerable<string>? NullEnumerable = null;
 
     [Fact]
     public void SafeConcat_ParamsOfItems()
